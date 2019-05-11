@@ -5,19 +5,29 @@ This repository is a notebook about how to design four(**tetra**) coupling
 A3-CompactFlex Filling machine's jaw and drive units as an example.
 
 video 10s
+
+[![Alt text](https://mp.weixin.qq.com/mp/videoplayer?action=get_mp_video_cover&vid=wxv_801815896934318081)](https://v.qq.com/iframe/player.html?vid=wxv_801815896934318081)
+
+[![Alt text](https://img.youtube.com/vi/VID/0.jpg)](https://www.youtube.com/watch?v=VID)
+
+
+[![Alt text](https://mp.weixin.qq.com/mp/videoplayer?action=get_mp_video_cover&vid=wxv_801815896934318081)](http://mpvideo.qpic.cn/tjg_3007806270_50000_d79152afa5284e03a56a7a5ba3096fca.f10002.mp4?dis_k=827ffb3e3e7333bef9e4c9bab984adc9&dis_t=1557538921)
+
 <iframe 
     height=450 
     width=800 
     src="http://mpvideo.qpic.cn/tjg_3007806270_50000_d79152afa5284e03a56a7a5ba3096fca.f10002.mp4?dis_k=019959d960063e80571c99b5d1b4036d&dis_t=1557484926" 
     frameborder=0 
-    allowfullscreen> </iframe>
+    allowfullscreen> 
+</iframe>
 
 <iframe 
     height=450 
     width=800 
     src="http://mpvideo.qpic.cn/tjg_3007806270_50000_d79152afa5284e03a56a7a5ba3096fca.f10002.mp4?dis_k=827ffb3e3e7333bef9e4c9bab984adc9&dis_t=1557538921" 
     frameborder=0 
-    allowfullscreen> </iframe>
+    allowfullscreen> 
+</iframe>
 
 http://mpvideo.qpic.cn/tjg_3007806270_50000_d79152afa5284e03a56a7a5ba3096fca.f10002.mp4?dis_k=827ffb3e3e7333bef9e4c9bab984adc9&dis_t=1557538921
 
