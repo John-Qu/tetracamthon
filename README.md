@@ -4,14 +4,13 @@ This repository is a notebook about how to design four(**tetra**) coupling
 **cam**s mechanisms with Py**thon** and FreeCAD, especially in Tetra Pak's 
 A3-CompactFlex Filling machine's jaw and drive units as an example.
 
-video 10s
 
-[![Alt text](https://mp.weixin.qq.com/mp/videoplayer?action=get_mp_video_cover&vid=wxv_801815896934318081)](https://v.qq.com/iframe/player.html?vid=wxv_801815896934318081)
 
-[![Alt text](https://img.youtube.com/vi/VID/0.jpg)](https://www.youtube.com/watch?v=VID)
-
+[![Tetracamthon video 10s](https://mp.weixin.qq.com/mp/videoplayer?action=get_mp_video_cover&vid=wxv_801815896934318081)](http://mp.weixin.qq.com/mp/video?__biz=MzAwNzgwNjI3MA==&mid=100000987&sn=c98d6ab8480362eb4befa4b359b728cb&vid=wxv_801815896934318081&idx=1&vidsn=546b1ffe0f85f4fdc77b9584745a8682&fromid=1&scene=20&xtrack=1#wechat_redirect "What do Tetra Pak Jaw and Drive look like? How do they move?")
 
 [![Alt text](https://mp.weixin.qq.com/mp/videoplayer?action=get_mp_video_cover&vid=wxv_801815896934318081)](http://mpvideo.qpic.cn/tjg_3007806270_50000_d79152afa5284e03a56a7a5ba3096fca.f10002.mp4?dis_k=827ffb3e3e7333bef9e4c9bab984adc9&dis_t=1557538921)
+
+[![Everything Is AWESOME](http://i.imgur.com/Ot5DWAW.png)](https://youtu.be/StTqXEQ2l-Y?t=35s "Everything Is AWESOME")
 
 <iframe 
     height=450 
@@ -30,8 +29,6 @@ video 10s
 </iframe>
 
 http://mpvideo.qpic.cn/tjg_3007806270_50000_d79152afa5284e03a56a7a5ba3096fca.f10002.mp4?dis_k=827ffb3e3e7333bef9e4c9bab984adc9&dis_t=1557538921
-
-
 
 ## Industry and Insights
 
