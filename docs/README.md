@@ -4,11 +4,11 @@ This repository is a notebook about how to design four(**tetra**) coupling
 **cam**s mechanisms with Py**thon** and FreeCAD, especially in Tetra Pak's 
 A3-CompactFlex Filling machine's jaw and drive units as an example.
 
-[![Tetracamthon video 10s](https://mp.weixin.qq.com/mp/videoplayer?action=get_mp_video_cover&vid=wxv_801815896934318081)](http://mp.weixin.qq.com/mp/video?__biz=MzAwNzgwNjI3MA==&mid=100000987&sn=c98d6ab8480362eb4befa4b359b728cb&vid=wxv_801815896934318081&idx=1&vidsn=546b1ffe0f85f4fdc77b9584745a8682&fromid=1&scene=20&xtrack=1#wechat_redirect "Open video in anather tab to see what Tetra Pak A3/Flex jaw and drive unit look like and how they move.")
-
 ## Industry and Insights
 
 Are you interested in Tetra Pak's aseptic filling machine?
+
+[![Tetracamthon video 10s](https://mp.weixin.qq.com/mp/videoplayer?action=get_mp_video_cover&vid=wxv_801815896934318081)](http://mp.weixin.qq.com/mp/video?__biz=MzAwNzgwNjI3MA==&mid=100000987&sn=c98d6ab8480362eb4befa4b359b728cb&vid=wxv_801815896934318081&idx=1&vidsn=546b1ffe0f85f4fdc77b9584745a8682&fromid=1&scene=20&xtrack=1#wechat_redirect "Open video in anather tab to see what Tetra Pak A3/Flex jaw and drive unit look like and how they move.")
 
 ### Players in This Industry
 
