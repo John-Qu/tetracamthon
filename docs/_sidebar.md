@@ -1,26 +1,25 @@
-- **Industry and Insights**
-    - [Players in This Industry](players.md "TODO")
-    - [A Brief History of Tetra Pak's machines](history.md "TODO")
-    - [Concepts in Aseptic Filling Machine](concepts.md "TODO")
+- [Tetracamthon](/ "Project logs")
 
-- [**Problem and Project**]( "Can you explain the problem clearly to get help from a friend in the other profession?")
-    - [Vision, Goal and Approach](intension.md "Personal motivation")
-    - [Phase Diagram of Movements]()
-    - [Mechanism Definition](mechanism.md)
-    - [Road Map](map.md)
-    
-- [**Knowledge and Know-hows**]( "How to teach a trainee minimum necessary knowledge to give a hand?")
-    - [How to Get Data from Chart](sourcedata.md "DONE")
-    - [How to Compare Chart with Video](compare.md "DONE")
-    
-- [**Reasons and Results**]( "Are the approaches reasonable and the results reliable?")
-    - [Description of Phase Diagram]()
-    
-- [**Learning and Lessons**]( "What could we learn in this practice?")
+- [HOW-TO GUIDE](/how-to/ "Steps to specific goal") 
+    - [How to get data from chart](/how-to/get-data-from-chart)
+    - [and more](/how-to/ "Steps to specific goal")
 
-- **Appendixes**
-    - [FAQs](faqs.md)
-    - [Reading TBA22 Thesis](thesis-chain-driven.md)
-    - [Reading A3Flex Thesis](note-of-servo-driven.md)
-    - [Contributing](../CONTRIBUTING.md)
+- [EXPLANATION](/explanation/ "Reasons, concepts and considerations")
+    - [Two kinds of forming mechanisms](/)
+    - [and more](/explanation/ "Reasons, concepts and considerations")
+
+- [REFERENCE](/reference/ "Information of technical details")
+    - [Generations of Tetra Pak's Filling machines](/)
+    - [Mechanism Definition](/reference/mechanism.md)
+    - [Reading TBA22 Thesis](/reference/thesis-chain-driven.md)
+    - [Reading A3Flex Thesis](/reference/note-of-servo-driven.md)
+    - [and more](/reference/ "Information of technical details")
+
+- [TUTORIAL](/tutorial/ "Lessons to get started")
+    - [Build documentation with docsify in one hour](/)
+    - [and more](/tutorial/ "Lessons to get started")
+
+- [FAQs](faqs.md)
+- [Road Map](map.md)
+- [Contributing](../CONTRIBUTING.md)
 
