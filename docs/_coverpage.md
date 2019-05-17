@@ -1,13 +1,12 @@
-<img src="https://ws3.sinaimg.cn/large/006tNc79gy1g3251xmbx7j31c006w76p.jpg" width="400px" alt="Tetracamthon - Four Cam designed with Python">
+![logo](_media/icon.svg)
 
-<hr style='width:40%; border-color:#da291c;'>
-<h1 style="color: #da291c">Notebook</h1>
-<p style="color: #da291c">version 0.1</p>
+# Tetracamthon <small>0.2</small>
 
+> A practical design practice on four(<u>tetra</u>) <u>cam</u> profiles in Py<u>thon</u>.
+
+- Complex profiles with cam mechanism velocities synchronization.
+- Free tools based on the open-sourcing FreeCAD, Python, and Blender.
+- Good documentation aiming at one tutorial for young mechanical engineers.
 
 [GitHub](https://github.com/John-Qu/tetracamthon)
-
-[Get Started](#docsify)
-
-<!-- background color -->
-![color](#ffffff)
+[Get Started](/)
