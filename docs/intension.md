@@ -18,7 +18,7 @@ Let it no longer a bottleneck at the cam profiles of Tetra Pak's Filling Machine
 
   Generate cams profiles for other size and shape of packages.
 
-### Validationbility
+### Validatability
 
   Prove to be practical and productive.
 

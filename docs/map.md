@@ -2,16 +2,16 @@
 
 ## General Goal
 
-The goal IS to understand more with a practical approach, which includes:
+The goal **IS** to understand more with a practical approach, which includes:
 
 1. Designing curves of cam profile;
 2. Calculating dimensions of critical mechanism ;
 3. Record approaches to solving the problem.
 
-The goal IS NOT to copy, to reinvent wheels, or to learn something, which means:
+The goal **IS NOT** to copy, to reinvent wheels, or to learn something, which means:
 
 1. Not to build Tetra Pak's machine models;
-2. Not to applying a patent just different (no better) from the original ones;
+2. Not to apply a patent just different (no better) from the original ones;
 3. Not to become an expert of cams by reading through or translating cam design handbooks.
 
 ## Road Map

@@ -1,18 +1,28 @@
 # Welcome to Tetracamthon!
 
-The **Four Cam Mechanisms designed with Python and FreeCAD** - or **Tetracamthon** for short - is a pubic practice of mechanical knowledge and programming skill with a practical problem in the [filling machine]() as Tetra Pak have done well. 
+### What is Tetracamthon?
 
-[![Tetracamthon video 10s](https://ws2.sinaimg.cn/large/006tNc79gy1g3258iyackj31kr0u0u0y.jpg)](http://mp.weixin.qq.com/mp/video?__biz=MzAwNzgwNjI3MA==&mid=100000987&sn=c98d6ab8480362eb4befa4b359b728cb&vid=wxv_801815896934318081&idx=1&vidsn=546b1ffe0f85f4fdc77b9584745a8682&fromid=1&scene=20&xtrack=1#wechat_redirect "Open video in anather tab to see what Tetra Pak A3/Flex jaw and drive unit look like and how they move.")
+- a personal **practice**, solving an old problem with new data and insights 
+- a practical **problem**, re-inventing a core wheel which many wonders around
+- a public **project**, documenting nearly everything as an example of free tools
 
-### Mission Statement
+### What does "tetracamthon" mean?
 
-To find an approach to reverse-engineer multiple cams which cooperate in placement and velocity to form one product.
+- **tetra**: four, as in tetramerous, tetragram, tetrode, especially in Tetra Pak's classical [four faces package](https://www.tetrapak.com/packaging/tetra-classic-aseptic)
+- **cam**: a special shape of mechanical part(not necessary) which controls the movement of followers according to a specific function
+- **thon**: a part of Python, indicating all the tools are based on Python like open source libraries.
 
-Cam profile controls mechanism movement. Actual movements sometimes need to be cooperating. These cooperations can be complicated in two aspects. In space relationships, movement A and B let mechanism C behave like this D at place E, and movement F lets mechanism G behave like that H at placement J, while these two behaviors D and H affects the same objective K. In time relationships, movements A and B must consider the effects of mechanism G at one time and also consider the effects of mechanism C at another time, while this kind of consideration is not only in placements but also in velocities.
+### Where is the problem?
 
-### Tetracamthon Notebook
+- In Tetra Pak's [A3/flex filling machine](https://www.tetrapak.com/packaging/tetra-pak-a3flex), jaw system is driven by servo motors whose programs is unable to download.
+- In the servo motors' programs, there are several key positions at which two or more action affect the production and packages. 
+- For various shape and size packages, the programs should vary with lest critical parts exchanged.
 
-This repository is a notebook about how to design four(**tetra**) coupling **cam**s mechanisms with Py**thon** and FreeCAD, especially in Tetra Pak's A3-CompactFlex Filling machine's jaw and drive units as an example. 
+### What are the results?
 
-If you find a problem or something that you'd like to dispute, please [open an issue](https://github.com/John-Qu/tetracamthon/issues/new). You can learn more about this notebook [here](notebook-structure.md).
+- data and profile of four cams, and dimensions of exchangeable parts
+- functions that generate those data, and scripts that draw the profiles of those data
+- documentation of those functions and the process of writing these function
 
+> - If you are interested and want to discuss problems with me, please [open an issue](https://github.com/John-Qu/tetracamthon/issues/new). 
+> - If you are confused about documentation structure, please read Daniele Procida's blog "[What nobody tells you about documentation](https://www.divio.com/blog/documentation/)".

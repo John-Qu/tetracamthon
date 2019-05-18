@@ -1,7 +1,7 @@
-- [Tetracamthon](/ "Project logs")
+- [Home](/README.md "Project logs")
 
 - [HOW-TO GUIDE](/how-to/ "Steps to specific goal") 
-    - [How to get data from chart](/how-to/get-data-from-chart)
+    - [How to get data from chart](/how-to/get-data-from-chart.md "How to Get Data from Chart")
     - [and more](/how-to/ "Steps to specific goal")
 
 - [EXPLANATION](/explanation/ "Reasons, concepts and considerations")
@@ -9,10 +9,7 @@
     - [and more](/explanation/ "Reasons, concepts and considerations")
 
 - [REFERENCE](/reference/ "Information of technical details")
-    - [Generations of Tetra Pak's Filling machines](/)
     - [Mechanism Definition](/reference/mechanism.md)
-    - [Reading TBA22 Thesis](/reference/thesis-chain-driven.md)
-    - [Reading A3Flex Thesis](/reference/note-of-servo-driven.md)
     - [and more](/reference/ "Information of technical details")
 
 - [TUTORIAL](/tutorial/ "Lessons to get started")
@@ -21,5 +18,6 @@
 
 - [FAQs](faqs.md)
 - [Road Map](map.md)
+- [Motivation, Goal and Approach](intension.md)
 - [Contributing](../CONTRIBUTING.md)
 

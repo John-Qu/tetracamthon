@@ -9,4 +9,4 @@
 - Good documentation aiming at one tutorial for young mechanical engineers.
 
 [GitHub](https://github.com/John-Qu/tetracamthon)
-[Get Started](/)
+[Get Started](/README.md)

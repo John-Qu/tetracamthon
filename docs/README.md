@@ -1,18 +1,28 @@
 # Welcome to Tetracamthon!
 
-The **Four(tetra) Cam Mechanisms designed with Python and FreeCAD** - or **Tetracamthon** for short - is a pubic practice of mechanical knowledge and programming skill with a practical problem in Tetra Pak's [filling machine](). 
+### What is Tetracamthon?
 
-## Mission
+- a personal **practice**, solving an old problem with new data and insights 
+- a practical **problem**, re-inventing a core wheel which many wonders around
+- a public **project**, documenting nearly everything as an example of free tools
 
-To find an approach to reverse-engineer multiple cams which cooperate in placement and velocity to form one product.
+### What does "tetracamthon" mean?
 
-Tetra Pak had solved this problem decades ago. However, nobody could refer to this knowledge from outside, so re-inventing this wheel with free tools publicly should draw an end to such wonder.
+- **tetra**: four, as in tetramerous, tetragram, tetrode, especially in Tetra Pak's classical [four faces package](https://www.tetrapak.com/packaging/tetra-classic-aseptic)
+- **cam**: a special shape of mechanical part(not necessary) which controls the movement of followers according to a specific function
+- **thon**: a part of Python, indicating all the tools are based on Python like open source libraries.
 
-The result may be useful for dairy machinery industry, but the motivation of this documentation is arming at a tutorial for young engineers, who are curious about new tools and new profession.
+### Where is the problem?
 
-### Tetracamthon Notebook
+- In Tetra Pak's [A3/flex filling machine](https://www.tetrapak.com/packaging/tetra-pak-a3flex), jaw system is driven by servo motors whose programs is unable to download.
+- In the servo motors' programs, there are several key positions at which two or more action affect the production and packages. 
+- For various shape and size packages, the programs should vary with lest critical parts exchanged.
 
-This repository is a notebook about how to design four(**tetra**) coupling **cam**s mechanisms with Py**thon** and FreeCAD, especially in Tetra Pak's A3-CompactFlex Filling machine's jaw and drive units as an example. 
+### What are the results?
 
-If you find a problem or something that you'd like to dispute, please [open an issue](https://github.com/John-Qu/tetracamthon/issues/new). You can learn more about this documentation [here](/reference/trans-four-documentation.md).
+- data and profile of four cams, and dimensions of exchangeable parts
+- functions that generate those data, and scripts that draw the profiles of those data
+- documentation of those functions and the process of writing these function
 
+> - If you are interested and want to discuss problems with me, please [open an issue](https://github.com/John-Qu/tetracamthon/issues/new). 
+> - If you are confused about documentation structure, please read Daniele Procida's blog "[What nobody tells you about documentation](https://www.divio.com/blog/documentation/)".
