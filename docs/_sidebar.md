@@ -19,5 +19,6 @@
 - [FAQs](faqs.md)
 - [Road Map](map.md)
 - [Motivation, Goal and Approach](intension.md)
+- [Resources](/resources/README.md)
 - [Contributing](../CONTRIBUTING.md)
 

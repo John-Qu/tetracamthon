@@ -1,6 +1,6 @@
 # Information of technical details
 
-Please note this:
+I would like to quote this here to remind myself.
 
 > A reference guide:
 >
@@ -11,3 +11,13 @@ Please note this:
 > *Analogy: a reference encyclopedia article*
 
 from Daniele Procida's blog "[What nobody tells you about documentation](https://www.divio.com/blog/documentation/)".
+
+## Mechanical
+
+- 
+
+## FreeCAD
+
+## Coding
+
+

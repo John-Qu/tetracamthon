@@ -2,30 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/docs/explanation/history.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/how-to/scale-image.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_coverpage.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_coverpage.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/_sidebar.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_sidebar.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/explanation/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/explanation/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/explanation/_sidebar.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/explanation/_sidebar.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/how-to/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/how-to/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/how-to/_sidebar.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/how-to/_sidebar.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/intension.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/intension.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/map.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/map.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/notebook-structure.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/reference/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/reference/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/reference/_sidebar.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/reference/_sidebar.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/reference/note-chain-driven.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/reference/note-servo-driven.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/reference/players.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/resources/_sidebar.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/resources/_sidebar.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theme.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/tutorial/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/tutorial/_sidebar.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial/_sidebar.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/zh-cn/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/zh-cn/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/resources/Design_and_Modeling_of_a_Mechatronic_Pac.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/resources/Functional_design_and_kinematic_synthesi.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/resources/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/resources/README.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -47,12 +28,36 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/docs/reference/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="FIRST">
-              <first_editor relative-caret-position="234">
-                <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+              <first_editor relative-caret-position="288">
+                <caret line="16" column="2" selection-start-line="16" selection-start-column="2" selection-end-line="16" selection-end-column="2" />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/docs/resources/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="FIRST">
+              <first_editor relative-caret-position="738">
+                <caret line="24" column="8" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="8" />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/docs/_sidebar.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="FIRST">
+              <first_editor relative-caret-position="378">
+                <caret line="21" column="24" selection-start-line="21" selection-start-column="24" selection-end-line="21" selection-end-column="24" />
               </first_editor>
               <second_editor />
             </state>
@@ -86,7 +91,6 @@
         <option value="$PROJECT_DIR$/docs/reference/_sidebar.md" />
         <option value="$PROJECT_DIR$/docs/explanation/_sidebar.md" />
         <option value="$PROJECT_DIR$/docs/intension.md" />
-        <option value="$PROJECT_DIR$/docs/_sidebar.md" />
         <option value="$PROJECT_DIR$/get-data-from-chart.md" />
         <option value="$PROJECT_DIR$/docs/how-to/get-data-from-chart.md" />
         <option value="$PROJECT_DIR$/docs/how-to/scale-image.md" />
@@ -98,12 +102,16 @@
         <option value="$PROJECT_DIR$/docs/index.html" />
         <option value="$PROJECT_DIR$/docs/map.md" />
         <option value="$PROJECT_DIR$/docs/reference/README.md" />
+        <option value="$PROJECT_DIR$/docs/_sidebar.md" />
+        <option value="$PROJECT_DIR$/docs/resources/README.md" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="width" value="1680" />
-    <option name="height" value="1050" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="840" />
+    <option name="y" value="23" />
+    <option name="width" value="840" />
+    <option name="height" value="1027" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -113,6 +121,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -124,6 +133,18 @@
               <item name="Tetracamthon" type="b2602c69:ProjectViewProjectNode" />
               <item name="Tetracamthon" type="462c0819:PsiDirectoryNode" />
               <item name="docs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Tetracamthon" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Tetracamthon" type="462c0819:PsiDirectoryNode" />
+              <item name="docs" type="462c0819:PsiDirectoryNode" />
+              <item name="_media" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Tetracamthon" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Tetracamthon" type="462c0819:PsiDirectoryNode" />
+              <item name="docs" type="462c0819:PsiDirectoryNode" />
+              <item name="explanation" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Tetracamthon" type="b2602c69:ProjectViewProjectNode" />
@@ -153,7 +174,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -248,18 +268,21 @@
       <workItem from="1558074359003" duration="2108000" />
       <workItem from="1558084176204" duration="8557000" />
       <workItem from="1558141819381" duration="1930000" />
+      <workItem from="1558145014925" duration="3678000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43549000" />
+    <option name="totallyTimeSpent" value="47227000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
+    <frame x="840" y="23" width="840" height="1027" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17704518" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17794487" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Inspection Results" weight="0.32941177" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32959184" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -271,7 +294,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.2010204" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.21069519" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.32959184" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -441,16 +464,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/docs/_sidebar.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="FIRST">
-          <first_editor relative-caret-position="54">
-            <caret line="3" column="93" selection-start-line="3" selection-start-column="93" selection-end-line="3" selection-end-column="93" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/docs/tutorial/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="FIRST">
@@ -511,11 +524,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/docs/theme.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4924" />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/theme.css" />
     <entry file="file://$PROJECT_DIR$/docs/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
@@ -546,8 +555,28 @@
     <entry file="file://$PROJECT_DIR$/docs/reference/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="FIRST">
-          <first_editor relative-caret-position="234">
-            <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+          <first_editor relative-caret-position="288">
+            <caret line="16" column="2" selection-start-line="16" selection-start-column="2" selection-end-line="16" selection-end-column="2" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/_sidebar.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="378">
+            <caret line="21" column="24" selection-start-line="21" selection-start-column="24" selection-end-line="21" selection-end-column="24" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/resources/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="738">
+            <caret line="24" column="8" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="8" />
           </first_editor>
           <second_editor />
         </state>
