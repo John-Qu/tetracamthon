@@ -23,3 +23,5 @@ The four actions mentioned above are:
 
 Cam profile controls mechanism movement. Actual movements sometimes need to be cooperating. These cooperations can be complicated in two aspects. In space relationships, movement A and B let mechanism C behave like this D at place E, and movement F lets mechanism G behave like that H at placement J, while these two behaviors D and H affects the same objective K. In time relationships, movements A and B must consider the effects of mechanism G at one time and also consider the effects of mechanism C at another time, while this kind of consideration is not only in placements but also in velocities.
 
+
+

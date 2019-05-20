@@ -14,9 +14,19 @@ from Daniele Procida's blog "[What nobody tells you about documentation](https:/
 
 ## Mechanical
 
-- 
+### Mechanism
+
+- Definition of Key Points
+
+### Function
+
+- Phases of movement
 
 ## FreeCAD
+
+### Script
+
+- Parametric Model Script
 
 ## Coding
 
