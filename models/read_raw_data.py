@@ -1,7 +1,7 @@
 import csv
 from collections import namedtuple
 import numpy as np
-import matplotlib.pyplot as plt
+from scipy.integrate import cumtrapz
 
 def get_csv_data():
     """
@@ -18,7 +18,7 @@ def get_csv_data():
             degree.append(int(row.Degree))
             york_acc.append(float(row.York_acc))
             jaw_acc.append(float(row.Jaw_acc))
-    return degree, york_acc, jaw_acc
+    return np.array(degree), np.array(york_acc), np.array(jaw_acc)
 
 def meet_jork_jaw_there(york_acc, jaw_acc):
     for i in range(130, 340):
@@ -27,34 +27,60 @@ def meet_jork_jaw_there(york_acc, jaw_acc):
     return york_acc, jaw_acc
 
 
-degree, york_acc, jaw_acc = get_csv_data()
-york_acc, jaw_acc = meet_jork_jaw_there(york_acc, jaw_acc)
+def zerolyse_part_of_acc(york_acc, jaw_acc):
+    """In the center part, they should be exact zeros.
 
+    :param york_acc:
+    :param jaw_acc:
+    :return: side effect
+    """
+    for i in range(198, 263):
+        if abs(york_acc[i]) < 0.3:
+            york_acc[i] = jaw_acc[i] = 0
+    return york_acc, jaw_acc
+
+
+def calculate_avp():
+    """Calculate the acceleration, velocity and placement from csv data.
+    :return """
+    degree, york_acc, jaw_acc = get_csv_data()
+    york_acc -= 0.169
+    jaw_acc -= 0.159
+    york_acc, jaw_acc = meet_jork_jaw_there(york_acc, jaw_acc)
+    york_acc, jaw_acc = zerolyse_part_of_acc(york_acc,jaw_acc)
+    york_velo = cumtrapz(york_acc, degree, initial=0) * (0.9 / 360 * 1000)
+    jaw_velo = cumtrapz(jaw_acc, degree, initial=0) * (0.9 / 360 * 1000)
+    jaw_velo = jaw_velo - (jaw_velo[220] - york_velo[220])
+    york_place = cumtrapz(york_velo, degree, initial=0) * (0.9 / 360)
+    jaw_place = cumtrapz(jaw_velo, degree, initial=0) * (0.9 / 360)
+    jaw_place += york_place[230]-jaw_place[230]
+    return degree, york_acc, jaw_acc, york_velo, jaw_velo, york_place, jaw_place
 
 if __name__ == "__main__":
-    # degree, york_acc, jaw_acc = get_csv_data()
-    # york_acc, jaw_acc = meet_jork_jaw_there(york_acc, jaw_acc)
-    # # Create a figure of size 8x6 inches, 80 dots per inch
-    plt.figure(figsize=(30, 10), dpi=80)
-    # Create a new subplot from a grid of 1x1
-    plt.subplot(1, 1, 1)
-    # X = np.linspace(-np.pi, np.pi, 256, endpoint=True)
-    X = np.array(degree)
-    # C, S = np.cos(X), np.sin(X)
-    C = np.array(york_acc)
-    S = np.array(jaw_acc)
-    # Plot cosine with a blue continuous line of width 1 (pixels)
-    plt.plot(X, C, color="blue", linewidth=2.0, linestyle="-", label="york_acc")
-    # Plot sine with a green continuous line of width 1 (pixels)
-    plt.plot(X, S, color="green", linewidth=2.0, linestyle="-", label="jaw_acc") # Set x limits
-    # plt.xlim(-4.0, 4.0) # Set x ticks
-    plt.legend(loc='upper right')
-    plt.xlim(0.0, 360.0) # Set x ticks
-    plt.xticks(np.linspace(0, 360, 37, endpoint=True)) # Set y limits
-    plt.ylim(-60.0, 60.0) # Set y ticks
-    plt.yticks(np.linspace(-60, 60, 7, endpoint=True)) # Save figure using 72 dots per inch
-    plt.savefig("exercise_2.png", dpi=720)
+    degree, york_acc, jaw_acc, york_velo, jaw_velo, york_place, jaw_place = calculate_avp()
+    print('the last three of york_velocity:', york_velo[-3], york_velo[-2], york_velo[-1])
+    # print('the last two of jaw_velocity:', jaw_velo[-2], jaw_velo[-1])
+    print('the first three of york_velocity:', york_velo[0], york_velo[1], york_velo[2])
+    print(york_velo[-3] - york_velo[-2])
+    print(york_velo[1] - york_velo[2])
+    print(york_velo[-2] - york_velo[1])
 
-    # Show result on screen
+    print('the last three of jaw_velocity:', jaw_velo[-3], jaw_velo[-2], jaw_velo[-1])
+    # print('the last two of jaw_velocity:', jaw_velo[-2], jaw_velo[-1])
+    print('the first three of jaw_velocity:', jaw_velo[0], jaw_velo[1], jaw_velo[2])
+    print(jaw_velo[-3] - jaw_velo[-2])
+    print(jaw_velo[1] - jaw_velo[2])
+    print(jaw_velo[-2] - jaw_velo[1])
+    print("-"*10)
+    print(york_place[133]-york_place[133+180])
 
-    plt.show()
+
+# def bisection_search(start ,end):
+# TODO: fine tune the adjust value
+# stage_diff = abs(york_velo[-2] - york_velo[1] -
+#                  ((york_velo[-3] - york_velo[-2]) +
+#                   (york_velo[2] - york_velo[1])) / 2)
+# while stage_diff > 10:
+#
+#
+
