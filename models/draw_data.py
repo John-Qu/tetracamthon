@@ -2,14 +2,17 @@ from read_raw_data import calculate_avp
 import matplotlib.pyplot as plt
 import numpy as np
 
-d, right_york_acc, right_jaw_acc, right_york_velo, right_jaw_velo, \
-    right_york_place, right_jaw_place = calculate_avp()
-left_york_acc = np.hstack((right_york_acc[-181:], right_york_acc[:180]))
-left_jaw_acc = np.hstack((right_jaw_acc[-181:], right_jaw_acc[:180]))
-left_york_velo = np.hstack((right_york_velo[-181:], right_york_velo[:180]))
-left_jaw_velo = np.hstack((right_jaw_velo[-181:], right_jaw_velo[:180]))
-left_york_place = np.hstack((right_york_place[-181:], right_york_place[:180]))
-left_jaw_place = np.hstack((right_jaw_place[-181:], right_jaw_place[:180]))
+d, \
+right_york_acc, right_jaw_acc, \
+right_york_velo, right_jaw_velo, \
+right_york_place, right_jaw_place \
+    = calculate_avp()
+left_york_acc = np.hstack((right_york_acc[-181:-1], right_york_acc[:181]))
+left_jaw_acc = np.hstack((right_jaw_acc[-181:-1], right_jaw_acc[:181]))
+left_york_velo = np.hstack((right_york_velo[-181:-1], right_york_velo[:181]))
+left_jaw_velo = np.hstack((right_jaw_velo[-181:-1], right_jaw_velo[:181]))
+left_york_place = np.hstack((right_york_place[-181:-1], right_york_place[:181]))
+left_jaw_place = np.hstack((right_jaw_place[-181:-1], right_jaw_place[:181]))
 
 right_jaw_to_york_velo = right_jaw_velo - right_york_velo
 right_jaw_to_york_place = right_jaw_place - right_york_place
