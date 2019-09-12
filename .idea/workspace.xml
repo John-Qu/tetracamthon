@@ -6,6 +6,7 @@
       <change beforePath="$PROJECT_DIR$/docs/logs/2019-09-05THU.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/logs/2019-09-05THU.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/Tetra Pak A3 flex Curves.png" beforeDir="false" afterPath="$PROJECT_DIR$/models/Tetra Pak A3 flex Curves.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/draw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/draw_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/read_raw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/read_raw_data.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -145,6 +146,9 @@
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />

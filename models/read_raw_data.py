@@ -1,3 +1,4 @@
+
 import csv
 from collections import namedtuple
 import numpy as np
@@ -77,10 +78,5 @@ if __name__ == "__main__":
 
 # def bisection_search(start ,end):
 # TODO: fine tune the adjust value
-# stage_diff = abs(york_velo[-2] - york_velo[1] -
-#                  ((york_velo[-3] - york_velo[-2]) +
-#                   (york_velo[2] - york_velo[1])) / 2)
-# while stage_diff > 10:
-#
 #
 
