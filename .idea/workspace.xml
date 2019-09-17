@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/models/linkages.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/packages.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/link_analysis.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mechanism/york_and_jaw.FCStd" beforeDir="false" afterPath="$PROJECT_DIR$/mechanism/york_and_jaw.FCStd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -53,7 +51,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.packages">
+  <component name="RunManager" selected="Python.link_analysis">
     <configuration name="Tetracamthon" type="PythonConfigurationType" factoryName="Python">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -120,20 +118,17 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="get-data-from-image" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="link_analysis" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/get-data-from-image.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/link_analysis.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -146,6 +141,9 @@
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -207,11 +205,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.link_analysis" />
         <item itemvalue="Python.packages" />
         <item itemvalue="Python.TrotBot Stationary" />
         <item itemvalue="Python.test_read_raw_data" />
         <item itemvalue="Python.read_raw_data" />
-        <item itemvalue="Python.get-data-from-image" />
       </list>
     </recent_temporary>
   </component>
