@@ -58,6 +58,25 @@ def annotate_max_min_part_curve(a, start=0, end=None, col='red', mark_size=50, p
                  arrowprops=dict(arrowstyle="->", connectionstyle="arc3,rad=.2"))
 
 
+def annotate_zero_point_on_curve(a, start=0, end=None, step=1, col='red', mark_size=50, position=(50, 50), font_size=12):
+    """Mark a scatter on the curve of an array at index with position coordinate.
+
+    :param a: array-like object
+    :param start, end: int indicating the place of certain item in the array
+    :param col: string of scatter color, better being the same with the curve of array
+    :param mark_size: int (of points?)
+    :param position: tuple of two ints or floats, relative to the scatter's place
+    :param font_size: int of the messages' size
+    :return: None, effecting the plt object
+    """
+    index = np.argmin(np.abs(a[start:end:step]))*(step) + start
+    plt.scatter([index, ], [a[index], ], mark_size, color=col)
+    plt.annotate("(" + str(index) + ', '+ str(round(a[index], 1)) + ")",
+                 xy=(index, a[index]), xycoords='data',
+                 xytext=position, textcoords='offset points', fontsize=font_size,
+                 arrowprops=dict(arrowstyle="->", connectionstyle="arc3,rad=.2"))
+
+
 # Create a figure of size 8x6 inches, 80 dots per inch
 fig = plt.figure(figsize=(15, 12), dpi=80)
 fig.suptitle('Tetra Pak A3 Flex @ 8000 p/h \n York and Jaw SVAJ curves @ 0.9s/cycle', fontsize='xx-large')
@@ -97,6 +116,10 @@ annotate_max_min_part_curve(right_jaw_acc, 270, 280, col="green", position=(-70,
 annotate_max_min_part_curve(right_jaw_acc, 300, 315, col="green", position=(-70,-30))
 annotate_max_min_part_curve(right_york_acc, 330, 340, col="blue", position=(-50,30))
 annotate_max_min_part_curve(right_jaw_acc, 330, 350, col="green", position=(-50,-30))
+annotate_zero_point_on_curve(right_york_acc, 130, 140, col="blue")
+annotate_zero_point_on_curve(right_jaw_acc, 130, 140, col="green")
+annotate_zero_point_on_curve(left_jaw_acc, 90, 80, step=-1, col="green")
+annotate_zero_point_on_curve(left_jaw_acc, 110, 120, col="green")
 # plt.legend(loc='upper right')
 plt.xlim(0.0, 360.0)
 plt.xticks(np.linspace(0, 360, 37, endpoint=True))
@@ -119,6 +142,7 @@ annotate_max_min_part_curve(right_york_velo, 160, 180, col="green", position=(-2
 annotate_max_min_part_curve(right_york_velo, 180, 280, col="green", position=(-10,-30))
 annotate_max_min_part_curve(right_york_velo, 280, 310, col="green", position=(10,15))
 annotate_max_min_part_curve(right_york_velo, 310, 320, col="green", position=(-50,-30))
+annotate_zero_point_on_curve(right_jaw_to_york_velo, 120, 140, col="red")
 
 # plt.legend(loc='upper right')
 plt.xlim(0.0, 360.0)
@@ -150,6 +174,7 @@ plt.xlim(0.0, 360.0)
 plt.xticks(np.linspace(0, 360, 37, endpoint=True))
 plt.ylim(-200, 500)
 plt.yticks(np.linspace(-200, 500, 8, endpoint=True))
+annotate_zero_point_on_curve(right_jaw_to_york_place, 110, 140, col="red")
 
 # Save figure using 720 dots per inch
 plt.savefig("Tetra Pak A3 flex Curves.png", dpi=720)
