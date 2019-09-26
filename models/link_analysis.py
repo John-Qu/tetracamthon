@@ -96,5 +96,4 @@ y_R_AO2_simple_velocity_touch = y_R_AO2_simple_velocity.subs([(v, 800), (r, 100.
 print(x_R_AO2_simple_velocity_touch.evalf())  #TODO: why negative sence?
 print(y_R_AO2_simple_velocity_touch.evalf())
 
-x_A02_of_y =
 
