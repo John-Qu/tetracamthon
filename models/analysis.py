@@ -310,8 +310,8 @@ class ANeedO4(JawOnYork):
         j3 = ANeedO4()
         print(j3.get_v_O4O2_of_x_V_AO2_expr())
         print(latex(j3.get_v_O4O2_of_x_V_AO2_expr()))
-        print(j3.get_v_O4O2_of_x_V_AO2_expr().subs([(j3.x_R_AO2, -29.47),(j3.x_V_AO2, -593.71)]))
-        # 800.000005067435
+        print(j3.get_v_O4O2_of_x_V_AO2_expr().subs([(j3.x_R_AO2, -29.47),(j3.x_V_AO2, 593.71)]))
+        # -800.000005067435
         """
         v_O4O2_of_x_R_AO2_expr = self.get_r_O4O2_of_x_R_AO2_expr().diff(x)
         v_O4O2_of_x_RV_AO2_expr = v_O4O2_of_x_R_AO2_expr.subs(
@@ -324,8 +324,9 @@ class ANeedO4(JawOnYork):
         j3 = ANeedO4()
         print(j3.get_v_O4O2_of_y_V_AO2_expr())
         print(latex(j3.get_v_O4O2_of_y_V_AO2_expr()))
-        print(j3.get_v_O4O2_of_y_V_AO2_expr().subs([(j3.y_R_AO2, 172.36),(j3.y_V_AO2, 105.16)]))
-        # 799.822346652580
+        print(j3.get_v_O4O2_of_y_V_AO2_expr().subs([(j3.y_R_AO2, 172.36),(j3.y_V_AO2, -105.16)]))
+        print(j3.get_v_O4O2_of_y_V_AO2_expr().subs([(j3.y_R_AO2, 172.36),(j3.y_V_AO2, -535)]))
+        # -799.822346652580
         """
         v_O4O2_of_y_R_AO2_expr = self.get_r_O4O2_of_y_R_AO2_expr().diff(x)
         v_O4O2_of_y_RV_AO2_expr = v_O4O2_of_y_R_AO2_expr.subs(
