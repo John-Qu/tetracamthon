@@ -17,7 +17,7 @@ class Coefficients(object):
     def __init__(self, id, order = 6):
         self.c = []
         self.m = order
-        for i in range(self.m, 0,-1):
+        for i in range(self.m, 0, -1):
             self.c.append(symbols('C_' + str(id) + str(i)))
 
     def __str__(self):
