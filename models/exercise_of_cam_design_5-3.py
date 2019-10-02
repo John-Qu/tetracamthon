@@ -38,7 +38,6 @@ class BsplineCoefficients(object):
 
 order = 6
 degree = order - 1
-piecewise_polynomials = []
 knots = np.array(
     [0, 0, 0, 0, 0, 0, pi / 4, pi / 2, 3 * pi / 4, pi, pi, pi, pi, pi, pi])
 positions = np.array([0, 0, 0, 0, 0, 0, 0.45, 1, 0.45, 0, 0, 0, 0, 0, 0])
@@ -91,9 +90,17 @@ p1 = plot(s_expr, (x, 0, pi),
 #     p1.extend(b)
 
 p1.show()
-b = plot(bs[0], bs[1], bs[2], bs[3], bs[4], bs[5], bs[6], bs[7], bs[8], (x, 0, pi))
+b = plot(bs[0], bs[1], bs[2], bs[3], bs[4],
+         bs[5], bs[6], bs[7], bs[8],
+         (x, 0, pi),
+         title='B-splines of order 6' + '\n with knots:' + str(knots),
+         ylabel='',
+         xlabel='radial')
 b4knots = np.array([0, 0, pi / 4, pi / 2, 3 * pi / 4, pi, pi])
 b4 = bspline_basis(degree, b4knots, 0, x)
 print(latex(bs[3]))
 print(latex(b4))
 plot(b4, (x, 0, pi))
+
+
+from scipy.interpolate import BSpline
