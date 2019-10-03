@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/models/bsplines.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/logs/bsplines_diff.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/bsplines.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/bsplines.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/ex5-3.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/ex5-3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/ex5-4.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/ex5-4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/for_debug.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/for_debug.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -102,9 +107,6 @@
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -124,9 +126,6 @@
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -168,9 +167,6 @@
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -190,9 +186,6 @@
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -212,8 +205,8 @@
       <list>
         <item itemvalue="Python.ex5-3" />
         <item itemvalue="Python.for_debug" />
-        <item itemvalue="Python.exercise_of_cam_design_5-3" />
         <item itemvalue="Python.ex5-4" />
+        <item itemvalue="Python.exercise_of_cam_design_5-3" />
         <item itemvalue="Python.exercise_of_cam_design_5-2" />
       </list>
     </recent_temporary>

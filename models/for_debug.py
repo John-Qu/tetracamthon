@@ -12,11 +12,10 @@ import numpy as np
 # print(latex(b4))
 # plot(b4, (x, 0, 180))
 
-knots = np.array(
-    [0, 0, 1, 2, 2])
+knots = tuple([0, 0, 0, 1, 1, 2, 2, 2])
 order = len(knots) - 1
 degree = order - 1
-bs = bspline_basis(degree, knots, 0, x)
+bs = bspline_basis_set(degree, knots, x)
 print(latex(bs))
-plot(bs, (x, 0, knots[-1]),
+plot(bs[0], (x, 0, knots[-1]),
      title="B-spline of order "+str(order)+"\nwith knots: "+str(knots))

@@ -1,6 +1,6 @@
 # EXAMPLE 5-4 Using a B-Spline for a constant velocity Cam.
 
-from sympy import *
+from sympy import pi
 from sympy.abc import x
 import numpy as np
 from scipy.interpolate import BSpline
