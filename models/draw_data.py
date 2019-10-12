@@ -31,6 +31,8 @@ right_jaw_to_york_velo = right_jaw_velo - right_york_velo
 right_jaw_to_york_place = right_jaw_place - right_york_place
 left_jaw_to_york_velo = left_jaw_velo - left_york_velo
 left_jaw_to_york_place = left_jaw_place - left_york_place
+right_jaw_to_york_acc = right_jaw_acc - right_york_acc
+left_jaw_to_york_acc = left_jaw_acc - left_york_acc
 
 
 def annotate_max_min_part_curve(a, start=0, end=None, col='red', mark_size=50, position=(50, 50), font_size=12):
@@ -102,6 +104,8 @@ plt.plot(d, left_york_acc, color="blue", linewidth=1.0, linestyle="--", label="l
 # Plot jaw acceleration with a green continuous line of width 1 (pixels)
 plt.plot(d, right_jaw_acc, color="green", linewidth=3.0, linestyle="-", label="right jaw")
 plt.plot(d, left_jaw_acc, color="green", linewidth=1.0, linestyle="--", label="left jaw")
+plt.plot(d, right_jaw_to_york_acc, color="red", linewidth=3.0, linestyle="-", label="right jaw to york")
+plt.plot(d, left_jaw_to_york_acc, color="red", linewidth=1.0, linestyle="--", label="left jaw")
 annotate_max_min_part_curve(right_york_acc, 0, 20, col="blue", position=(-20,-40))
 annotate_max_min_part_curve(right_jaw_acc, 10, 30, col="green", position=(40,-30))
 annotate_max_min_part_curve(right_york_acc, 60, 80, col="blue", position=(-70,-20))

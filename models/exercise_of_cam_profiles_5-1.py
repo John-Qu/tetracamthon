@@ -1,8 +1,8 @@
 # EXAMPLE 5-1 Using a Classical Spline for a Single-Dwell Cam.
-
 from sympy import *
 from sympy.abc import x
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def degree_to_radial(degree):
@@ -24,11 +24,9 @@ class Coefficients(object):
         return str(self.c)
 
 
-# theta = symbols('theta')
 order = 6
 degree = order - 1
 piecewise_polynomials = []
-# knots = np.array([0, 45, 90, 135, 180])
 knots = np.array([0, pi/4, pi/2, 3*pi/4, pi])
 # By tweaking a couple of knots, we have more control of the max jerk values.
 # positions = np.array([0, 0.5, 1, 0.5, 0])
@@ -58,14 +56,6 @@ for i in range(1, len(knots)):
     jerk.append(jerk_i)
     ping.append(ping_i)
 
-
-# for trying
-# eq = Eq(x**3 + 9*x, 6*x**2)
-# c1 = Coefficients(0, order=2)
-# system = [c1.c[0]**2 - 2*c1.c[1]**2 -2, c1.c[0]*c1.c[1] - 2]
-# vars = c1.c
-# nonlinsolve(system, vars)
-
 pf, vf, af, jerkf, pingf = [], [], [], [], []
 for i in range(len(knots) - 1):
     pf.append(lambdify(x, p[i]))
@@ -78,12 +68,6 @@ equations = []
 # interpolation equations 5.4, num = number of interior knots = 3
 for i in range(1, len(knots)-1):
     equations.append(Eq(pf[i](knots[i]).evalf(), positions[i]))
-
-#
-#     for j in range(len(knots)-1):
-#         equations.append(Eq(pf[j](knots[i]), positions[i]))
-# Eq(i)
-
 # smoothness equations 5.5 5.6 num = 5 * (number of interior knots) = 15
 for i in range(1, len(knots)-1):
     equations.append(Eq(pf[i-1](knots[i]).evalf(), pf[i](knots[i]).evalf()))
@@ -91,7 +75,6 @@ for i in range(1, len(knots)-1):
     equations.append(Eq(af[i-1](knots[i]).evalf(), af[i](knots[i]).evalf()))
     equations.append(Eq(jerkf[i-1](knots[i]).evalf(), jerkf[i](knots[i]).evalf()))
     equations.append(Eq(pingf[i-1](knots[i]).evalf(), pingf[i](knots[i]).evalf()))
-
 # boundary conditions 5.7, num = 3 * (num of start and end) = 6
 equations.append(Eq(pf[0](knots[0]).evalf(), positions[0]))
 equations.append(Eq(vf[0](knots[0]).evalf(), velocities[0]))
@@ -106,14 +89,16 @@ d_expr = []
 for i in range(len(knots)-1):
     d_expr.append(p[i].subs([(c[i].c[j], round(solutions[c[i].c[j]], 4)) for j in range(order)]))
 
-p_of_x = Piecewise((0, x < knots[0]),
-                       (d_expr[0], x <= knots[1]),
-                       (d_expr[1], x <= knots[2]),
-                       (d_expr[2], x <= knots[3]),
-                       (d_expr[3], x <= knots[4]),
-                       (0, True))
+for i in range(len(knots)-1):
+    print(latex([str(c[i].c[j]) + str(round(solutions[c[i].c[j]], 4)) for j in range(order)]))
 
-import matplotlib.pyplot as plt
+p_of_x = Piecewise((0, x < knots[0]),
+                   (d_expr[0], x <= knots[1]),
+                   (d_expr[1], x <= knots[2]),
+                   (d_expr[2], x <= knots[3]),
+                   (d_expr[3], x <= knots[4]),
+                   (0, True))
+
 
 def move_sympyplot_to_axes(p, ax):
     backend = p.backend(p)
@@ -149,6 +134,5 @@ move_sympyplot_to_axes(p1, ax1)
 move_sympyplot_to_axes(p2, ax2)
 move_sympyplot_to_axes(p3, ax3)
 move_sympyplot_to_axes(p4, ax4)
-
 plt.show()
 

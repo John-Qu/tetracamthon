@@ -7,12 +7,12 @@ init_printing(use_unicode=True)
 class JawOnYork(object):
     def __init__(self, r_BC_value=100, r_BO4_value=155, r_CO2_value=60,
                  r_AD_value=60, r_DC_value=164.44,
-                 orient_R_O4O2_value = 3 / 2 * pi, orient_R_CO2_value = pi):
+                 orient_R_O4O2_value=3 / 2 * pi, orient_R_CO2_value=pi):
         """
         -r_O4O2 + 155*sqrt(1 - (100*cos(theta) - 60)**2/24025) - 100*sin(theta)
         """
         self.r_O4O2, self.r_BO4, self.r_BC, self.r_CO2 = symbols(
-            "r_O4O2, r_BO4, r_BC, r_CO2" )
+            "r_O4O2, r_BO4, r_BC, r_CO2")
         self.r_AD, self.r_DC = symbols("r_AD, r_DC")
         self.x_R_AO2, self.y_R_AO2 = symbols("x_R_AO2, y_R_AO2")
         self.alpha, self.theta = symbols('alpha, theta')
@@ -40,12 +40,13 @@ class JawOnYork(object):
                          self.r_BO4 * cos(self.alpha) - \
                          self.r_BC * cos(self.theta) - \
                          self.r_CO2 * cos(self.orient_R_CO2)
-        expr_y_eq_zero = self.r_O4O2 * sin(self.orient_R_O4O2) + \
-                         self.r_BO4 * sin(self.alpha) - \
-                         self.r_BC * sin(self.theta) - \
-                         self.r_CO2 * sin(self.orient_R_CO2)
-        alpha_expr = solve(expr_x_eq_zero, self.alpha)[1]  # The second root counts.
-        expr_y_eq_zero_without_alpha = expr_y_eq_zero.subs(self.alpha, alpha_expr)
+        expr_y_eq_zero = self.r_O4O2 * sin(self.orient_R_O4O2) \
+                         + self.r_BO4 * sin(self.alpha) \
+                         - self.r_BC * sin(self.theta) \
+                         - self.r_CO2 * sin(self.orient_R_CO2)
+        alpha_expr = solve(expr_x_eq_zero, self.alpha)[1]  # second counts.
+        expr_y_eq_zero_without_alpha = expr_y_eq_zero.subs(self.alpha,
+                                                           alpha_expr)
         equation_of_r_O4O2_and_theta = \
             expr_y_eq_zero_without_alpha.subs([
                 (self.r_BC, self.r_BC_value),
@@ -89,7 +90,9 @@ class JawOnYork(object):
 
     def get_equation_of_x_R_AO2_and_y_R_AO2(self):
         equation = \
-            (self.x_R_AO2 + self.r_CO2)**2 + self.y_R_AO2**2 - self.r_AC**2
+            (self.x_R_AO2 + self.r_CO2) ** 2 \
+            + self.y_R_AO2 ** 2 \
+            - self.r_AC ** 2
         equation_simple = equation.subs([
             (self.r_AD, self.r_AD_value),
             (self.r_DC, self.r_DC_value),
@@ -122,10 +125,12 @@ class JawOnYork(object):
     def __str__(self):
         class_name = "A JawOnYork Class Object: \n"
         linkage_dim = str(self.r_BC) + ' = ' + str(self.r_BC_value) + ';\n' + \
-            str(self.r_BO4) + ' = ' + str(self.r_BO4_value) + ';\n' + \
-            str(self.r_CO2) + ' = ' + str(self.r_CO2_value) + ';\n' + \
-            str(self.orient_R_O4O2) + ' = ' + str(self.orient_R_O4O2_value) + ';\n' + \
-            str(self.orient_R_CO2) + ' = ' + str(self.orient_R_CO2_value) + '.'
+                      str(self.r_BO4) + ' = ' + str(self.r_BO4_value) + ';\n' + \
+                      str(self.r_CO2) + ' = ' + str(self.r_CO2_value) + ';\n' + \
+                      str(self.orient_R_O4O2) + ' = ' + str(
+            self.orient_R_O4O2_value) + ';\n' + \
+                      str(self.orient_R_CO2) + ' = ' + str(
+            self.orient_R_CO2_value) + '.'
         return class_name + linkage_dim
 
 
@@ -137,10 +142,10 @@ class O4DriveA(JawOnYork):
 
     def __str__(self):
         about_theta = "theta = f(r_O4O2) = \n" + "\t" + \
-                      latex(self.get_theta_expr_simple())
+                      latex(self.get_theta_of_r_O4O2_expr())
         return about_theta
 
-    def get_theta_of_r_O4O2_expr(self, simple=True):
+    def get_theta_of_r_O4O2_expr(self):
         """
         j2 = O4DriveA()
         theta_expr = j2.get_theta_of_r_O4O2_expr()
@@ -158,23 +163,32 @@ class O4DriveA(JawOnYork):
         #     (self.r_CO2, self.r_CO2_value)])
         return theta_of_r_O4O2_expr
 
-    def get_x_R_AO2_of_theta_expr(self, simple=True):
+    def get_x_R_AO2_of_theta_expr(self):
         """
         j2 = O4DriveA()
         R_AO2_x = j2.get_x_R_AO2_of_theta_expr()
         print(R_AO2_x)
         """
         x_R_AO2_of_theta_expr = solve(self.get_equation_of_x_R_AO2_and_theta(),
-                                       self.x_R_AO2)[0]
+                                      self.x_R_AO2)[0]
         return x_R_AO2_of_theta_expr
 
-    def get_x_R_AO2_of_r_O4O2_expr(self, simple=True):
+    def get_x_R_AO2_of_r_O4O2_expr(self):
+        """
+        j2 = O4DriveA()
+        R_AO2_x = j2.get_x_R_AO2_of_r_O4O2_expr()
+        print(j2.get_x_R_AO2_of_theta_expr())
+        print(j2.get_theta_of_r_O4O2_expr())
+        print(j2.theta)
+        print(R_AO2_x)
+        print(j2.get_x_R_AO2_of_theta_expr().subs([(j2.theta, j2.get_theta_of_r_O4O2_expr())]))
+        # 175.044318959514*cos(2.0*atan((200.0*r_O4O2 + sqrt(-r_O4O2**4 + 60850.0*r_O4O2**2 + 35319375.0))/(r_O4O2**2 + 1575.0)) + 2.26972648191758) - 60.0
+        """
         x_R_AO2_of_r_O4O2_expr = self.get_x_R_AO2_of_theta_expr().subs(
-             (self.theta, self.get_theta_of_r_O4O2_expr()),
-        )
+            [(self.theta, self.get_theta_of_r_O4O2_expr())])
         return x_R_AO2_of_r_O4O2_expr
 
-    def get_y_R_AO2_of_theta_expr(self, simple=True):
+    def get_y_R_AO2_of_theta_expr(self):
         """
         j2 = O4DriveA()
         R_AO2_y = j2.get_y_R_AO2_of_theta_expr()
@@ -185,7 +199,7 @@ class O4DriveA(JawOnYork):
                                       self.y_R_AO2)[0]
         return y_R_AO2_of_theta_expr
 
-    def get_y_R_AO2_of_r_O4O2_expr(self, simple=True):
+    def get_y_R_AO2_of_r_O4O2_expr(self):
         y_R_AO2_of_r_O4O2_expr = self.get_y_R_AO2_of_theta_expr().subs(
             (self.theta, self.get_theta_of_r_O4O2_expr()),
         )
@@ -194,12 +208,13 @@ class O4DriveA(JawOnYork):
     def get_x_V_AO2_of_vr_O4O2(self):
         """
         j2 = O4DriveA()
-        x_V_AO2_when_touch = j1.get_x_V_AO2_of_vr_O4O2().subs([(j1.v, 800), (j1.r, 100.33)]).evalf()
-        print(round(x_V_AO2_when_touch, 2))  # TODO: why negative sence?
-        # -593.71
+        x_V_AO2_when_touch = j2.get_x_V_AO2_of_vr_O4O2().subs([(j2.v, 966.6038206895039), (j2.r, 93.14763942596754)]).evalf()
+        print(round(x_V_AO2_when_touch, 4))  # TODO: why negative sence?
+        print(j2.get_x_V_AO2_of_vr_O4O2())
+        # -686.7686
         """
         x_V_AO2 = self.get_x_R_AO2_of_r_O4O2_expr().subs(
-            self.r_O4O2, self.r).diff(x)
+            [(self.r_O4O2, self.r)]).diff(x)
         x_V_AO2_of_v_r = x_V_AO2.subs(Derivative(self.r, x), self.v)
         return x_V_AO2_of_v_r
 
@@ -287,6 +302,14 @@ class ANeedO4(JawOnYork):
         print(j3.get_r_O4O2_of_x_R_AO2_expr())
         print(j3.get_r_O4O2_of_x_R_AO2_expr().subs(j3.x_R_AO2, 0))
         # 52.0476394259659
+        print(j3.get_r_O4O2_of_x_R_AO2_expr().subs(j3.x_R_AO2, -100))
+        # 178.451666336814
+        178.451666336814-52.0476394259659
+        # 126.40402691084809
+        print(j3.get_r_O4O2_of_x_R_AO2_expr().subs(j3.x_R_AO2, -24.25))
+        # 93.1457274726962
+        93.1457274726962-52.0476394259659
+        # 41.0980880467303
         """
         r_O4O2_of_x_R_AO2_expr = self.get_r_O4O2_of_theta_expr().subs(
             self.theta, self.get_theta_of_x_R_AO2_expr()
