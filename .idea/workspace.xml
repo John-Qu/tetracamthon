@@ -2,21 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/models/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/cam_splines.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/s_of_jaw_to_york.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/svaj_of_jaw_to_york.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/svaj_of_jaw_to_york_2019-10-11_094901.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/test_cam_splines.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/test_knots.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/jaw_on_york.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/Tetra Pak A3 flex Curves.png" beforeDir="false" afterPath="$PROJECT_DIR$/models/Tetra Pak A3 flex Curves.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/analysis.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/draw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/draw_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/ex5-4.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/ex5-4.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/exercise_of_cam_profiles_5-1.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/exercise_of_cam_profiles_5-1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/for_debug.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/for_debug.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/packages.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/packages.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -67,7 +54,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.analysis">
+  <component name="RunManager" selected="Python.jaw_on_york">
     <configuration name="Tetracamthon" type="PythonConfigurationType" factoryName="Python">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -175,20 +162,17 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="for_debug" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="jaw_on_york" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/for_debug.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/jaw_on_york.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -221,11 +205,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.jaw_on_york" />
         <item itemvalue="Python.analysis" />
         <item itemvalue="Python.cam_splines" />
         <item itemvalue="Python.packages" />
         <item itemvalue="Python.draw_data" />
-        <item itemvalue="Python.for_debug" />
       </list>
     </recent_temporary>
   </component>
