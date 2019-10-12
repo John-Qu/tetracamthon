@@ -57,7 +57,7 @@ class ClassicalSplines(object):
             self.co.append(Coefficients(i))
             p_i = self.co[-1].c[-1]
             self.var.append(self.co[-1].c[0])
-            for j in range(degree):
+            for j in range(self.degree):
                 p_i += self.co[-1].c[j] \
                        * (y - self.knots[i - 1]) ** (self.degree - j)
                 self.var.append(self.co[-1].c[j + 1])
@@ -110,7 +110,7 @@ class ClassicalSplines(object):
             for i in range(len(self.knots) - 1):
                 self.solved_expr[k].append(self.exprs[k][i].subs(
                     [(self.co[i].c[j], solutions[self.co[i].c[j]]) for j in
-                     range(order)]))
+                     range(self.order)]))
         if latex_print_out:
             for i in range(len(self.knots) - 1):
                 print(latex(self.solved_expr[i]))
@@ -122,7 +122,7 @@ class ClassicalSplines(object):
         exprs_of_y = self.get_solved_expressions()
         for k in range(len(exprs_of_y)):
             self.exprs_of_x[k] += [exprs_of_y[k][i].subs(y, x + delta1)
-                                   for i in range(len(knots) - 1)]
+                                   for i in range(len(self.knots) - 1)]
             self.exprs_of_x[k].append(exprs_of_y[k][0].subs(y, x - delta2))
 
     def get_exprs_of_x(self):
@@ -206,7 +206,7 @@ class ClassicalSplines(object):
         plt.savefig("svaj_of_jaw_on_york.png", dpi=720)
 
 
-if __name__ == "__main__":
+def build_jaw_on_york_curves(if_print=False, if_plot=False):
     order = 6
     degree = order - 1
     knots = degree_to_time(np.array([0, 73, 120, 168]))
@@ -219,37 +219,21 @@ if __name__ == "__main__":
     cp.build_boundary_conditions(bc_depth=3)
     cp.build_interpolation_conditions({1: [0, 1], 2: [0]})
     # cp.build_smoothness_conditions({1:2, 2:1})
-    cp.build_smoothness_conditions({1:1})
+    cp.build_smoothness_conditions({1: 1})
     solutions = solve(cp.equations, cp.var)
     cp.build_expressions(solutions, latex_print_out=False)
-    exprs_of_y = cp.get_solved_expressions()
     delta1 = degree_to_time(30)
     delta2 = degree_to_time(330)
     cp.shift_curve(delta1, delta2)
     cp.make_piecewise_curve()
     curves = cp.get_piecewise_of_x()
-    for i in range(len(curves)):
-        print(latex(curves[i]))
-    cp.plot_numerical(num=360)
-    # p1 = plot(curves[0], (x, knots[0], degree_to_time(360)),
-    #           title="Displacement",
-    #           ylabel="(mm)",
-    #           show=False)
-    # p2 = plot(curves[1], (x, knots[0], degree_to_time(360)),
-    #           title="Velocity",
-    #           ylabel="(mm/sec)",
-    #           show=False)
-    # p3 = plot(curves[2], (x, knots[0], degree_to_time(360)),
-    #           title="Acceleration",
-    #           ylabel="(mm/sec^2)",
-    #           show=False)
-    # p4 = plot(curves[3], (x, knots[0], degree_to_time(360)),
-    #           title="Jerk",
-    #           ylabel="(mm/sec^3)",
-    #           show=False)
-    # fig, (ax1, ax2, ax3, ax4) = plt.subplots(nrows=4)
-    # move_sympyplot_to_axes(p1, ax1)
-    # move_sympyplot_to_axes(p2, ax2)
-    # move_sympyplot_to_axes(p3, ax3)
-    # move_sympyplot_to_axes(p4, ax4)
-    # plt.show()
+    if if_print:
+        for i in range(len(curves)):
+            print(latex(curves[i]))
+    if if_plot:
+        cp.plot_numerical(num=360)
+    return cp
+
+if __name__ == "__main__":
+    build_jaw_on_york_curves(if_print=True, if_plot=True)
+
