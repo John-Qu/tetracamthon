@@ -3,26 +3,28 @@ from sympy import symbols, nan, diff, lambdify, Eq, solve, latex, \
 from sympy.abc import x, y
 import numpy as np
 import matplotlib.pyplot as plt
+from helper_functions import degree_to_time, time_to_degree, \
+    move_sympyplot_to_axes
 
 
-def degree_to_time(degree, cycle_time=0.9):
-    degree_to_time_ratio = cycle_time / 360.0
-    return np.array(degree) * degree_to_time_ratio
-
-
-def time_to_degree(time, cycle_time=0.9):
-    time_to_degree_ratio = 360.0 / cycle_time
-    return np.array(time) * time_to_degree_ratio
-
-
-def move_sympyplot_to_axes(p, ax):
-    backend = p.backend(p)
-    backend.ax = ax
-    backend.process_series()
-    backend.ax.spines['right'].set_color('none')
-    backend.ax.spines['bottom'].set_position('zero')
-    backend.ax.spines['top'].set_color('none')
-    plt.close(backend.fig)
+# def degree_to_time(degree, cycle_time=0.9):
+#     degree_to_time_ratio = cycle_time / 360.0
+#     return np.array(degree) * degree_to_time_ratio
+#
+#
+# def time_to_degree(time, cycle_time=0.9):
+#     time_to_degree_ratio = 360.0 / cycle_time
+#     return np.array(time) * time_to_degree_ratio
+#
+#
+# def move_sympyplot_to_axes(p, ax):
+#     backend = p.backend(p)
+#     backend.ax = ax
+#     backend.process_series()
+#     backend.ax.spines['right'].set_color('none')
+#     backend.ax.spines['bottom'].set_position('zero')
+#     backend.ax.spines['top'].set_color('none')
+#     plt.close(backend.fig)
 
 
 class Coefficients(object):
@@ -100,7 +102,7 @@ class ClassicalSplines(object):
         """
         f = self.funcs
         for i in range(1, len(self.knots) - 1):
-            for j in range(5 if i not in loose_knots else 5-loose_knots[i]):
+            for j in range(5 if i not in loose_knots else 5 - loose_knots[i]):
                 self.equations.append(
                     Eq(f[j][i - 1](self.knots[i]).evalf(),
                        f[j][i](self.knots[i]).evalf()))
@@ -165,7 +167,7 @@ class ClassicalSplines(object):
         jerk = self.get_functional_jerk()(t)
         fig = plt.figure(figsize=(15, 12), dpi=80)
         fig.suptitle('SVAJ curves of Jaw on York, with knots on \n' +
-                     str(time_to_degree(self.knots)-30),
+                     str(time_to_degree(self.knots) - 30),
                      fontsize='xx-large')
         plt.subplot(4, 1, 1)
         plt.grid()
@@ -188,7 +190,7 @@ class ClassicalSplines(object):
         plt.subplot(4, 1, 3)
         plt.grid()
         plt.ylabel("Acceleration (m/s^3)")
-        plt.plot(degree, acceleration/1000,
+        plt.plot(degree, acceleration / 1000,
                  color="blue", linewidth=3.0, linestyle="-")
         plt.xlim(0.0, 360.0)
         plt.xticks(np.linspace(0, 360, 37, endpoint=True))
@@ -197,7 +199,7 @@ class ClassicalSplines(object):
         plt.subplot(4, 1, 4)
         plt.grid()
         plt.ylabel("Jerk (m/s^4)")
-        plt.plot(degree, jerk/1000,
+        plt.plot(degree, jerk / 1000,
                  color="blue", linewidth=3.0, linestyle="-")
         plt.xlim(0.0, 360.0)
         plt.xticks(np.linspace(0, 360, 37, endpoint=True))
@@ -234,6 +236,6 @@ def build_jaw_on_york_curves(if_print=False, if_plot=False):
         cp.plot_numerical(num=360)
     return cp
 
+
 if __name__ == "__main__":
     build_jaw_on_york_curves(if_print=True, if_plot=True)
-
