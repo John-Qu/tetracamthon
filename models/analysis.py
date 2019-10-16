@@ -183,6 +183,8 @@ class O4DriveA(JawOnYork):
         print(R_AO2_x)
         print(j2.get_x_R_AO2_of_theta_expr().subs([(j2.theta, j2.get_theta_of_r_O4O2_expr())]))
         # 175.044318959514*cos(2.0*atan((200.0*r_O4O2 + sqrt(-r_O4O2**4 + 60850.0*r_O4O2**2 + 35319375.0))/(r_O4O2**2 + 1575.0)) + 2.26972648191758) - 60.0
+        print(j2.get_x_R_AO2_of_r_O4O2_expr().subs([(j2.r_O4O2, 52.0476394259645)]).evalf())
+        # 5.04485342389671e-13
         """
         x_R_AO2_of_r_O4O2_expr = self.get_x_R_AO2_of_theta_expr().subs(
             [(self.theta, self.get_theta_of_r_O4O2_expr())])
@@ -201,8 +203,7 @@ class O4DriveA(JawOnYork):
 
     def get_y_R_AO2_of_r_O4O2_expr(self):
         y_R_AO2_of_r_O4O2_expr = self.get_y_R_AO2_of_theta_expr().subs(
-            (self.theta, self.get_theta_of_r_O4O2_expr()),
-        )
+            [(self.theta, self.get_theta_of_r_O4O2_expr())])
         return y_R_AO2_of_r_O4O2_expr
 
     def get_x_V_AO2_of_vr_O4O2(self):
@@ -356,6 +357,11 @@ class ANeedO4(JawOnYork):
             Derivative(self.y_R_AO2, x), self.y_V_AO2
         )
         return v_O4O2_of_y_RV_AO2_expr
+
+
+class FoldingFlap(object):
+    def __init__(self):
+        self.r_AO1 = 20
 
 
 if __name__ == '__main__':

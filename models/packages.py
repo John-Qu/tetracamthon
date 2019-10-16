@@ -1,5 +1,6 @@
 import math
 
+
 class Package(object):
     """Define various package types.
     p250sq = Package(250, 'Square', 43, 41.5, 126.8, 5, 185)
@@ -22,6 +23,7 @@ class Package(object):
     Tube diameter: 53.79
     Horizental Sealing: 16
     """
+
     def __init__(self, volumn, shape, width, depth, height,
                  ls_overlap, web_repeated_length):
         self.volumn = volumn
@@ -32,10 +34,11 @@ class Package(object):
         self.ls_overlap = ls_overlap
         self.web_repeated_length = web_repeated_length
         self.web_width = 2 * (self.width + self.depth) + self.ls_overlap
-        self.hs_sealing = math.floor(self.web_repeated_length -
-                                     (self.height + self.depth))
-        self.tube_diameter = round((self.web_width-self.ls_overlap)/math.pi, 2)
-
+        self.hs_sealing_length = math.floor(self.web_repeated_length -
+                                            (self.height + self.depth))
+        self.hs_sealing_width = (self.web_width - self.ls_overlap) / 2
+        self.tube_diameter = round(
+            (self.web_width - self.ls_overlap) / math.pi, 2)
 
     def __str__(self):
         return ("Package of " + str(self.volumn) +
@@ -44,7 +47,9 @@ class Package(object):
                 "Depth: " + str(self.depth) + "\n" +
                 "Height: " + str(self.height) + "\n" +
                 "Tube diameter: " + str(self.tube_diameter) + "\n" +
-                "Horizental Sealing: " + str(self.hs_sealing) )
+                "Horizental Sealing length and width: " +
+                str(self.hs_sealing_length) + ' and ' +
+                str(self.hs_sealing_width))
 
     def get_pulling_velocity(self, cycle_time=0.9):
         return self.web_repeated_length / cycle_time * 2
@@ -55,4 +60,3 @@ class Package(object):
 
 if __name__ == "__main__":
     pass
-

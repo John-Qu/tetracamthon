@@ -7,26 +7,6 @@ from helper_functions import degree_to_time, time_to_degree, \
     move_sympyplot_to_axes
 
 
-# def degree_to_time(degree, cycle_time=0.9):
-#     degree_to_time_ratio = cycle_time / 360.0
-#     return np.array(degree) * degree_to_time_ratio
-#
-#
-# def time_to_degree(time, cycle_time=0.9):
-#     time_to_degree_ratio = 360.0 / cycle_time
-#     return np.array(time) * time_to_degree_ratio
-#
-#
-# def move_sympyplot_to_axes(p, ax):
-#     backend = p.backend(p)
-#     backend.ax = ax
-#     backend.process_series()
-#     backend.ax.spines['right'].set_color('none')
-#     backend.ax.spines['bottom'].set_position('zero')
-#     backend.ax.spines['top'].set_color('none')
-#     plt.close(backend.fig)
-
-
 class Coefficients(object):
     def __init__(self, piece_id, order=6):
         self.c = []
@@ -49,20 +29,22 @@ class ClassicalSplines(object):
         self.order = order
         self.degree = self.order - 1
         self.exprs = [self.pe, self.ve, self.ae, self.je, self.pie]
-        self.funcs = [self.pf, self.vf, self.af, self.jf, self.pif]
+        # self.funcs = [self.pf, self.vf, self.af, self.jf, self.pif]
+        self.funcs = [[] for i in range(self.order)]
         self.solved_expr = [self.p, self.v, self.a, self.j, self.pi]
         self.equations = []
         self.pvaj = pvaj
-        self.exprs_of_x = [[], [], [], [], []]
+        self.exprs_of_x = [[] for i in range(self.degree)]
         self.piecewise_of_x = []
-        for i in range(1, len(self.knots)):
-            self.co.append(Coefficients(i))
+        for index_of_piece in range(0, len(self.knots)-1):
+            self.co.append(Coefficients(index_of_piece, order=self.order))
             p_i = self.co[-1].c[-1]
             self.var.append(self.co[-1].c[0])
-            for j in range(self.degree):
-                p_i += self.co[-1].c[j] \
-                       * (y - self.knots[i - 1]) ** (self.degree - j)
-                self.var.append(self.co[-1].c[j + 1])
+            for index_of_depth in range(self.degree):
+                p_i += self.co[-1].c[index_of_depth] \
+                       * (y - self.knots[index_of_piece - 1]) ** \
+                       (self.degree - index_of_depth)
+                self.var.append(self.co[-1].c[index_of_depth + 1])
             v_i = diff(p_i, y)
             a_i = diff(v_i, y)
             jerk_i = diff(a_i, y)
@@ -72,9 +54,10 @@ class ClassicalSplines(object):
             self.ae.append(a_i)
             self.je.append(jerk_i)
             self.pie.append(ping_i)
-        for i in range(len(self.knots) - 1):
-            for j in range(len(self.exprs)):
-                self.funcs[j].append(lambdify(y, self.exprs[j][i]))
+        for index_of_piece in range(len(self.knots) - 1):
+            for index_of_depth in range(len(self.exprs)):
+                self.funcs[index_of_depth].append(
+                    lambdify(y, self.exprs[index_of_depth][index_of_piece]))
 
     def build_boundary_conditions(self, bc_depth):
         f = self.funcs
@@ -102,13 +85,19 @@ class ClassicalSplines(object):
         """
         f = self.funcs
         for i in range(1, len(self.knots) - 1):
-            for j in range(5 if i not in loose_knots else 5 - loose_knots[i]):
+            for j in range(self.degree if i not in loose_knots else self.degree - loose_knots[i]):
                 self.equations.append(
                     Eq(f[j][i - 1](self.knots[i]).evalf(),
                        f[j][i](self.knots[i]).evalf()))
 
+    def build_not_at_knot_conditions(self, index_of_piece,
+                                     control_point, index_of_depth, value):
+        f = self.funcs
+        self.equations.append(Eq(f[index_of_depth][index_of_piece]
+                                     (control_point).evalf(), value))
+
     def build_expressions(self, solutions, latex_print_out=False):
-        for k in range(5):
+        for k in range(self.degree):
             for i in range(len(self.knots) - 1):
                 self.solved_expr[k].append(self.exprs[k][i].subs(
                     [(self.co[i].c[j], solutions[self.co[i].c[j]]) for j in
@@ -136,11 +125,23 @@ class ClassicalSplines(object):
             self.piecewise_of_x.append(Piecewise(
                 (0, x < 0),
                 (exprs_of_x[k][0], x <= degree_to_time(43)),
-                (exprs_of_x[k][1], x <= degree_to_time(90)),
+                (exprs_of_x[k][1], x <= degree_to_time(82)),
                 (exprs_of_x[k][2], x <= degree_to_time(138)),
                 (0, x <= degree_to_time(330)),
                 (exprs_of_x[k][3], x <= degree_to_time(360)),
                 (0, True)))
+
+    def make_piecewise_curve2(self):
+        exprs_of_x = self.get_exprs_of_x()
+        for k in range(5):
+            self.piecewise_of_x.append(Piecewise(
+                (0, x < 0),
+                (exprs_of_x[k][0], x <= degree_to_time(43)),
+                (exprs_of_x[k][1], x <= degree_to_time(138)),
+                (0, x <= degree_to_time(330)),
+                (exprs_of_x[k][2], x <= degree_to_time(360)),
+                (0, True)))
+
 
     def get_piecewise_of_x(self):
         return self.piecewise_of_x
@@ -211,7 +212,7 @@ class ClassicalSplines(object):
 def build_jaw_on_york_curves(if_print=False, if_plot=False):
     order = 6
     degree = order - 1
-    knots = degree_to_time(np.array([0, 73, 120, 168]))
+    knots = degree_to_time(np.array([0, 73, 112, 168]))
     positions = np.array([0, -131, -41.1, 0])
     velocities = np.array([0, 0, nan, 0])
     accelerations = np.array([0, nan, nan, 0])
@@ -233,9 +234,38 @@ def build_jaw_on_york_curves(if_print=False, if_plot=False):
         for i in range(len(curves)):
             print(latex(curves[i]))
     if if_plot:
-        cp.plot_numerical(num=360)
+        cp.plot_numerical(num=3600)
     return cp
 
+def build_jaw_on_york_curves2(if_print=False, if_plot=False):
+    order = 6
+    degree = order - 1
+    knots = degree_to_time(np.array([0, 73, 168]))
+    positions = np.array([0, -131, 0])
+    velocities = np.array([0, 0, 0])
+    accelerations = np.array([0, nan, 0])
+    jerks = np.array([0, 0, 0])
+    pvaj = [positions, velocities, accelerations, jerks]
+    cp = ClassicalSplines(knots, order, pvaj)
+    cp.build_boundary_conditions(bc_depth=3)
+    cp.build_interpolation_conditions({1: [0, 1]})
+    cp.build_smoothness_conditions({1:1})
+    # cp.build_smoothness_conditions({1:2})
+    # cp.build_not_at_knot_conditions(index_of_piece=0,
+    #                                 control_point=degree_to_time(50),
+    #                                 index_of_depth=3, value=0)
+    solutions = solve(cp.equations, cp.var)
+    cp.build_expressions(solutions, latex_print_out=False)
+    delta1 = degree_to_time(30)
+    delta2 = degree_to_time(330)
+    cp.shift_curve(delta1, delta2)
+    cp.make_piecewise_curve2()
+    if if_print:
+        for i in range(len(curves)):
+            print(latex(curves[i]))
+    if if_plot:
+        cp.plot_numerical(num=3600)
+    return cp
 
 if __name__ == "__main__":
-    build_jaw_on_york_curves(if_print=True, if_plot=True)
+    build_jaw_on_york_curves2(if_print=True, if_plot=True)

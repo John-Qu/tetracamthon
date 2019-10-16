@@ -3,8 +3,9 @@ from sympy import pi, nan, bspline_basis_set, diff, symbols, \
 from sympy.abc import x
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.interpolate import BSpline
-
+from .helper_functions import degree_to_time, time_to_degree, \
+    move_sympyplot_to_axes, duplicate_start_end, radial_to_time, time_to_time, \
+    time_to_radial
 
 
 class Knots(object):
