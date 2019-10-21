@@ -114,6 +114,15 @@ class ClassicalSplines(object):
         self.equations.append(Eq(f[index_of_depth][index_of_piece]
                                  (control_point).evalf(), value))
 
+    def build_periodic_conditions(self):
+        f = self.get_function_with_co()
+        print("Period Conditions")
+        for index_of_depth in range(self.degree):
+            self.equations.append(
+                Eq(f[index_of_depth][0](self.knots[0]).evalf(),
+                   f[index_of_depth][-1](self.knots[-1]).evalf()))
+            print(self.equations[-1])
+
     def solve_equations(self):
         if len(self.equations) == len(self.var):
             return solve(self.equations, self.var)
@@ -362,22 +371,9 @@ class York(ClassicalSplines):
                  leaving[0], left[0], end[0]])
         if pvajp == None:
             pvajp = np.array([
-                [start[1][0], highest[1][0], touch[1][0], closed[1][0],
-                 folding[1][0], folded[1][0], accepting[1][0], accepted[1][0],
-                 leaving[1][0], left[1][0], end[1][0]],
-                [start[1][1], highest[1][1], touch[1][1], closed[1][1],
-                 folding[1][1], folded[1][1], accepting[1][1], accepted[1][1],
-                 leaving[1][1], left[1][1], end[1][1]],
-                [start[1][2], highest[1][2], touch[1][2], closed[1][2],
-                 folding[1][2], folded[1][2], accepting[1][2], accepted[1][2],
-                 leaving[1][2], left[1][2], end[1][2]],
-                [start[1][3], highest[1][3], touch[1][3], closed[1][3],
-                 folding[1][3], folded[1][3], accepting[1][3], accepted[1][3],
-                 leaving[1][3], left[1][3], end[1][3]],
-                [start[1][4], highest[1][4], touch[1][4], closed[1][4],
-                 folding[1][4], folded[1][4], accepting[1][4], accepted[1][4],
-                 leaving[1][4], left[1][4], end[1][4]],
-            ])
+                [start[1][i], highest[1][i], touch[1][i], closed[1][i],
+                 folding[1][i], folded[1][i], accepting[1][i], accepted[1][i],
+                 leaving[1][i], left[1][i], end[1][i]] for i in range(5)])
         print(knots)
         ClassicalSplines.__init__(self, knots, order, pvajp)
 
