@@ -46,3 +46,48 @@ ax.plot(x, f(x), 'r', lw=8, alpha=0.4)
 ax.grid(True)
 plt.show()
 
+
+class RaiseToTouch(ClassicalSplines):
+    def __init__(self, order=6, knots=None, pvajp=None, theta_touch=93,
+                 y_O2O1_touch=None, v_O2O1_touch=None):
+        if theta_touch == None:
+            theta_touch= symbols('theta_touch')
+        if knots == None:
+            knots = np.array(degree_to_time([0, 84, theta_touch]))
+        if y_O2O1_touch == None:
+            y_O2O1_touch = symbols('y_O2O1_touch')
+        if v_O2O1_touch == None:
+            v_O2O1_touch = symbols('v_O2O1_touch')
+        if pvajp == None:
+            pvajp = np.array([[0, 372.2, y_O2O1_touch], [0, 0, v_O2O1_touch],
+                              [0, 0, 0], [0, 0, 0], [0, 0, 0]])
+        ClassicalSplines.__init__(self, order, knots, pvajp)
+
+
+class TouchToClose(ClassicalSplines):
+    def __init__(self):
+        pass
+
+
+class FoldingFlap(ClassicalSplines):
+    def __init__(self):
+        pass
+
+class Pulling(object):
+    def __init__(self):
+        pass
+
+class AcceptClosing(ClassicalSplines):
+    def __init__(self, order=6, knots=None, pvajp=None):
+        if knots == None:
+            knots = np.array(degree_to_time([262, 292, 318]))
+        if pvajp == None:
+            pvajp = np.array([
+                [p1, p2, p3],
+                [cv, cv+hv, cv],
+                [0, 0, 0],
+                [0, 0, 0],
+                [0, 0, 0],
+            ])
+        ClassicalSplines.__init__(self, order, knots, pvajp)
+

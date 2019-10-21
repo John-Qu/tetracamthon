@@ -57,6 +57,11 @@ class Package(object):
     def get_x_when_touching_tube(self):
         return self.depth / 2.0
 
+    def get_hs_sealing_length(self):
+        return self.hs_sealing_length
+
+    def get_height(self):
+        return self.height
 
 if __name__ == "__main__":
     pass
