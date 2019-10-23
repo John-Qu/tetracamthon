@@ -1,6 +1,7 @@
 from sympy import symbols, nan, diff, lambdify, Eq, solve, latex, \
     Piecewise, integrate, cot, acos, sqrt
 from sympy.abc import x, y
+from sympy.plotting import plot
 import numpy as np
 import matplotlib.pyplot as plt
 from helper_functions import degree_to_time, time_to_degree, \
@@ -396,53 +397,45 @@ class York(ClassicalSplines):
         return self.expression_with_co
 
     def build_touching_expr(self):
-        joy = Jaw_on_York()
-        j2 = O4DriveA()
-        # touch_time = solve(Eq(joy.get_expr_of_x()[0][1], -41.1), x)[2]
-        # touch_degree = time_to_degree(touch_time)
+        jaw_to_york_curve = Jaw_on_York()
+        jaw_on_york_mechanism = O4DriveA()
         touch_degree = 93
-        touch_time = degree_to_time(touch_degree)
         close_degree = 138
-        close_time = degree_to_time(close_degree)
-        x_R_AO2_of_r_O4O2_expr = j2.get_x_R_AO2_of_r_O4O2_expr()
-        y_R_AO2_of_r_O4O2_expr = j2.get_y_R_AO2_of_r_O4O2_expr()
-        x_V_AO2_of_vr_O4O2 = j2.get_x_V_AO2_of_vr_O4O2()
-        y_V_AO2_of_vr_O4O2 = j2.get_y_V_AO2_of_vr_O4O2()
-        jaw_on_york_slider_position = joy.get_expr_of_x()[0][1]
-        jaw_on_york_slider_velocity = joy.get_expr_of_x()[1][1]
-        x_R_AO2 = x_R_AO2_of_r_O4O2_expr.subs(j2.r_O4O2, -(
-                jaw_on_york_slider_position - 52.0476394259645))
+        x_R_AO2_of_r_O4O2_expr = jaw_on_york_mechanism.get_x_R_AO2_of_r_O4O2_expr()
+        y_R_AO2_of_r_O4O2_expr = jaw_on_york_mechanism.get_y_R_AO2_of_r_O4O2_expr()
+        x_V_AO2_of_vr_O4O2 = jaw_on_york_mechanism.get_x_V_AO2_of_vr_O4O2()
+        y_V_AO2_of_vr_O4O2 = jaw_on_york_mechanism.get_y_V_AO2_of_vr_O4O2()
+        jaw_to_york_slider_position = jaw_to_york_curve.get_expr_of_x()[0][1]
+        jaw_to_york_slider_velocity = jaw_to_york_curve.get_expr_of_x()[1][1]
+        p1 = plot(jaw_to_york_slider_position, (x, degree_to_time(43), degree_to_time(138)), show=True)
+        p2 = plot(jaw_to_york_slider_velocity, (x, degree_to_time(43), degree_to_time(138)), show=True)
+        x_R_AO2 = x_R_AO2_of_r_O4O2_expr.subs(jaw_on_york_mechanism.r_O4O2, -(
+                jaw_to_york_slider_position - 52.0476394259645))
         x_V_AO2 = x_V_AO2_of_vr_O4O2.subs(
-            [(j2.r, -(jaw_on_york_slider_position - 52.0476394259645)),
-             (j2.v, -jaw_on_york_slider_velocity)])
-        y_R_AO2 = y_R_AO2_of_r_O4O2_expr.subs(j2.r_O4O2, -(
-                jaw_on_york_slider_position - 52.0476394259645))
+            [(jaw_on_york_mechanism.r, -(jaw_to_york_slider_position - 52.0476394259645)),
+             (jaw_on_york_mechanism.v, -jaw_to_york_slider_velocity)])
+        y_R_AO2 = y_R_AO2_of_r_O4O2_expr.subs(jaw_on_york_mechanism.r_O4O2, -(
+                jaw_to_york_slider_position - 52.0476394259645))
         y_V_AO2 = y_V_AO2_of_vr_O4O2.subs(
-            [(j2.r, -(jaw_on_york_slider_position - 52.0476394259645)),
-             (j2.v, -jaw_on_york_slider_velocity)])
+            [(jaw_on_york_mechanism.r, -(jaw_to_york_slider_position - 52.0476394259645)),
+             (jaw_on_york_mechanism.v, -jaw_to_york_slider_velocity)])
+        p3 = plot(x_R_AO2, (x, degree_to_time(43), degree_to_time(138)), show=True)
+        p4 = plot(x_V_AO2, (x, degree_to_time(43), degree_to_time(138)), show=True)
+        p5 = plot(y_R_AO2, (x, degree_to_time(43), degree_to_time(138)), show=True)
+        p6 = plot(y_V_AO2, (x, degree_to_time(43), degree_to_time(138)), show=True)
         x_R_AO5 = x_R_AO2
-        x_V_AO5 = x_V_AO2
         p330sq = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
         r = p330sq.depth / 2
         y_R_AO5 = sqrt(r ** 2 - (r + x_R_AO5) ** 2)
+        p7 = plot(x_R_AO5, (x, degree_to_time(43), degree_to_time(138)), show=True)
+        p8 = plot(y_R_AO5, (x, degree_to_time(93), degree_to_time(138)), show=True)
         y_R_O5O2 = 164.44 + p330sq.get_hs_sealing_length() + p330sq.get_height()
+        print(y_R_O5O2)
         expr_O2O1_180 = self.get_expression_with_co()[0][6]\
             .subs(x, x + degree_to_time(180))
+        print(expr_O2O1_180)
         y_R_O2O1 = y_R_AO5 + y_R_O5O2 + expr_O2O1_180 - y_R_AO2
         return y_R_O2O1
-
-        # theta = acos((r + x_R_AO2) / r)
-        # y_V_AO5 = x_V_AO5 * cot(theta)
-        # y_R_AO5 = integrate(y_V_AO5, x)
-        # # y_V_O5O1 = york.get_expression_with_co()[1][6].subs(x, x + degree_to_time(180))
-        # y_V_O2O1 = y_V_AO5 + y_V_O5O1 - y_V_AO2
-        # y_R_O2O1 = integrate(y_V_O2O1, x) + symbols('C')
-        # y_A_O2O1 = diff(y_V_O2O1, x, 1)
-        # y_J_O2O1 = diff(y_V_O2O1, x, 2)
-        # y_P_O2O1 = diff(y_V_O2O1, x, 3)
-        # print(y_R_O2O1)
-        # print(latex(y_R_O2O1))
-        # return y_R_O2O1, y_V_O2O1, y_A_O2O1, y_J_O2O1, y_P_O2O1
 
     def replace_touching_expr(self):
         y_R_O2O1 = self.build_touching_expr()
@@ -496,7 +489,7 @@ class York(ClassicalSplines):
         self.equations.append(Eq(vr_folding, self.cv + 300))
         # 2 When accepting
         vr_accepting = f[1][6]((self.knots[6] + self.knots[7])/2).evalf()
-        self.equations.append(Eq(vr_folding, self.cv + 340))
+        self.equations.append(Eq(vr_accepting, self.cv + 340))
 
     # def build_periodic_coditions(self):
     #     f = self.get_function_with_co()
@@ -505,6 +498,7 @@ class York(ClassicalSplines):
 
     def build_equations(self):
         # self.build_smoothness_conditions(loose_at_konts={1: [2], 2: [2], 3: [2], 4: [2], 5: [2], 6: [2], 7: [2], 8: [2], 9: [2]})  # 3x9=27
+        # self.build_periodic_conditions()
         self.build_smoothness_conditions({1: 2, 2: 1, 3: 2, 4: 1, 5: 1, 6: 1, 7: 2, 8: 2, 9: 2})  # 3x9=27 -2-2 = 23 -
         self.build_boundary_conditions(conditions_of_knots={
             0: [0, 1],
@@ -526,7 +520,6 @@ def test_york():
     york.build_expression_with_co()
     york.replace_touching_expr()
     york.build_function_with_co()
-    np.seterr(invalid='ignore')
     york.build_equations()
     for i in range(6):
         york.var.pop(12)
