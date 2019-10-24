@@ -295,7 +295,7 @@ class York(ClassicalSplines):
             symbols('jerk_highest'),
             symbols('ping_highest')]]
         # 2
-        touch = [degree_to_time(93), [
+        touch = [degree_to_time(94), [
             # touch = [symbols('theta_touch'), [
             symbols('pos_touch'),
             symbols('vel_touch'),
