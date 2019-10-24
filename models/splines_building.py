@@ -65,6 +65,10 @@ class Polynomial(object):
             self.func.append(f_i)
         return len(self.func)
 
+    def update_functions(self):
+        self.func = []
+        self.build_functions()
+
     def get_functions(self):
         if len(self.func) < self.order:
             self.build_functions()
@@ -98,6 +102,7 @@ class SplineWithPiecewisePolynomial(object):
         self.orders = orders
         self.num_of_pieces = len(self.knots) - 1
         self.pieces = []
+        self.expressions = []
 
     def build_pieces(self):
         for piece_id in range(self.num_of_pieces):
@@ -120,6 +125,19 @@ class SplineWithPiecewisePolynomial(object):
         for i in range(self.num_of_pieces):
             pieces += str(self.pieces[i])
         return pieces
+
+    def involve_solutions(self, solution, latex_print_out=False):
+        """
+        """
+        for index_of_piece in range(self.num_of_pieces):
+            poly = self.pieces[index_of_piece]  # Poly type
+            position = poly.expr[0]
+            order = poly.order
+            poly.expr = []
+            poly.expr.append(position.subs([(poly.coe[index_of_coe],
+                           solution[poly.coe[index_of_coe]])
+                                        for index_of_coe in range(order)]))
+            poly.update_functions()
 
 
 class SplineWithBsplines(object):
