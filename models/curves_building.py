@@ -291,13 +291,15 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
         plot(j1.get_piecewise()[1], (x, 0, 0.9))
         """
         t = np.linspace(0, degree_to_time(360),
-                        num, endpoint=True)
+                        num=3600, endpoint=True)
         degree = time_to_degree(t)
-        position = lambdify(self.get_piecewise()[0], x)(t)
-        velocity = lambdify(self.get_piecewise()[1], x)(t)
+        position = lambdify(x, self.get_piecewise()[0])(t)
+        velocity = lambdify(x, self.get_piecewise()[1])(t)
+        # position = lambdify(j1.get_piecewise()[0], x)(t)
+        # velocity = lambdify(j1.get_piecewise()[1], x)(t)
         fig = plt.figure(figsize=(15, 12), dpi=80)
         fig.suptitle('Jaw on York, with knots on \n' +
-                     str(time_to_degree(self.knots) - 30),
+                     str(time_to_degree(self.knots)),
                      fontsize='xx-large')
         plt.subplot(2, 1, 1)
         plt.grid()
