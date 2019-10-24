@@ -84,7 +84,7 @@ fig = plt.figure(figsize=(15, 12), dpi=80)
 fig.suptitle('Tetra Pak A3 Flex @ 8000 p/h \n York and Jaw SVAJ curves @ 0.9s/cycle', fontsize='xx-large')
 
 # Jerk
-plt.subplot(4, 1, 1)
+plt.subplot(4, 1, 4)
 plt.grid()
 plt.ylabel("Jerk (m/s^3)")
 plt.plot(d, right_york_jerk, color="blue", linewidth=3.0, linestyle="-", label="right york")
@@ -96,7 +96,7 @@ plt.ylim(-2000.0, 2000.0)
 plt.yticks(np.linspace(-2000, 2000, 9, endpoint=True))
 
 # Acceleration
-plt.subplot(4, 1, 2)
+plt.subplot(4, 1, 3)
 plt.grid()
 plt.ylabel("Acceleration (m/s^2)")
 plt.plot(d, right_york_acc, color="blue", linewidth=3.0, linestyle="-", label="right york")
@@ -131,7 +131,7 @@ plt.ylim(-60.0, 60.0)
 plt.yticks(np.linspace(-60, 60, 7, endpoint=True))
 
 # Velocity
-plt.subplot(4, 1, 3)
+plt.subplot(4, 1, 2)
 plt.grid()
 plt.ylabel("Velocity (mm/s)")
 plt.plot(d, right_york_velo, color="blue", linewidth=3.0, linestyle="-", label="right york")
@@ -154,7 +154,7 @@ plt.xticks(np.linspace(0, 360, 37, endpoint=True))
 plt.ylim(-2000, 4000)
 plt.yticks(np.linspace(-2000, 4000, 7, endpoint=True))
 
-plt.subplot(4, 1, 4)
+plt.subplot(4, 1, 1)
 plt.grid()
 plt.xlabel("Machine Degree")
 plt.ylabel("Position and Distance (mm)")
