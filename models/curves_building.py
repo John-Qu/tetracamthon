@@ -267,16 +267,22 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
         solution = self.solve_coefficients()
         self.involve_solutions(solution)
 
+    def get_kth_expr_of_ith_piece(self, k, i):
+        try:
+            return self.get_pieces()[i].get_expr()[k]
+        except:
+            return 0
+
     def build_spline(self):
         self.update_with_solution()
         if len(self.piecewise) == 0:
-            for k in range(min(self.orders)):
+            for k in range(max(self.orders)):
                 self.piecewise.append(Piecewise(
                     (0, x < self.knots[0]),
-                    (self.get_pieces()[0].get_expr()[k], x <= self.knots[1]),
-                    (self.get_pieces()[1].get_expr()[k], x <= self.knots[2]),
-                    (self.get_pieces()[2].get_expr()[k], x <= self.knots[3]),
-                    (self.get_pieces()[3].get_expr()[k], x <= self.knots[4]),
+                    (self.get_kth_expr_of_ith_piece(k, 0), x <= self.knots[1]),
+                    (self.get_kth_expr_of_ith_piece(k, 1), x <= self.knots[2]),
+                    (self.get_kth_expr_of_ith_piece(k, 2), x <= self.knots[3]),
+                    (self.get_kth_expr_of_ith_piece(k, 3), x <= self.knots[4]),
                     (0, True)))
 
     def get_piecewise(self):
@@ -287,50 +293,44 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
         """
         j1 = JawOnYorkCurve()
         j1.plot_numerical()
-        plot(j1.get_piecewise()[0], (x, 0, 0.9))
-        plot(j1.get_piecewise()[1], (x, 0, 0.9))
         """
         t = np.linspace(0, degree_to_time(360),
                         num=3600, endpoint=True)
         degree = time_to_degree(t)
         position = lambdify(x, self.get_piecewise()[0])(t)
         velocity = lambdify(x, self.get_piecewise()[1])(t)
-        # position = lambdify(j1.get_piecewise()[0], x)(t)
-        # velocity = lambdify(j1.get_piecewise()[1], x)(t)
+        acceleration = lambdify(x, self.get_piecewise()[2])(t)
+        jerk = lambdify(x, self.get_piecewise()[3])(t)
         fig = plt.figure(figsize=(15, 12), dpi=80)
         fig.suptitle('Jaw on York, with knots on \n' +
                      str(time_to_degree(self.knots)),
                      fontsize='xx-large')
-        plt.subplot(2, 1, 1)
+        plt.subplot(4, 1, 1)
         plt.grid()
         plt.ylabel("Position (mm)")
         plt.plot(degree, position,
                  color="blue", linewidth=3.0, linestyle="-")
         plt.xlim(0.0, 360.0)
         plt.xticks(np.linspace(0, 360, 37, endpoint=True))
-        plt.subplot(2, 1, 2)
+        plt.subplot(4, 1, 2)
         plt.grid()
         plt.ylabel("Velocity (mm/s)")
         plt.plot(degree, velocity,
                  color="blue", linewidth=3.0, linestyle="-")
         plt.xlim(0.0, 360.0)
         plt.xticks(np.linspace(0, 360, 37, endpoint=True))
-        # plt.subplot(4, 1, 3)
-        # plt.grid()
-        # plt.ylabel("Acceleration (m/s^3)")
-        # plt.plot(degree, acceleration / 1000,
-        #          color="blue", linewidth=3.0, linestyle="-")
-        # plt.xlim(0.0, 360.0)
-        # plt.xticks(np.linspace(0, 360, 37, endpoint=True))
-        # plt.subplot(4, 1, 4)
-        # plt.grid()
-        # plt.ylabel("Jerk (m/s^4)")
-        # plt.plot(degree, jerk / 1000,
-        #          color="blue", linewidth=3.0, linestyle="-")
-        # plt.xlim(0.0, 360.0)
-        # plt.xticks(np.linspace(0, 360, 37, endpoint=True))
-        # plt.savefig("svaj_of_jaw_on_york.png", dpi=720)
-
-
-
-
+        plt.subplot(4, 1, 3)
+        plt.grid()
+        plt.ylabel("Acceleration (m/s^3)")
+        plt.plot(degree, acceleration / 1000,
+                 color="blue", linewidth=3.0, linestyle="-")
+        plt.xlim(0.0, 360.0)
+        plt.xticks(np.linspace(0, 360, 37, endpoint=True))
+        plt.subplot(4, 1, 4)
+        plt.grid()
+        plt.ylabel("Jerk (m/s^4)")
+        plt.plot(degree, jerk / 1000,
+                 color="blue", linewidth=3.0, linestyle="-")
+        plt.xlim(0.0, 360.0)
+        plt.xticks(np.linspace(0, 360, 37, endpoint=True))
+        plt.savefig("svaj_of_jaw_on_york.png", dpi=720)

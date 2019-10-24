@@ -15,6 +15,7 @@ class Polynomial(object):
     print(p2.__str__(all_depth=True))
     print(p2.coe)
     """
+
     def __init__(self, piece_id, order=6, piece=(0, 1)):
         self.piece_id = piece_id
         self.order = order
@@ -24,6 +25,9 @@ class Polynomial(object):
         self.coe = []
         self.expr = []
         self.func = []
+
+    def get_piece(self):
+        return self.piece
 
     def build_expression(self):
         co_0 = symbols('C_' + str(self.piece_id) + '_' + str(0))
@@ -36,6 +40,11 @@ class Polynomial(object):
         self.expr.append(expr)
         return expr
 
+    def get_coefficients(self):
+        if len(self.coe) < self.order:
+            self.build_expression()
+        return self.coe
+
     def build_diffs(self):
         if len(self.expr) == 0:
             self.build_expression()
@@ -45,16 +54,26 @@ class Polynomial(object):
             self.expr.append(diff(self.expr[0], x, depth))
         return self.expr
 
-    def get_expr(self):
+    def get_expr(self, solution=None):
         if len(self.expr) < self.order:
             self.build_diffs()
+        if solution != None:
+            self.update_expr(solution)
         return self.expr
 
-    def get_coefficients(self):
-        return self.coe
+    def update_expr(self, solution):
+        """ Update the coefficients with solution dictionary.
 
-    def get_piece(self):
-        return self.piece
+        :param solution: dict of coefficient and value pair
+        :return: None
+        """
+        expr_0 = self.get_expr()[0]
+        coe = self.get_coefficients()
+        self.expr.clear()
+        self.expr.append(expr_0.subs([(coe[index_of_coe],
+                                       solution[coe[index_of_coe]])
+                                      for index_of_coe in range(self.order)]))
+        self.build_diffs()
 
     def build_functions(self):
         if len(self.func) == self.order:
@@ -97,6 +116,7 @@ class SplineWithPiecewisePolynomial(object):
     s1 = SplineWithPiecewisePolynomial(knots1, orders1)
     print(s1)
     """
+
     def __init__(self, knots, orders):
         self.knots = knots
         self.orders = orders
@@ -118,7 +138,6 @@ class SplineWithPiecewisePolynomial(object):
             self.build_pieces()
         return self.pieces
 
-
     def __str__(self):
         self.get_pieces()
         pieces = ''
@@ -130,20 +149,11 @@ class SplineWithPiecewisePolynomial(object):
         """
         """
         for index_of_piece in range(self.num_of_pieces):
-            poly = self.pieces[index_of_piece]  # Poly type
-            position = poly.expr[0]
-            order = poly.order
-            poly.expr = []
-            poly.expr.append(position.subs([(poly.coe[index_of_coe],
-                           solution[poly.coe[index_of_coe]])
-                                        for index_of_coe in range(order)]))
-            poly.update_functions()
+            poly = self.pieces[index_of_piece]
+            poly.update_expr(solution)  # poly is an instance of Polynomial.
 
 
 class SplineWithBsplines(object):
     def __init__(self):
         # TODO: add b-spline ability
         pass
-
-
-
