@@ -460,10 +460,10 @@ class York(ClassicalSplines):
         f = self.get_function_with_co()
         # 1 when near
         pr_near = f[0][0](degree_to_time(43)).evalf()
-        pl_near = f[0][9](degree_to_time(43 + 180)).evalf()
+        pl_near = f[0][5](degree_to_time(43 + 180)).evalf()
         self.equations.append(Eq(pr_near, pl_near))
         # 2 when touch
-        pr_touch = f[0][0](self.knots[2]).evalf()
+        pr_touch = f[0][1](self.knots[2]).evalf()
         pl_touch = f[0][6](self.knots[2] + 0.45).evalf()
         y_ArO2r_touch = 171.354752195555
         y_ArO2l_touch = self.package.depth / 2 + \
