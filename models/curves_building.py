@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from helper_functions import degree_to_time, time_to_degree, \
     move_sympyplot_to_axes
-from analysis import O4DriveA
+from analysis import O4DriveA, ANeedO4
 from packages import Package
 from splines_building import SplineWithPiecewisePolynomial
 
@@ -267,7 +267,9 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
         solution = self.solve_coefficients()
         self.involve_solutions(solution)
 
-    def get_kth_expr_of_ith_piece(self, k, i):
+    def get_kth_expr_of_ith_piece(self, k, i, without_symbol_coe=True):
+        if without_symbol_coe:
+            self.update_with_solution()
         try:
             return self.get_pieces()[i].get_expr()[k]
         except:
@@ -334,3 +336,184 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
         plt.xlim(0.0, 360.0)
         plt.xticks(np.linspace(0, 360, 37, endpoint=True))
         plt.savefig("svaj_of_jaw_on_york.png", dpi=720)
+
+
+class TraceOfA(object):
+    def __init__(self):
+        self.joy_curve = JawOnYorkCurve()
+        self.joy_mechanism_forward = O4DriveA()
+        self.joy_mechanism_backward = ANeedO4()
+        self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
+        self.memo = {}
+
+    def get_close_rO4O2(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_close_rO4O2())
+        :return: 52.0476394259659
+        """
+        if 'r_O4O2_close' in self.memo:
+            return self.memo['r_O4O2_close']
+        expr = self.joy_mechanism_backward.get_r_O4O2_of_x_R_AO2_expr()
+        x_R_AO2 = self.joy_mechanism_backward.x_R_AO2
+        r_O4O2_close = expr.subs(x_R_AO2, 0)
+        self.memo['r_O4O2_close'] = r_O4O2_close
+        return r_O4O2_close
+
+    def get_touch_rO4O2(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_touch_rO4O2())
+        :return: 93.1457274726962
+        """
+        if 'r_O4O2_touch' in self.memo:
+            return self.memo['r_O4O2_touch']
+        expr = self.joy_mechanism_backward.get_r_O4O2_of_x_R_AO2_expr()
+        x_R_AO2_symbol = self.joy_mechanism_backward.x_R_AO2
+        x_R_AO2_when_touch = - self.package.depth / 2
+        r_O4O2_touch = expr.subs(x_R_AO2_symbol, x_R_AO2_when_touch)
+        self.memo['r_O4O2_touch'] = r_O4O2_touch
+        return r_O4O2_touch
+
+    def get_touch_time(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_touch_time())
+            0.232561894257538
+        """
+        if 'touch_time' in self.memo:
+            return self.memo['touch_time']
+        r_O4O2_touch = self.get_touch_rO4O2()
+        r_O4O2_close = self.get_close_rO4O2()
+        position_touch = - (r_O4O2_touch - r_O4O2_close)
+        curve = self.joy_curve.get_kth_expr_of_ith_piece(0, 1)
+        equation = Eq(curve, position_touch)
+        touch_time = solve(equation, x)[2]
+        self.memo['touch_time'] = touch_time
+        return touch_time
+
+    def get_touch_degree(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_touch_degree())
+            93.0247577030154
+        """
+        return time_to_degree(self.get_touch_time())
+
+    def get_y_R_AO2_when_touching_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_y_R_AO2_when_touching_expr())
+        print(t1.get_y_R_AO2_when_touching_expr().subs(x, t1.get_touch_time()))
+            171.354752195555
+        print(t1.get_y_R_AO2_when_touching_expr().subs(x, degree_to_time(138)))
+            164.440000000000
+        :return:
+        """
+        if 'y_R_AO2_when_touching_expr' in self.memo:
+            return self.memo['y_R_AO2_when_touching_expr']
+        expr = self.joy_mechanism_forward.get_y_R_AO2_of_r_O4O2_expr()
+        r_O4O2_symbol = self.joy_mechanism_forward.r_O4O2
+        curve = self.joy_curve.get_kth_expr_of_ith_piece(0, 1)
+        r_O4O2_close = self.get_close_rO4O2()
+        r_O4O2_value = - (curve - r_O4O2_close)
+        y_R_AO2_when_touching_expr = expr.subs(r_O4O2_symbol, r_O4O2_value)
+        self.memo['y_R_AO2_when_touching_expr'] = y_R_AO2_when_touching_expr
+        return y_R_AO2_when_touching_expr
+
+    def get_x_R_AO2_when_touching_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_x_R_AO2_when_touching_expr())
+        print(t1.get_x_R_AO2_when_touching_expr().subs(x, t1.get_touch_time()))
+            -24.2500000000004
+        print(t1.get_x_R_AO2_when_touching_expr().subs(x, degree_to_time(138)))
+            -7.81597009336110e-14
+        :return:
+        """
+        if 'x_R_AO2_when_touching_expr' in self.memo:
+            return self.memo['x_R_AO2_when_touching_expr']
+        expr = self.joy_mechanism_forward.get_x_R_AO2_of_r_O4O2_expr()
+        r_O4O2_symbol = self.joy_mechanism_forward.r_O4O2
+        curve = self.joy_curve.get_kth_expr_of_ith_piece(0, 1)
+        r_O4O2_close = self.get_close_rO4O2()
+        r_O4O2_value = - (curve - r_O4O2_close)
+        x_R_AO2_when_touching_expr = expr.subs(r_O4O2_symbol, r_O4O2_value)
+        self.memo['x_R_AO2_when_touching_expr'] = x_R_AO2_when_touching_expr
+        return x_R_AO2_when_touching_expr
+
+    def get_y_R_AO5_when_touching_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_y_R_AO5_when_touching_expr())
+        print(t1.get_y_R_AO5_when_touching_expr().subs(x, t1.get_touch_time()))
+            24.2500000000000
+        print(t1.get_y_R_AO5_when_touching_expr().subs(x, degree_to_time(138)))
+            1.93692169299983e-6
+        """
+        if 'y_R_AO5_when_touching_expr' in self.memo:
+            return self.memo['y_R_AO5_when_touching_expr']
+        x_R_AO2_when_touching_expr = \
+            self.get_x_R_AO2_when_touching_expr()
+        x_R_AO5_when_touching_expr = x_R_AO2_when_touching_expr
+        r_AG = self.package.depth / 2
+        y_R_AO5_when_touching_expr = sqrt(
+            r_AG ** 2 - (r_AG + x_R_AO5_when_touching_expr)**2)
+        self.memo['y_R_AO5_when_touching_expr'] = y_R_AO5_when_touching_expr
+        return y_R_AO5_when_touching_expr
+
+    def plot_numerical(self, num=360):
+        """
+        t1 = TraceOfA()
+        t1.plot_numerical()
+        """
+        start_time = float(self.get_touch_time())
+        end_time = float(degree_to_time(138-1))
+        t = np.linspace(start_time,
+                        end_time,
+                        num=360, endpoint=True)
+        degree = time_to_degree(t)
+        x_R_AO5_e = self.get_x_R_AO2_when_touching_expr()
+        x_R_AO5_f = lambdify(x, x_R_AO5_e)
+        y_R_AO5_e = self.get_y_R_AO5_when_touching_expr()
+        y_R_AO5_f = lambdify(x, y_R_AO5_e)
+        y_V_AO5_e = diff(y_R_AO5_e, x)
+        y_V_AO5_f = lambdify(x, y_V_AO5_e)
+        y_A_AO5_e = diff(y_V_AO5_e, x)
+        y_A_AO5_f = lambdify(x, y_A_AO5_e)
+        fig = plt.figure(figsize=(15, 12), dpi=80)
+        fig.suptitle('R_AO5 SVA curves.', fontsize='x-large')
+        plt.subplot(4, 1, 1)
+        plt.grid()
+        plt.ylabel("x position of AtoO5 (mm)")
+        plt.plot(degree, x_R_AO5_f(t),
+                 color="blue", linewidth=3.0, linestyle="-")
+        plt.xlim(time_to_degree(start_time), time_to_degree(end_time))
+        plt.subplot(4, 1, 2)
+        plt.grid()
+        plt.ylabel("y position of AtoO5 (mm)")
+        plt.plot(degree, y_R_AO5_f(t),
+                 color="blue", linewidth=3.0, linestyle="-")
+        plt.xlim(time_to_degree(start_time), time_to_degree(end_time))
+        plt.subplot(4, 1, 3)
+        plt.grid()
+        plt.ylabel("y velocity of AtoO5 (mm/s)")
+        plt.plot(degree, y_V_AO5_f(t),
+                 color="blue", linewidth=3.0, linestyle="-")
+        plt.xlim(time_to_degree(start_time), time_to_degree(end_time))
+        plt.subplot(4, 1, 4)
+        plt.grid()
+        plt.ylabel("y acceleration of AtoO5 (m/s^2)")
+        plt.plot(degree, y_A_AO5_f(t) / 1000,
+                 color="blue", linewidth=3.0, linestyle="-")
+        plt.xlim(time_to_degree(start_time), time_to_degree(end_time))
+        plt.savefig("Track of A to O5 curves.png", dpi=720)
+
+
+
+
+
+
+
+
+
