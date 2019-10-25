@@ -1,3 +1,6 @@
+# These codes were out-off date, replaced by
+# "splines_building.py" and "curves_building.py".
+
 from sympy import symbols, nan, diff, lambdify, Eq, solve, latex, \
     Piecewise, plot
 from sympy.abc import x, y
