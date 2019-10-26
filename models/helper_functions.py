@@ -54,3 +54,6 @@ def duplicate_start_end(a, num):
     return b + d + c
 
 
+def function_with_subs(value):
+    pass
+

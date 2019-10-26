@@ -29,6 +29,9 @@ class Polynomial(object):
     def get_piece(self):
         return self.piece
 
+    def get_order(self):
+        return self.order
+
     def build_expression(self):
         co_0 = symbols('C_' + str(self.piece_id) + '_' + str(0))
         self.coe.append(co_0)
@@ -50,7 +53,8 @@ class Polynomial(object):
             self.build_expression()
         elif len(self.expr) == self.order:
             return self.expr
-        for depth in range(1, self.order):
+        # for depth in range(1, self.order):
+        for depth in range(1, 6):
             self.expr.append(diff(self.expr[0], x, depth))
         return self.expr
 
@@ -75,21 +79,37 @@ class Polynomial(object):
                                       for index_of_coe in range(self.order)]))
         self.build_diffs()
 
+    def replace_expr(self, new_expr, new_order):
+        self.expr.clear()
+        self.expr.append(new_expr)
+        self.coe.clear()
+        self.order = new_order
+        self.build_diffs()
+
     def build_functions(self):
-        if len(self.func) == self.order:
+        if len(self.func) >= self.order:
             return len(self.func)
         expr = self.get_expr()
-        for i in range(self.order):
+        for i in range(len(expr)):
             f_i = lambdify(x, expr[i])
             self.func.append(f_i)
         return len(self.func)
 
+    def build_functions_with_subs(self, value):
+        if len(self.func) >= self.order:
+            return len(self.func)
+        expr = self.get_expr()
+        for i in range(len(expr)):
+            f_i = expr[i].subs(x, value).evalf()
+            self.func.append(f_i)
+        return len(self.func)
+
     def update_functions(self):
-        self.func = []
+        self.func.clear()
         self.build_functions()
 
     def get_functions(self):
-        if len(self.func) < self.order:
+        if len(self.func) <= self.order:
             self.build_functions()
             return self.func
         else:
