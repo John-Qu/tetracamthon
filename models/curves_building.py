@@ -565,7 +565,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         folding = [degree_to_time(145), [
             # folding = [symbols('theta_folding'), [
             symbols('pos_folding'),
-            self.cv,
+            symbols('vel_folding'),
             symbols('acc_folding'),
             symbols('jerk_folding'),
             symbols('ping_folding')]]
@@ -581,7 +581,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         accepting = [degree_to_time(262), [
             # accepting = [symbols('theta_accepting'), [
             symbols('pos_accepting'),
-            self.cv,
+            symbols('vel_accepting'),
             symbols('acc_accepting'),
             symbols('jerk_accepting'),
             symbols('ping_accepting')]]
@@ -597,7 +597,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         # leaving = [symbols('theta_leaving'), [
         leaving = [degree_to_time(330), [
             symbols('pos_leaving'),
-            self.cv,
+            symbols('vel_leaving'),
             symbols('acc_leaving'),
             symbols('jerk_leaving'),
             symbols('ping_leaving')]]
@@ -862,15 +862,15 @@ class YorkCurve(SplineWithPiecewisePolynomial):
             return self.count_of_smoothness
         if depths == None:
             depths = {
-                1: 3,
-                2: 3,
-                3: 3,
+                1: 4,
+                2: 4,
+                3: 4,
                 4: 2,
                 5: 2,
                 6: 2,
                 7: 2,
                 8: 2,
-                9: 3
+                9: 4
             }
         for i in depths.keys():
             ki = self.knots[i]
