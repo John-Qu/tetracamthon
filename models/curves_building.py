@@ -5,7 +5,7 @@ from sympy.plotting import plot
 import numpy as np
 import matplotlib.pyplot as plt
 from helper_functions import degree_to_time, time_to_degree, \
-    move_sympyplot_to_axes
+    move_sympyplot_to_axes, print_list_items_in_row
 from analysis import O4DriveA, ANeedO4
 from packages import Package
 from splines_building import SplineWithPiecewisePolynomial
@@ -524,14 +524,13 @@ AttributeError: 'Float' object has no attribute 'sqrt'
 
 
 class YorkCurve(SplineWithPiecewisePolynomial):
-    def __init__(self, knots=None, orders=None, pvajp=None,
-                 constant_velocity=-422):
-        self.cv = constant_velocity
+    def __init__(self, knots=None, orders=None, pvajp=None):
         self.joy = JawOnYorkCurve()
         self.trace = TraceOfA()
         self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
+        self.cv = - self.package.get_pulling_velocity(cycle_time=0.9)
         # 0
-        start = [0, [
+        start = [degree_to_time(0), [
             0,
             0,
             symbols('acc_start'),
@@ -540,7 +539,8 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         # 1
         # highest = [symbols('theta_highest'), [
         highest = [degree_to_time(84), [
-            372.2,
+            symbols('pos_highest'),
+            # 372.2,
             0,
             symbols('acc_highest'),
             symbols('jerk_highest'),
@@ -641,6 +641,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         self.count_of_velocity = 0
         self.count_of_smoothness = 0
         self.piecewise = []
+        self.solution = {}
 
     def replace_touching_piece(self):
         """
@@ -705,7 +706,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
                     eq = Eq(e[d].subs(x, knot), self.pvajp[d][k])
                     self.equations.append(eq)
                     self.count_of_interpolation += 1
-        return self.count_of_interpolation
+        return self.equations[-self.count_of_interpolation:]
 
     def build_boundary_condition(self):
         """
@@ -727,7 +728,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
                     eq = Eq(e[d].subs(x, knot), self.pvajp[d][k])
                     self.equations.append(eq)
                     self.count_of_boundary += 1
-        return self.count_of_boundary
+        return self.equations[-self.count_of_boundary:]
 
     def build_periodic_condition(self):
         """
@@ -749,7 +750,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
             self.equations.append(eq)
             self.count_of_periodic += 1
             # TODO: less than 6 order condition?
-        return self.count_of_periodic
+        return self.equations[-self.count_of_periodic:]
 
     def build_position_relation(self):
         """
@@ -799,7 +800,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
                                  - pl_accepting_e.subs(x, ljat),
                                  y_ArAl_jaw_over_jaw))
         self.count_of_position += 1
-        return self.count_of_position
+        return self.equations[-self.count_of_position:]
 
     def build_velocity_condition(self):
         """
@@ -823,7 +824,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         self.equations.append(Eq(vr_accepting_e.subs(x, amt),
                                  self.cv + 340))
         self.count_of_velocity += 1
-        return self.count_of_velocity
+        return self.equations[-self.count_of_velocity:]
 
     def how_many_smoothness_equations_available(self):
         """
@@ -863,7 +864,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
             depths = {
                 1: 3,
                 2: 3,
-                3: 2,
+                3: 3,
                 4: 2,
                 5: 2,
                 6: 2,
@@ -883,7 +884,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
                 eq = Eq(eib[d].subs(x, ki), eia[d].subs(x, ki))
                 self.equations.append(eq)
                 self.count_of_smoothness += 1
-        return self.count_of_smoothness
+        return self.equations[-self.count_of_smoothness:]
 
     def build_equations(self):
         """
@@ -894,17 +895,29 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         """
         self.replace_touching_piece()
         if self.count_of_interpolation == 0:
-            self.build_interpolating_condition()
+            inter_equations = self.build_interpolating_condition()
+            print('inter_equations:')
+            print_list_items_in_row(inter_equations)
         if self.count_of_boundary == 0:
-            self.build_boundary_condition()
+            bound_equations = self.build_boundary_condition()
+            print('bound_equations')
+            print_list_items_in_row(bound_equations)
         if self.count_of_periodic == 0:
-            self.build_periodic_condition()
+            period_equations = self.build_periodic_condition()
+            print('period_equations')
+            print_list_items_in_row(period_equations)
         if self.count_of_position == 0:
-            self.build_position_relation()
+            position_equations = self.build_position_relation()
+            print('position_equations')
+            print_list_items_in_row(position_equations)
         if self.count_of_velocity == 0:
-            self.build_velocity_condition()
+            velocity_equations = self.build_velocity_condition()
+            print('velocity_equations')
+            print_list_items_in_row(velocity_equations)
         if self.count_of_smoothness == 0:
-            self.build_smoothness_condition()
+            smoothness_equations = self.build_smoothness_condition()
+            print('smoothness_equations')
+            print_list_items_in_row(smoothness_equations)
         return len(self.equations)
 
     def get_equations(self):

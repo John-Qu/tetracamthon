@@ -54,6 +54,15 @@ def duplicate_start_end(a, num):
     return b + d + c
 
 
-def function_with_subs(value):
-    pass
+def print_list_items_in_row(li):
+    """
+    a = [1,2,3]
+    b = ['a', 'b', 'c']
+    print_list_items_in_row(a)
+    print_list_items_in_row(b)
+    :param li: list
+    :return: None
+    """
+    for i in range(len(li)):
+        print(str(i) + 'th: ' + str(li[i]))
 
