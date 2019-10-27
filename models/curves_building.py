@@ -1,5 +1,5 @@
-from sympy import symbols, Symbol, nan, diff, lambdify, Eq, solve, latex, \
-    Piecewise, integrate, cot, acos, sqrt
+from sympy import symbols, Symbol, diff, lambdify, Eq, solve, \
+    Piecewise, linsolve
 from sympy.abc import x, y
 from sympy.plotting import plot
 import numpy as np
@@ -935,7 +935,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         """
         equations = self.get_equations()
         variables = self.get_variables()
-        solution = solve(equations, variables)
+        solution = linsolve(equations, variables)
         self.solution = solution
         return self.solution
 
