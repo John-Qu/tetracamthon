@@ -1063,11 +1063,33 @@ class YorkCurve(SplineWithPiecewisePolynomial):
     def update_with_solution(self):
         """
         j2 = YorkCurve()
+        j2.replace_touching_piece()
         j2.update_with_solution()
+        print(j2.get_pieces()[2].get_expr()[0])
+        print(j2.get_pieces()[2].get_expr()[2])
         """
         self.build_variables()
         solution = self.load_solution()
         self.involve_solutions(solution)
+
+    def save_solved_pieces(self):
+        """
+        j2 = YorkCurve()
+        j2.save_solved_pieces()
+        """
+        output = open('york_curve_pieces.pkl', 'wb')
+        pickle.dump(self.get_pieces(), output)
+        output.close()
+
+    def load_solved_pieces(self):
+        """
+        j3 = YorkCurve()
+        j3.load_solved_pieces()
+        print(j3.get_pieces()[2].get_expr()[0])
+        """
+        pkl_file = open('york_curve_pieces.pkl', 'rb')
+        self.pieces = pickle.load(pkl_file)
+        pkl_file.close()
 
     def get_kth_expr_of_ith_piece(self, k, i, without_symbol_coe=True):
         if without_symbol_coe:
@@ -1080,6 +1102,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
     def build_spline(self):
         """
         j2 = YorkCurve()
+        j2.replace_touching_piece()
         j2.build_spline()
         """
         self.update_with_solution()
