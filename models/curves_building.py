@@ -8,7 +8,8 @@ from helper_functions import degree_to_time, time_to_degree, \
     move_sympyplot_to_axes, print_list_items_in_row
 from analysis import O4DriveA, ANeedO4
 from packages import Package
-from splines_building import SplineWithPiecewisePolynomial
+from splines_building import SplineWithPiecewisePolynomial, Polynomial
+import pickle
 
 
 class JawOnYorkCurve(SplineWithPiecewisePolynomial):
@@ -339,12 +340,34 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
 
 
 class TraceOfA(object):
-    def __init__(self):
+    def __init__(self, load_memo=False):
         self.joy_curve = JawOnYorkCurve()
         self.joy_mechanism_forward = O4DriveA()
         self.joy_mechanism_backward = ANeedO4()
         self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
-        self.memo = {}
+        if load_memo:
+            self.load_memo_from_file()
+        else:
+            self.memo = {}
+
+    def write_memo_to_file(self):
+        """
+        t1 = TraceOfA()
+        t1.write_memo_to_file()
+        """
+        output = open('trace_of_A_memo.pkl', 'wb')
+        pickle.dump(self.memo, output)
+        output.close()
+
+    def load_memo_from_file(self):
+        """
+        t1 = TraceOfA()
+        t1.load_memo_from_file()
+        """
+        pkl_file = open('trace_of_A_memo.pkl', 'rb')
+        self.memo = pickle.load(pkl_file)
+        pkl_file.close()
+        return self.memo
 
     def get_close_rO4O2(self):
         """
@@ -419,6 +442,7 @@ class TraceOfA(object):
         r_O4O2_value = - (curve - r_O4O2_close)
         y_R_AO2_when_touching_expr = expr.subs(r_O4O2_symbol, r_O4O2_value)
         self.memo['y_R_AO2_when_touching_expr'] = y_R_AO2_when_touching_expr
+        self.write_memo_to_file()
         return y_R_AO2_when_touching_expr
 
     def get_x_R_AO2_when_touching_expr(self):
@@ -440,6 +464,7 @@ class TraceOfA(object):
         r_O4O2_value = - (curve - r_O4O2_close)
         x_R_AO2_when_touching_expr = expr.subs(r_O4O2_symbol, r_O4O2_value)
         self.memo['x_R_AO2_when_touching_expr'] = x_R_AO2_when_touching_expr
+        self.write_memo_to_file()
         return x_R_AO2_when_touching_expr
 
     def get_y_R_AO5_when_touching_expr(self):
@@ -460,6 +485,7 @@ class TraceOfA(object):
         y_R_AO5_when_touching_expr = \
             (r_AG ** 2 - (r_AG + x_R_AO5_when_touching_expr) ** 2)**0.5
         self.memo['y_R_AO5_when_touching_expr'] = y_R_AO5_when_touching_expr
+        self.write_memo_to_file()
         return y_R_AO5_when_touching_expr
 
     def get_y_R_AO5_when_touching_func(self):
@@ -523,10 +549,21 @@ AttributeError: 'Float' object has no attribute 'sqrt'
         plt.savefig("Track of A to O5 curves.png", dpi=720)
 
 
+def load_new_touch_piece():
+    """
+    j2 = YorkCurve()
+    print(j2.new_touch_piece())
+    """
+    pkl_file = open('new_touch_piece.pkl', 'rb')
+    new_touch_piece = pickle.load(pkl_file)
+    pkl_file.close()
+    return new_touch_piece
+
+
 class YorkCurve(SplineWithPiecewisePolynomial):
     def __init__(self, knots=None, orders=None, pvajp=None):
         self.joy = JawOnYorkCurve()
-        self.trace = TraceOfA()
+        self.trace = TraceOfA(load_memo=True)
         self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
         self.cv = - self.package.get_pulling_velocity(cycle_time=0.9)
         # 0
@@ -650,22 +687,45 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         self.piecewise = []
         self.solution = {}
 
-    def replace_touching_piece(self):
+    def save_new_touch_piece(self, new_touch_piece):
         """
         j2 = YorkCurve()
-        j2.replace_touching_piece()
-        print(j2.pieces[2].get_expr()[1])
+        j2.save_new_touch_piece()
         """
+        output = open('new_touch_piece.pkl', 'wb')
+        pickle.dump(new_touch_piece, output)
+        output.close()
+
+    def replace_touching_piece(self, reload=True):
+        """
+        j2 = YorkCurve()
+        j2.replace_touching_piece(reload=False)
+        print(j2.pieces[2].get_expr()[0])
+        j3 = YorkCurve()
+        j3.replace_touching_piece()
+        print(j3.pieces[2].get_expr()[1])
+        """
+        if reload:
+            np = load_new_touch_piece()
+            self.pieces[2] = np
+            return
         y_R_AO5_expr = self.trace.get_y_R_AO5_when_touching_expr()
         y_R_AO2_expr = self.trace.get_y_R_AO2_when_touching_expr()
         r_O5O2 = self.package.height + \
                  self.package.hs_sealing_length + \
                  self.trace.joy_mechanism_forward.r_DC_value
         accepting_curve_expr = self.pieces[6].get_expr()[0]
-        accepting_curve_order = self.pieces[6].get_order()
-        touch_curve_expr = y_R_AO5_expr + r_O5O2 + accepting_curve_expr \
+        accepting_curve_coe = self.pieces[6].get_coefficients()
+        new_touch_curve_expr = y_R_AO5_expr + r_O5O2 + accepting_curve_expr \
                            - y_R_AO2_expr
-        self.pieces[2].replace_expr(touch_curve_expr, accepting_curve_order)
+        op = self.pieces[2]  # Old Piece
+        op_id = op.get_piece_id()
+        op_order = op.get_order()
+        op_piece = op.get_piece()
+        np = Polynomial(op_id, op_order, op_piece)
+        np.replace_expr(new_touch_curve_expr, accepting_curve_coe)
+        self.save_new_touch_piece(np)
+        self.pieces[2] = np
 
     def build_variables(self):
         """
@@ -973,9 +1033,77 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         variables = j2.get_variables()
         solutions = solve(equations, variables)
         """
+        if self.solution != {}:
+            return self.solution
         equations = self.get_equations()
         variables = self.get_variables()
         solution = solve(equations, variables)
         self.solution = solution
         return self.solution
 
+    def save_solution(self):
+        """
+        j2 = YorkCurve()
+        j2.save_solution()
+        """
+        output = open('york_curve_solution.pkl', 'wb')
+        pickle.dump(self.solve_coefficients(), output)
+        output.close()
+
+    def load_solution(self):
+        """
+        j2 = YorkCurve()
+        print(j2.load_solution())
+        """
+        pkl_file = open('york_curve_solution.pkl', 'rb')
+        self.solution = pickle.load(pkl_file)
+        pkl_file.close()
+        return self.solution
+
+    def update_with_solution(self):
+        """
+        j2 = YorkCurve()
+        j2.update_with_solution()
+        """
+        self.build_variables()
+        solution = self.load_solution()
+        self.involve_solutions(solution)
+
+    def get_kth_expr_of_ith_piece(self, k, i, without_symbol_coe=True):
+        if without_symbol_coe:
+            self.update_with_solution()
+        try:
+            return self.get_pieces()[i].get_expr()[k]
+        except:
+            return 0
+
+    def build_spline(self):
+        """
+        j2 = YorkCurve()
+        j2.build_spline()
+        """
+        self.update_with_solution()
+        for k in range(max(self.orders)):
+            self.piecewise.append(Piecewise(
+                (0, x < self.knots[0]),
+                (self.get_kth_expr_of_ith_piece(k, 0), x <= self.knots[1]),
+                (self.get_kth_expr_of_ith_piece(k, 1), x <= self.knots[2]),
+                (self.get_kth_expr_of_ith_piece(k, 2), x <= self.knots[3]),
+                (self.get_kth_expr_of_ith_piece(k, 3), x <= self.knots[4]),
+                (self.get_kth_expr_of_ith_piece(k, 4), x <= self.knots[5]),
+                (self.get_kth_expr_of_ith_piece(k, 5), x <= self.knots[6]),
+                (self.get_kth_expr_of_ith_piece(k, 6), x <= self.knots[7]),
+                (self.get_kth_expr_of_ith_piece(k, 7), x <= self.knots[8]),
+                (self.get_kth_expr_of_ith_piece(k, 8), x <= self.knots[9]),
+                (0, True)))
+        return self.piecewise
+
+    def get_piecewise(self):
+        """
+        j2 = YorkCurve()
+        j2.replace_touching_piece()
+        print(j2.get_piecewise()[0])
+        """
+        if len(self.piecewise) == 0:
+            self.build_spline()
+        return self.piecewise
