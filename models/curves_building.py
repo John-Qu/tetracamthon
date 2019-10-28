@@ -1,15 +1,16 @@
-from sympy import symbols, Symbol, diff, lambdify, Eq, solve, \
-    Piecewise, linsolve
-from sympy.abc import x, y
-from sympy.plotting import plot
-import numpy as np
+import pickle
+
 import matplotlib.pyplot as plt
+import numpy as np
+from analysis import O4DriveA, ANeedO4
 from helper_functions import degree_to_time, time_to_degree, \
     move_sympyplot_to_axes, print_list_items_in_row
-from analysis import O4DriveA, ANeedO4
 from packages import Package
 from splines_building import SplineWithPiecewisePolynomial, Polynomial
-import pickle
+from sympy import symbols, Symbol, diff, lambdify, Eq, solve, \
+    Piecewise
+from sympy.abc import x
+from sympy.plotting import plot
 
 
 class JawOnYorkCurve(SplineWithPiecewisePolynomial):
@@ -731,6 +732,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         """
         j2 = YorkCurve()
         print(j2.build_variables())
+        print(j3.build_variables())
         """
         if len(self.variables) != 0:
             return len(self.variables)
@@ -756,12 +758,16 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         """
         j2 = YorkCurve()
         print(j2.build_interpolating_condition())
+        print(j3.build_interpolating_condition())
         """
         if self.count_of_interpolation != 0:
             return self.count_of_interpolation
         for k in range(len(self.knots)):
             knot = self.knots[k]
-            p = self.get_pieces()[k-1]
+            if k == 0:
+                p = self.get_pieces()[0]
+            else:
+                p = self.get_pieces()[k-1]
             e = p.get_expr()
             for d in range(5):
                 if isinstance(self.pvajp[d][k], Symbol):
@@ -1091,9 +1097,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         self.pieces = pickle.load(pkl_file)
         pkl_file.close()
 
-    def get_kth_expr_of_ith_piece(self, k, i, without_symbol_coe=True):
-        if without_symbol_coe:
-            self.update_with_solution()
+    def get_kth_expr_of_ith_piece(self, k, i):
         try:
             return self.get_pieces()[i].get_expr()[k]
         except:
@@ -1101,12 +1105,13 @@ class YorkCurve(SplineWithPiecewisePolynomial):
 
     def build_spline(self):
         """
-        j2 = YorkCurve()
-        j2.replace_touching_piece()
-        j2.build_spline()
+        j3 = YorkCurve()
+        j3.load_solved_pieces()
+        print(j3.get_pieces()[2].get_expr()[0])
+        j3.build_spline()
         """
-        self.update_with_solution()
-        for k in range(max(self.orders)):
+        # self.update_with_solution()
+        for k in range(4):
             self.piecewise.append(Piecewise(
                 (0, x < self.knots[0]),
                 (self.get_kth_expr_of_ith_piece(k, 0), x <= self.knots[1]),
@@ -1119,7 +1124,6 @@ class YorkCurve(SplineWithPiecewisePolynomial):
                 (self.get_kth_expr_of_ith_piece(k, 7), x <= self.knots[8]),
                 (self.get_kth_expr_of_ith_piece(k, 8), x <= self.knots[9]),
                 (0, True)))
-        return self.piecewise
 
     def get_piecewise(self):
         """
@@ -1130,3 +1134,92 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         if len(self.piecewise) == 0:
             self.build_spline()
         return self.piecewise
+
+    def plot_svaj(self):
+        """
+        j3 = YorkCurve()
+        j3.load_solved_pieces()
+        j3.plot_svaj()
+        """
+        p0 = plot(0, (x, self.knots[0], self.knots[-1]),
+                  title="Position",
+                  ylabel="(mm)",
+                  show=False)
+        for i in range(self.num_of_pieces):
+            expr_p_i = self.get_kth_expr_of_ith_piece(0, i)
+            pi = plot(expr_p_i, (x, self.knots[i], self.knots[i+1]), show=False)
+            p0.extend(pi)
+        v0 = plot(0, (x, self.knots[0], self.knots[-1]),
+                  title="Velocity",
+                  ylabel="(mm/sec)",
+                  show=False)
+        for i in range(self.num_of_pieces):
+            expr_v_i = self.get_kth_expr_of_ith_piece(1, i)
+            vi = plot(expr_v_i, (x, self.knots[i], self.knots[i+1]), show=False)
+            v0.extend(vi)
+        a0 = plot(0, (x, self.knots[0], self.knots[-1]),
+                  title = "Acceleration",
+                  ylabel = "(mm/sec^2)",
+                  show = False)
+        for i in range(self.num_of_pieces):
+            expr_a_i = self.get_kth_expr_of_ith_piece(2, i)
+            ai = plot(expr_a_i, (x, self.knots[i], self.knots[i+1]), show=False)
+            a0.extend(ai)
+        j0 = plot(0, (x, self.knots[0], self.knots[-1]),
+                  title = "Jerk",
+                  ylabel = "(mm/sec^3)",
+                  show = False)
+        for i in range(self.num_of_pieces):
+            expr_j_i = self.get_kth_expr_of_ith_piece(3, i)
+            ji = plot(expr_j_i, (x, self.knots[i], self.knots[i+1]), show=False)
+            j0.extend(ji)
+        fig, (ax1, ax2, ax3, ax4) = plt.subplots(nrows=4)
+        move_sympyplot_to_axes(p0, ax1)
+        move_sympyplot_to_axes(v0, ax2)
+        move_sympyplot_to_axes(a0, ax3)
+        move_sympyplot_to_axes(j0, ax4)
+        plt.show()
+
+    def plt_svaj(self):
+        """
+        j3 = YorkCurve()
+        j3.load_solved_pieces()
+        j3.plt_svaj()
+        """
+        p0 = plot((0, (x, self.knots[0], self.knots[-1])), show=False)
+        for i in range(self.num_of_pieces):
+            expr_p_i = self.get_kth_expr_of_ith_piece(0, i)
+            pi = plot(expr_p_i, (x, self.knots[i], self.knots[i + 1]),
+                      show=False)
+            p0.extend(pi)
+        v0 = plot((0, (x, self.knots[0], self.knots[-1])), show=False)
+        for i in range(self.num_of_pieces):
+            expr_v_i = self.get_kth_expr_of_ith_piece(1, i)
+            vi = plot(expr_v_i, (x, self.knots[i], self.knots[i + 1]),
+                      show=False)
+            v0.extend(vi)
+        x1y1 = p0.get_points()
+        x2y2 = v0.get_points()
+        fig = plt.figure(figsize=(8, 5))
+        ax1 = fig.add_subplot(121)
+        ax2 = fig.add_subplot(122)
+
+        # do subplot 1
+        ax1.plot(x1y1[0], x1y1[1], 'g')  # plot x**2 in green
+        ax1.set_xlim([-2, 2])
+        ax1.set_xlabel('X1')
+        ax1.set_ylabel('Y1')
+        ax1.set_title('Line1')  # destroyed by another .title(); axis metho1
+
+        # do subplot 2
+        ax2.plot(x2y2[0], x2y2[1], 'r')  # plot x**3 in red
+        ax2.set_xlim([-2, 2])
+        ax2.set_xlabel('X2')
+        ax2.set_ylabel('Y2')
+        ax2.set_title('Line2')
+
+        fig.subplots_adjust(wspace=0.4)  # set space between subplots
+
+        plt.show()
+
+
