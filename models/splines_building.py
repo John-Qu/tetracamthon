@@ -29,6 +29,9 @@ class Polynomial(object):
     def get_piece(self):
         return self.piece
 
+    def get_piece_id(self):
+        return self.piece_id
+
     def get_order(self):
         return self.order
 
@@ -71,19 +74,21 @@ class Polynomial(object):
         :param solution: dict of coefficient and value pair
         :return: None
         """
-        expr_0 = self.get_expr()[0]
+        old_expr = self.get_expr().copy()
         coe = self.get_coefficients()
         self.expr.clear()
-        self.expr.append(expr_0.subs([(coe[index_of_coe],
-                                       solution[coe[index_of_coe]])
-                                      for index_of_coe in range(self.order)]))
-        self.build_diffs()
+        for i in range(len(old_expr)):
+            expr_i = old_expr[i]
+            self.expr.append(expr_i.subs([(coe[index_of_coe],
+                                           solution[coe[index_of_coe]])
+                                          for index_of_coe
+                                          in range(self.order)]))
 
-    def replace_expr(self, new_expr, new_order):
+    def replace_expr(self, new_expr, new_coe):
         self.expr.clear()
         self.expr.append(new_expr)
         self.coe.clear()
-        self.order = new_order
+        self.coe.extend(new_coe)
         self.build_diffs()
 
     def build_functions(self):
