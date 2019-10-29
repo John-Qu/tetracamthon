@@ -969,11 +969,11 @@ class YorkCurve(SplineWithPiecewisePolynomial):
             return self.count_of_smoothness
         if depths == None:
             depths = {
-                1: 4,
-                2: 4,
+                1: 3,
+                2: 3,
                 3: 2,
-                4: 2,
-                5: 2,
+                4: 3,
+                5: 3,
                 6: 2,
                 7: 2,
                 8: 2,
