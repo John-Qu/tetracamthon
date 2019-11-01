@@ -604,7 +604,8 @@ class YorkCurve(SplineWithPiecewisePolynomial):
             symbols('jerk_highest_pair'),
             symbols('ping_highest_pair')]]
         self.touch = [self.trace.get_touch_time(), [
-            350,
+            symbols('pos_touch'),
+            # 350,
             symbols('vel_touch'),
             symbols('acc_touch'),
             symbols('jerk_touch'),
@@ -985,7 +986,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
                 10: 3,
                 11: 3,
                 12: 3,
-                13: 3,
+                13: 4,
                 14: 5
             }
         for i in depths.keys():
