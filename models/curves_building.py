@@ -691,7 +691,22 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         if orders == None:
             orders = [6, 6, 6, 2, 6, 2, 6, 2, 6]
             # orders = [6 for i in range(len(self.kp) - 1)]
-        SplineWithPiecewisePolynomial.__init__(self, knots, orders)
+        # SplineWithPiecewisePolynomial.__init__(self, knots, orders)
+        knots_0 = np.linspace(self.start[0], self.cross[0], 4, endpoint=True)
+        orders_0 = np.array([6 for i in range(len(knots_0)-1)])
+        piece_0 = SplineWithPiecewisePolynomial(knots_0, orders_0)
+        knots_1 = np.linspace(self.cross[0], self.highest[0], 4, endpoint=True)
+        orders_1 = np.array([6 for i in range(len(knots_1)-1)])
+        piece_1 = SplineWithPiecewisePolynomial(knots_1, orders_1)
+        knots_2 = np.linspace(self.highest[0], self.touch[0], 4, endpoint=True)
+        orders_2 = np.array([6 for i in range(len(knots_2)-1)])
+        piece_2 = SplineWithPiecewisePolynomial(knots_2, orders_2)
+        knots_3 = np.linspace(self.accept[0], self.accepted[0], 4, endpoint=True)
+        orders_3 = np.array([6 for i in range(len(knots_3)-1)])
+        piece_3 = SplineWithPiecewisePolynomial(knots_3, orders_3)
+        piece_4 = None
+
+
         self.pvajp = pvajp
         self.equations = []
         self.variables = []

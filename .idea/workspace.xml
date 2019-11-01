@@ -4,7 +4,7 @@
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/curves_building.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/curves_building.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/new_touch_piece.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/models/new_touch_piece.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/splines_building.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/splines_building.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -55,7 +55,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.curves_building">
+  <component name="RunManager" selected="Python.splines_building">
     <configuration name="Tetracamthon" type="PythonConfigurationType" factoryName="Python">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -189,9 +189,6 @@
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -209,10 +206,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.splines_building" />
         <item itemvalue="Python.curves_building" />
         <item itemvalue="Python.packages" />
         <item itemvalue="Python.helper_functions" />
-        <item itemvalue="Python.splines_building" />
         <item itemvalue="Python.analysis" />
       </list>
     </recent_temporary>
