@@ -8,7 +8,7 @@ from helper_functions import degree_to_time, time_to_degree, \
 from packages import Package
 from splines_building import SplineWithPiecewisePolynomial, Polynomial
 from sympy import symbols, Symbol, diff, lambdify, Eq, solve, \
-    Piecewise
+    Piecewise, linsolve
 from sympy.abc import x
 from sympy.plotting import plot
 
@@ -81,7 +81,7 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
         if self.count_of_interpolation != 0:
             return self.count_of_interpolation
         for d in range(5):
-            for k in range(1, len(self.knots) - 1):
+            for k in range(1, len(self.kp) - 1):
                 if isinstance(self.pvajp[d][k], Symbol):
                     continue
                 else:
@@ -484,7 +484,7 @@ class TraceOfA(object):
         x_R_AO5_when_touching_expr = x_R_AO2_when_touching_expr
         r_AG = self.package.depth / 2
         y_R_AO5_when_touching_expr = \
-            (r_AG ** 2 - (r_AG + x_R_AO5_when_touching_expr) ** 2)**0.5
+            (r_AG ** 2 - (r_AG + x_R_AO5_when_touching_expr) ** 2) ** 0.5
         self.memo['y_R_AO5_when_touching_expr'] = y_R_AO5_when_touching_expr
         self.write_memo_to_file()
         return y_R_AO5_when_touching_expr
@@ -567,117 +567,129 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         self.trace = TraceOfA(load_memo=True)
         self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
         self.cv = - self.package.get_pulling_velocity(cycle_time=0.9)
-        # 0
-        start = [degree_to_time(0), [
+        self.start = [degree_to_time(0), [
             0,
             0,
             symbols('acc_start'),
             symbols('jerk_start'),
             symbols('ping_start')]]
-        # 1
-        cross = [degree_to_time(43), [
-            # symbols('pos_cross'),
+        self.start_pair = [degree_to_time(20), [
+            symbols('pos_start_pair'),
+            symbols('vel_start_pair'),
+            symbols('acc_start_pair'),
+            symbols('jerk_start_pair'),
+            symbols('ping_start_pair')]]
+        self.cross = [degree_to_time(43), [
             200,
             symbols('vel_cross'),
             0,
             symbols('jerk_cross'),
             symbols('ping_cross')]]
-        # #
-        # highest = [symbols('theta_highest'), [
+        self.cross_pair = [degree_to_time(63), [
+            symbols('pos_cross_pair'),
+            symbols('vel_cross_pair'),
+            symbols('acc_cross_pair'),
+            symbols('jerk_cross_pair'),
+            symbols('ping_cross_pair')]]
         self.highest = [degree_to_time(84), [
-            # symbols('pos_highest'),
             372.2,
             0,
             symbols('acc_highest'),
             symbols('jerk_highest'),
             symbols('ping_highest')]]
-        # 2
-        touch = [self.trace.get_touch_time(), [
-            # touch = [symbols('theta_touch'), [
-            symbols('pos_touch'),  # 350,
+        self.highest_pair = [degree_to_time(90), [
+            symbols('pos_highest_pair'),
+            symbols('vel_highest_pair'),
+            symbols('acc_highest_pair'),
+            symbols('jerk_highest_pair'),
+            symbols('ping_highest_pair')]]
+        self.touch = [self.trace.get_touch_time(), [
+            350,
             symbols('vel_touch'),
             symbols('acc_touch'),
             symbols('jerk_touch'),
             symbols('ping_touch')]]
-        # 3
-        closed = [degree_to_time(138), [
-            # closed = [symbols('theta_closed'), [
+        self.closed = [degree_to_time(138), [
             symbols('pos_closed'),
             self.cv,
-            symbols('acc_closed'),
+            0,
             symbols('jerk_closed'),
             symbols('ping_closed')]]
-        # 4
-        folding = [degree_to_time(145), [
-            # folding = [symbols('theta_folding'), [
+        self.fold = [degree_to_time(145), [
             symbols('pos_folding'),
             self.cv,
-            # symbols('vel_folding'),
-            symbols('acc_folding'),
+            0,
             symbols('jerk_folding'),
             symbols('ping_folding')]]
-        # 5
-        folded = [degree_to_time(192), [
-            # folded = [symbols('theta_folded'), [
+        self.folding = [degree_to_time(168), [
+            symbols('pos_folding'),
+            self.cv + 300,
+            0,
+            symbols('jerk_folding'),
+            symbols('ping_folding')]]
+        self.folded = [degree_to_time(192), [
             symbols('pos_folded'),
             self.cv,
-            symbols('acc_folded'),
+            0,
             symbols('jerk_folded'),
             symbols('ping_folded')]]
-        # 6
-        accepting = [degree_to_time(262), [
-            # accepting = [symbols('theta_accepting'), [
+        self.accept = [degree_to_time(262), [
             symbols('pos_accepting'),
             self.cv,
-            # symbols('vel_accepting'),
-            symbols('acc_accepting'),
+            0,
             symbols('jerk_accepting'),
             symbols('ping_accepting')]]
-        # 7
-        accepted = [degree_to_time(318), [
+        self.accepted = [degree_to_time(318), [
             # accepted = [symbols('theta_accepted'), [
             symbols('pos_accepted'),
             self.cv,
-            symbols('acc_accepted'),
+            0,
             symbols('jerk_accepted'),
             symbols('ping_accepted')]]
-        # 8
-        # leaving = [symbols('theta_leaving'), [
-        leaving = [degree_to_time(325), [
+        self.leave = [degree_to_time(325), [
             symbols('pos_leaving'),
             self.cv,
-            # symbols('vel_leaving'),
-            symbols('acc_leaving'),
+            0,
             symbols('jerk_leaving'),
             symbols('ping_leaving')]]
-        # 9
-        # left = [symbols('theta_left'), [
         self.left = [degree_to_time(330), [
             symbols('pos_left'),
             symbols('vel_left'),
             symbols('acc_left'),
             symbols('jerk_left'),
             symbols('ping_left')]]
-        # 10
-        end = [degree_to_time(360), [
+        self.end = [degree_to_time(360), [
             symbols('pos_end'),
             symbols('vel_end'),
             symbols('acc_end'),
             symbols('jerk_end'),
             symbols('ping_end')]]
+        self.kp = [
+            self.start,
+            self.start_pair,
+            self.cross,
+            self.cross_pair,
+            self.highest,
+            self.highest_pair,
+            self.touch,
+            self.closed,
+            self.fold,
+            self.folding,
+            self.folded,
+            self.accept,
+            self.accepted,
+            self.leave,
+            self.left,
+            self.end
+        ]
         if knots == None:
-            knots = np.array(
-                [start[0], cross[0], touch[0], closed[0],
-                 folding[0], folded[0], accepting[0], accepted[0],
-                 leaving[0], end[0]])
+            knots = np.array([self.kp[i][0] for i in range(len(self.kp))])
         if pvajp == None:
-            pvajp = np.array([
-                [start[1][i], cross[1][i], touch[1][i], closed[1][i],
-                 folding[1][i], folded[1][i], accepting[1][i], accepted[1][i],
-                 leaving[1][i], end[1][i]] for i in range(5)])
+            pvajp = np.array([[self.kp[i][1][j] for i in range(len(self.kp))]
+                              for j in range(5)])
         if orders == None:
             # orders = [6, 6, 6, 2, 6, 2, 6, 2, 6]
-            orders = [6, 6, 6, 6, 6, 6, 6, 6, 6]
+            orders = [6 for i in range(len(self.kp) - 1)]
         SplineWithPiecewisePolynomial.__init__(self, knots, orders)
         self.pvajp = pvajp
         self.equations = []
@@ -710,27 +722,29 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         j3.replace_touching_piece()
         print(j3.pieces[2].get_expr()[1])
         """
+        index_t = self.kp.index(self.touch)
         if reload:
-            np = load_new_touch_piece()
-            self.pieces[2] = np
+            np = load_new_touch_piece()  # New Piece
+            self.pieces[index_t] = np
             return
         y_R_AO5_expr = self.trace.get_y_R_AO5_when_touching_expr()
         y_R_AO2_expr = self.trace.get_y_R_AO2_when_touching_expr()
         r_O5O2 = self.package.height + \
                  self.package.hs_sealing_length + \
                  self.trace.joy_mechanism_forward.r_DC_value
-        accepting_curve_expr = self.pieces[6].get_expr()[0]
-        accepting_curve_coe = self.pieces[6].get_coefficients()
+        index_a = self.kp.index(self.accept)
+        accepting_curve_expr = self.pieces[index_a].get_expr()[0]
+        accepting_curve_coe = self.pieces[index_a].get_coefficients()
         new_touch_curve_expr = y_R_AO5_expr + r_O5O2 + accepting_curve_expr \
-                           - y_R_AO2_expr
-        op = self.pieces[2]  # Old Piece
+                               - y_R_AO2_expr
+        op = self.pieces[index_t]  # Old Piece
         op_id = op.get_piece_id()
         op_order = op.get_order()
         op_piece = op.get_piece()
-        np = Polynomial(op_id, op_order, op_piece)
+        np = Polynomial(op_id, op_order, op_piece)  # New Piece
         np.replace_expr(new_touch_curve_expr, accepting_curve_coe)
         self.save_new_touch_piece(np)
-        self.pieces[2] = np
+        self.pieces[index_t] = np
 
     def build_variables(self):
         """
@@ -741,7 +755,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         if len(self.variables) != 0:
             return len(self.variables)
         for i in range(self.num_of_pieces):
-            if i == 2:
+            if i == self.kp.index(self.touch):
                 continue
             polynomial_i = self.get_pieces()[i]
             coe_i = polynomial_i.coe
@@ -771,7 +785,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
             if k == 0:
                 p = self.get_pieces()[0]
             else:
-                p = self.get_pieces()[k-1]
+                p = self.get_pieces()[k - 1]
             e = p.get_expr()
             for d in range(5):
                 if isinstance(self.pvajp[d][k], Symbol):
@@ -781,29 +795,6 @@ class YorkCurve(SplineWithPiecewisePolynomial):
                     self.equations.append(eq)
                     self.count_of_interpolation += 1
         return self.equations[-self.count_of_interpolation:]
-
-    # Merge boundary condition into interpolation condition
-    # def build_boundary_condition(self):
-    #     """
-    #     j2 = YorkCurve()
-    #     print(j2.build_boundary_condition())
-    #     """
-    #     if self.count_of_boundary != 0:
-    #         return self.count_of_boundary
-    #     for d in range(5):
-    #         for k in [0, -1]:
-    #             if isinstance(self.pvajp[d][k], Symbol):
-    #                 continue
-    #             else:
-    #                 p = self.get_pieces()[k]
-    #                 e = p.get_expr()
-    #                 # f = p.get_functions()
-    #                 knot = self.knots[k]
-    #                 # eq = Eq(f[d](knot), self.pvajp[d][k])
-    #                 eq = Eq(e[d].subs(x, knot), self.pvajp[d][k])
-    #                 self.equations.append(eq)
-    #                 self.count_of_boundary += 1
-    #     return self.equations[-self.count_of_boundary:]
 
     def build_periodic_condition(self):
         """
@@ -818,7 +809,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         pe = self.get_pieces()[-1]  # Piece of End
         ee = pe.get_expr()  # Expression of End
         te = self.knots[-1]  # Time of End
-        for d in range(min(ps.order, pe.order) - 2):  # Start IS a knot.
+        for d in range(min(ps.order, pe.order) - 1):  # Start IS a knot.
             eq = Eq(es[d].subs(x, ts), ee[d].subs(x, te))
             self.equations.append(eq)
             self.count_of_periodic += 1
@@ -848,11 +839,11 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         # ======
         # when highest
         # ------
-        trh = self.highest[0]  # Time of Right york Highest
-        pr_highest_e = pps[1].get_expr()[0]
-        p_highest_v = self.highest[1][0]  # Position Highest Value
-        self.equations.append(Eq(pr_highest_e.subs(x, trh), p_highest_v))
-        self.count_of_position += 1
+        # trh = self.highest[0]  # Time of Right york Highest
+        # pr_highest_e = pps[1].get_expr()[0]
+        # p_highest_v = self.highest[1][0]  # Position Highest Value
+        # self.equations.append(Eq(pr_highest_e.subs(x, trh), p_highest_v))
+        # self.count_of_position += 1
         # ======
         # when touch  # Duplicated?
         # ------
@@ -889,13 +880,16 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         # ======
         # When left
         # ------
-        trjl = degree_to_time(330)  # Time Right Jaw Left
-        tljl = degree_to_time(330 + 180 - 360)  # Time Left Jaw Left
-        pr_touching_e = pps[8].get_expr()[0]  # Position Right york Expression
-        pl_accepting_e = pps[4].get_expr()[0] # Position Left york Expression
-        self.equations.append(Eq(pr_touching_e.subs(x, trjl)
-                                 - pl_accepting_e.subs(x, tljl),
-                                - y_ArAl_jaw_over_jaw - 20))
+        index_left = self.kp.index(self.left)
+        trjl = self.knots[index_left]  # Time Right Jaw Left
+        tljl = trjl - degree_to_time(180)  # Time Left Jaw Left
+        index_leave = self.kp.index(self.leave)
+        pr_leave_e = pps[index_leave].get_expr()[0]
+        index_fold = self.kp.index(self.fold)
+        pl_fold_e = pps[index_fold].get_expr()[0]
+        self.equations.append(Eq(pr_leave_e.subs(x, trjl)
+                                 - pl_fold_e.subs(x, tljl),
+                                 - y_ArAl_jaw_over_jaw - 20))
         self.count_of_position += 1
         return self.equations[-self.count_of_position:]
 
@@ -911,28 +905,36 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         # When folding
         # ------
         # vr_folding_f = pps[4].get_functions()[1]
-        vr_folding_e = pps[4].get_expr()[1]
-        fmt = (self.knots[4] + self.knots[5]) / 2  # Folding Middle Time
-        self.equations.append(Eq(vr_folding_e.subs(x, fmt),
-                                 self.cv + 300))
-        self.count_of_velocity += 1
+        # vr_folding_e = pps[5].get_expr()[1]
+        # fmt = (self.knots[5] + self.knots[6]) / 2  # Folding Middle Time
+        # self.equations.append(Eq(vr_folding_e.subs(x, fmt),
+        #                          self.cv + 300))
+        # self.count_of_velocity += 1
+        # ar_folding_e = pps[5].get_expr()[2]
+        # self.equations.append(Eq(ar_folding_e.subs(x, fmt), 0))
+        # self.count_of_velocity += 1
         # ======
         # When accepting
         # ------
         # vr_accepting_f = pps[6].get_functions()[1]
-        vr_accepting_e = pps[6].get_expr()[1]
-        amt = (self.knots[6] + self.knots[7]) / 2  # Accepting Middle Time
+        index_accept = self.kp.index(self.accept)
+        # Accepting Middle Time
+        amt = (self.knots[index_accept] + self.knots[index_accept + 1]) / 2
+        vr_accepting_e = pps[index_accept].get_expr()[1]
         self.equations.append(Eq(vr_accepting_e.subs(x, amt),
                                  self.cv + 340))
+        self.count_of_velocity += 1
+        ar_accepting_e = pps[index_accept].get_expr()[2]
+        self.equations.append(Eq(ar_accepting_e.subs(x, amt), 0))
         self.count_of_velocity += 1
         # ======
         # When heighest
         # ------
-        trh = self.highest[0]  # Time of Right york Highest
-        vr_highest_e = pps[1].get_expr()[1]
-        v_highest_v = self.highest[1][1]  # Velocity Highest Value
-        self.equations.append(Eq(vr_highest_e.subs(x, trh), v_highest_v))
-        self.count_of_velocity += 1
+        # trh = self.highest[0]  # Time of Right york Highest
+        # vr_highest_e = pps[1].get_expr()[1]
+        # v_highest_v = self.highest[1][1]  # Velocity Highest Value
+        # self.equations.append(Eq(vr_highest_e.subs(x, trh), v_highest_v))
+        # self.count_of_velocity += 1
         return self.equations[-self.count_of_velocity:]
 
     def how_many_smoothness_equations_available(self):
@@ -945,8 +947,6 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         """
         if self.count_of_interpolation == 0:
             self.build_interpolating_condition()
-        # if self.count_of_boundary == 0:
-        #     self.build_boundary_condition()
         if self.count_of_periodic == 0:
             self.build_periodic_condition()
         if self.count_of_position == 0:
@@ -956,7 +956,6 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         count_of_var = self.build_variables()
         result = (count_of_var -
                   self.count_of_interpolation -
-                  # self.count_of_boundary -
                   self.count_of_periodic -
                   self.count_of_position -
                   self.count_of_velocity)
@@ -975,12 +974,18 @@ class YorkCurve(SplineWithPiecewisePolynomial):
             depths = {
                 1: 4,
                 2: 4,
-                3: 4,
+                3: 5,
                 4: 4,
-                5: 4,
-                6: 3,
-                7: 3,
+                5: 5,
+                6: 4,
+                7: 4,
                 8: 3,
+                9: 5,
+                10: 3,
+                11: 3,
+                12: 3,
+                13: 3,
+                14: 5
             }
         for i in depths.keys():
             ki = self.knots[i]  # Knot I
@@ -1047,7 +1052,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
             return self.solution
         equations = self.get_equations()
         variables = self.get_variables()
-        solution = solve(equations, variables)
+        solution = linsolve(equations, variables)
         self.solution = solution
         return self.solution
 
@@ -1151,7 +1156,8 @@ class YorkCurve(SplineWithPiecewisePolynomial):
                   show=False)
         for i in range(self.num_of_pieces):
             expr_p_i = self.get_kth_expr_of_ith_piece(0, i)
-            pi = plot(expr_p_i, (x, self.knots[i], self.knots[i+1]), show=False)
+            pi = plot(expr_p_i, (x, self.knots[i], self.knots[i + 1]),
+                      show=False)
             p0.extend(pi)
         v0 = plot(0, (x, self.knots[0], self.knots[-1]),
                   title="Velocity",
@@ -1159,23 +1165,26 @@ class YorkCurve(SplineWithPiecewisePolynomial):
                   show=False)
         for i in range(self.num_of_pieces):
             expr_v_i = self.get_kth_expr_of_ith_piece(1, i)
-            vi = plot(expr_v_i, (x, self.knots[i], self.knots[i+1]), show=False)
+            vi = plot(expr_v_i, (x, self.knots[i], self.knots[i + 1]),
+                      show=False)
             v0.extend(vi)
         a0 = plot(0, (x, self.knots[0], self.knots[-1]),
-                  title = "Acceleration",
-                  ylabel = "(mm/sec^2)",
-                  show = False)
+                  title="Acceleration",
+                  ylabel="(mm/sec^2)",
+                  show=False)
         for i in range(self.num_of_pieces):
             expr_a_i = self.get_kth_expr_of_ith_piece(2, i)
-            ai = plot(expr_a_i, (x, self.knots[i], self.knots[i+1]), show=False)
+            ai = plot(expr_a_i, (x, self.knots[i], self.knots[i + 1]),
+                      show=False)
             a0.extend(ai)
         j0 = plot(0, (x, self.knots[0], self.knots[-1]),
-                  title = "Jerk",
-                  ylabel = "(mm/sec^3)",
-                  show = False)
+                  title="Jerk",
+                  ylabel="(mm/sec^3)",
+                  show=False)
         for i in range(self.num_of_pieces):
             expr_j_i = self.get_kth_expr_of_ith_piece(3, i)
-            ji = plot(expr_j_i, (x, self.knots[i], self.knots[i+1]), show=False)
+            ji = plot(expr_j_i, (x, self.knots[i], self.knots[i + 1]),
+                      show=False)
             j0.extend(ji)
         fig, (ax1, ax2, ax3, ax4) = plt.subplots(nrows=4)
         move_sympyplot_to_axes(p0, ax1)
@@ -1250,7 +1259,8 @@ class YorkCurve(SplineWithPiecewisePolynomial):
 
 def resolve_york(if_reload_touching_piece=True):
     j2 = YorkCurve()
-    j2.replace_touching_piece()
+    j2.replace_touching_piece(reload=False)
+    j2.replace_touching_piece(reload=True)
     j2.solve_coefficients()
     j2.save_solution()
     j2.update_with_solution()
