@@ -733,7 +733,8 @@ class YorkCurve(SplineWithPiecewisePolynomial):
                  self.package.hs_sealing_length + \
                  self.trace.joy_mechanism_forward.r_DC_value
         index_a = self.kp.index(self.accept)
-        accepting_curve_expr = self.pieces[index_a].get_expr()[0]
+        accepting_curve_expr = \
+            self.pieces[index_a].get_expr()[0].subs(x, x + degree_to_time(180))
         accepting_curve_coe = self.pieces[index_a].get_coefficients()
         new_touch_curve_expr = y_R_AO5_expr + r_O5O2 + accepting_curve_expr \
                                - y_R_AO2_expr
