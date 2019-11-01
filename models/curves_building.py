@@ -1223,3 +1223,5 @@ class YorkCurve(SplineWithPiecewisePolynomial):
         plt.show()
 
 
+if __name__ == '__main__':
+    pass
