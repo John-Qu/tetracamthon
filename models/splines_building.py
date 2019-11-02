@@ -2,6 +2,7 @@ from sympy import symbols, diff, lambdify, nan, Eq, solve, Piecewise
 from sympy.abc import x
 from sympy.plotting import plot
 import numpy as np
+import pickle
 import matplotlib.pyplot as plt
 from helper_functions import degree_to_time, time_to_degree, \
     move_sympyplot_to_axes
@@ -136,18 +137,36 @@ class Polynomial(object):
 
 class SplineWithPiecewisePolynomial(object):
     """
-    knots1 = [0, 1, 2, 3]
-    orders1 = [3, 4, 5]
-    s1 = SplineWithPiecewisePolynomial(knots1, orders1)
+    s1 = SplineWithPiecewisePolynomial()
     print(s1)
     """
 
-    def __init__(self, knots, orders):
+    def __init__(self, knots=None, orders=None, pvajp=None,
+                 name='polynomials_curve'):
+        if knots is None:
+            knots = np.linspace(0, 3, 4, endpoint=True)
+        if orders is None:
+            orders = [6 for i in range(len(knots)-1)]
+        if pvajp is None:
+            pvajp = [
+                [0, 0.3, 0.6, 1],
+                [0, nan, nan, 0],
+                [0, nan, nan, 0],
+                [nan, nan, nan, nan],
+                [nan, nan, nan, nan]
+            ]
+        self._name = name
         self.knots = knots
         self.orders = orders
+        self.pvajp = pvajp
         self.num_of_pieces = len(self.knots) - 1
         self.pieces = []
-        self.expressions = []
+        self.equations = []
+        self.variables = []
+        self.count_of_interpolation = 0
+        self.count_of_smoothness = 0
+        self.piecewise = []
+        self.solution = {}
 
     def build_pieces(self):
         for piece_id in range(self.num_of_pieces):
@@ -177,65 +196,17 @@ class SplineWithPiecewisePolynomial(object):
             poly = self.pieces[index_of_piece]
             poly.update_expr(solution)  # poly is an instance of Polynomial.
 
+    @property
+    def name(self):
+        return self._name
 
-class SplineWithBsplines(object):
-    def __init__(self):
-        # TODO: add b-spline ability
-        pass
-
-
-class ShakeHand(SplineWithPiecewisePolynomial):
-    # def __init__(self, start_knot=0.3625, end_knot=0.4825,
-    #              start_position=0, end_position=symbols('end_p'),
-    #              cons_velocity=-422, mod_velocity=-122):
-    def __init__(self, start_knot=0.3625, end_knot=0.4825,
-                 start_position=0, end_position=nan,
-                 cons_velocity=-422, mod_velocity=-122):
-
-        """
-        s1 = ShakeHand()
-        :param start_knot:
-        :param end_knot:
-        :param start_position:
-        :param end_position:
-        :param cons_velocity:
-        :param mod_velocity:
-        """
-        self.start_knot = start_knot
-        self.end_knot = end_knot
-        self.start_p = start_position
-        self.end_p = end_position
-        self.cons_v= cons_velocity
-        self.mod_v= mod_velocity
-        delta = self.end_knot - self.start_knot
-        knots = np.array([
-            self.start_knot,
-            self.start_knot + delta / 10 * 2,
-            self.start_knot + delta / 10 * 3,
-            self.start_knot + delta / 2,
-            self.end_knot - delta / 10 * 3,
-            self.end_knot - delta / 10 * 2,
-            self.end_knot
-        ])
-        orders = [6 for i in range(len(knots) - 1)]
-        SplineWithPiecewisePolynomial.__init__(self, knots, orders)
-        self.pvajp = [
-            [self.start_p, nan, nan, nan, nan, nan, self.end_p],
-            [self.cons_v, nan, nan, self.mod_v, nan, nan, self.cons_v],
-            [0, nan, nan, 0, nan, nan, 0],
-            [0, 0, nan, nan, nan, 0, 0],
-            [nan, nan, 0, nan, 0, nan, nan]
-        ]
-        self.equations = []
-        self.variables = []
-        self.count_of_interpolation = 0
-        self.count_of_smoothness = 0
-        self.piecewise = []
-        self.solution = {}
+    @name.setter
+    def name(self, name):
+        self._name = name
 
     def build_variables(self):
         """
-        s1 = ShakeHand()
+        s1 = SplineWithPiecewisePolynomial()
         print(s1.build_variables())
         """
         if len(self.variables) != 0:
@@ -249,7 +220,7 @@ class ShakeHand(SplineWithPiecewisePolynomial):
 
     def get_variables(self):
         """
-        s1 = ShakeHand()
+        s1 = SplineWithPiecewisePolynomial()
         print(len(s1.get_variables()))
         """
         if len(self.variables) == 0:
@@ -258,7 +229,7 @@ class ShakeHand(SplineWithPiecewisePolynomial):
 
     def build_interpolating_condition(self):
         """
-        s1 = ShakeHand()
+        s1 = SplineWithPiecewisePolynomial()
         print(len(s1.build_interpolating_condition()))
         """
         if self.count_of_interpolation != 0:
@@ -281,20 +252,17 @@ class ShakeHand(SplineWithPiecewisePolynomial):
 
     def build_smoothness_condition(self, depths=None):
         """
-        s1 = ShakeHand()
+        s1 = SplineWithPiecewisePolynomial()
         print(len(s1.build_smoothness_condition()))
         for i in range(len(j2.equations)):
             print(j2.equations[i])
         """
         if self.count_of_smoothness != 0:
             return self.count_of_smoothness
-        if depths == None:
+        if depths is None:
             depths = {
                 1: 5,
-                2: 4,
-                3: 5,
-                4: 4,
-                5: 5
+                2: 5
             }
         for i in depths.keys():
             ki = self.knots[i]  # Knot I
@@ -310,7 +278,7 @@ class ShakeHand(SplineWithPiecewisePolynomial):
 
     def build_equations(self):
         """
-        s1 = ShakeHand()
+        s1 = SplineWithPiecewisePolynomial()
         print(len(s1.build_equations()))
         """
         if self.count_of_interpolation == 0:
@@ -326,11 +294,8 @@ class ShakeHand(SplineWithPiecewisePolynomial):
 
     def solve_coefficients(self):
         """
-        s1 = ShakeHand()
+        s1 = SplineWithPiecewisePolynomial()
         print(s1.solve_coefficients())
-        equations = s1.get_equations()
-        variables = s1.get_variables()
-        solutions = solve(equations, variables)
         """
         if self.solution != {}:
             return self.solution
@@ -342,12 +307,33 @@ class ShakeHand(SplineWithPiecewisePolynomial):
 
     def update_with_solution(self):
         """
-        s1 = ShakeHand()
+        s1 = SplineWithPiecewisePolynomial()
         s1.update_with_solution()
-        print(s1.get_pieces()[2].get_expr()[0])
+        print(s1.get_pieces()[0].get_expr()[0])
         """
         solution = self.solve_coefficients()
         self.involve_solutions(solution)
+
+    def save_solved_pieces(self):
+        """
+        s1 = SplineWithPiecewisePolynomial()
+        s1.update_with_solution()
+        s1.save_solved_pieces()
+        """
+        output = open('{}_pieces.pkl'.format(self.name), 'wb')
+        pickle.dump(self.get_pieces(), output)
+        output.close()
+
+    def load_solved_pieces(self):
+        """
+        s1 = SplineWithPiecewisePolynomial()
+        s1.load_solved_pieces()
+        print(s1.get_pieces()[2].get_expr()[0])
+        """
+        pkl_file = open('{}_pieces.pkl'.format(self.name), 'rb')
+        self.pieces = pickle.load(pkl_file)
+        pkl_file.close()
+
 
     def get_kth_expr_of_ith_piece(self, k, i):
         try:
@@ -355,35 +341,10 @@ class ShakeHand(SplineWithPiecewisePolynomial):
         except:
             return 0
 
-    def build_spline(self):
-        """
-        s1 = ShakeHand()
-        s1.update_with_solution()
-        s1.build_spline()
-        """
-        for k in range(4):
-            self.piecewise.append(Piecewise(
-                (0, x < self.knots[0]),
-                (self.get_kth_expr_of_ith_piece(k, 0), x <= self.knots[1]),
-                (self.get_kth_expr_of_ith_piece(k, 1), x <= self.knots[2]),
-                (self.get_kth_expr_of_ith_piece(k, 2), x <= self.knots[3]),
-                (self.get_kth_expr_of_ith_piece(k, 3), x <= self.knots[4]),
-                (0, True)))
-
-    def get_piecewise(self):
-        """
-        s1 = ShakeHand()
-        print(s1.get_piecewise()[0])
-        """
-        if len(self.piecewise) == 0:
-            self.build_spline()
-        return self.piecewise
-
     def plot_svaj(self):
         """
-        s1 = ShakeHand()
+        s1 = SplineWithPiecewisePolynomial()
         s1.update_with_solution()
-        print(s1.get_piecewise()[0])
         s1.plot_svaj()
         """
         p0 = plot(0, (x, self.knots[0], self.knots[-1]),
@@ -449,5 +410,103 @@ class ShakeHand(SplineWithPiecewisePolynomial):
         ax4.grid(True)
         ax4.set_xlabel('machine degree')
         plt.show()
+
+    def get_start_pvaj(self):
+        """
+        s1 = SplineWithPiecewisePolynomial()
+        s1.load_solved_pieces()
+        print(s1.get_start_pvaj())
+        :return: tuple of pvaj on the start knot
+        """
+        k_s = self.knots[0]
+        return tuple([self.get_kth_expr_of_ith_piece(k, 0).subs(x, k_s)
+                      for k in range(4)])
+
+    def get_end_pvaj(self):
+        """
+        s1 = SplineWithPiecewisePolynomial()
+        s1.load_solved_pieces()
+        print(s1.get_end_pvaj())
+        :return: tuple of pvaj on the end knot
+        """
+        k_e = self.knots[-1]
+        return tuple([self.get_kth_expr_of_ith_piece(k, -1).subs(x, k_e)
+                      for k in range(4)])
+
+
+class SplineWithBsplines(object):
+    def __init__(self):
+        # TODO: add b-spline ability
+        pass
+
+
+class ShakeHand(SplineWithPiecewisePolynomial):
+    # def __init__(self, start_knot=0.3625, end_knot=0.4825,
+    #              start_position=0, end_position=symbols('end_p'),
+    #              cons_velocity=-422, mod_velocity=-122):
+    def __init__(self, name='shake_hand_curve_1',
+                 start_knot=0.3625, end_knot=0.4825,
+                 start_position=0, end_position=nan,
+                 cons_velocity=-422, mod_velocity=-122):
+        """
+        s1 = ShakeHand()
+        """
+        self.start_knot = start_knot
+        self.end_knot = end_knot
+        self.start_p = start_position
+        self.end_p = end_position
+        self.cons_v= cons_velocity
+        self.mod_v= mod_velocity
+        delta = self.end_knot - self.start_knot
+        knots = np.array([
+            self.start_knot,
+            self.start_knot + delta / 10 * 2,
+            self.start_knot + delta / 10 * 3,
+            self.start_knot + delta / 2,
+            self.end_knot - delta / 10 * 3,
+            self.end_knot - delta / 10 * 2,
+            self.end_knot
+        ])
+        pvajp = [
+            [self.start_p, nan, nan, nan, nan, nan, self.end_p],
+            [self.cons_v, nan, nan, self.mod_v, nan, nan, self.cons_v],
+            [0, nan, nan, 0, nan, nan, 0],
+            [0, 0, nan, nan, nan, 0, 0],
+            [nan, nan, 0, nan, 0, nan, nan]
+        ]
+        orders = [6 for i in range(len(knots) - 1)]
+        SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
+                                               name='shake_hand_curve_1')
+
+    def build_spline(self):
+        """
+        s1 = ShakeHand()
+        s1.update_with_solution()
+        s1.build_spline()
+        """
+        for k in range(4):
+            self.piecewise.append(Piecewise(
+                (0, x < self.knots[0]),
+                (self.get_kth_expr_of_ith_piece(k, 0), x <= self.knots[1]),
+                (self.get_kth_expr_of_ith_piece(k, 1), x <= self.knots[2]),
+                (self.get_kth_expr_of_ith_piece(k, 2), x <= self.knots[3]),
+                (self.get_kth_expr_of_ith_piece(k, 3), x <= self.knots[4]),
+                (self.get_kth_expr_of_ith_piece(k, 4), x <= self.knots[5]),
+                (self.get_kth_expr_of_ith_piece(k, 5), x <= self.knots[6]),
+                (0, True)))
+
+    def get_piecewise(self):
+        """
+        s1 = ShakeHand()
+        print(s1.get_piecewise()[0])
+        """
+        if len(self.piecewise) == 0:
+            self.build_spline()
+        return self.piecewise
+
+
+class SmoothPulling(SplineWithPiecewisePolynomial):
+    def __init__(self):
+        pass
 
 
