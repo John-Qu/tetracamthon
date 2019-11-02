@@ -1,4 +1,5 @@
-from sympy import symbols, diff, lambdify, nan, Eq, solve, Piecewise
+from sympy import symbols, diff, lambdify, nan, Eq, solve, Piecewise, \
+    piecewise_fold
 from sympy.abc import x
 from sympy.plotting import plot
 import numpy as np
@@ -82,8 +83,7 @@ class Polynomial(object):
             expr_i = old_expr[i]
             self.expr.append(expr_i.subs([(coe[index_of_coe],
                                            solution[coe[index_of_coe]])
-                                          for index_of_coe
-                                          in range(self.order)]))
+                                          for index_of_coe in range(self.order)]))
 
     def replace_expr(self, new_expr, new_coe):
         self.expr.clear()
@@ -233,7 +233,7 @@ class SplineWithPiecewisePolynomial(object):
         print(len(s1.build_interpolating_condition()))
         """
         if self.count_of_interpolation != 0:
-            return self.count_of_interpolation
+            return self.equations[-self.count_of_interpolation:]
         for k in range(len(self.knots)):
             knot = self.knots[k]
             if k == 0:
@@ -254,8 +254,8 @@ class SplineWithPiecewisePolynomial(object):
         """
         s1 = SplineWithPiecewisePolynomial()
         print(len(s1.build_smoothness_condition()))
-        for i in range(len(j2.equations)):
-            print(j2.equations[i])
+        for i in range(len(s1.equations)):
+            print(s1.equations[i])
         """
         if self.count_of_smoothness != 0:
             return self.count_of_smoothness
@@ -433,6 +433,14 @@ class SplineWithPiecewisePolynomial(object):
         return tuple([self.get_kth_expr_of_ith_piece(k, -1).subs(x, k_e)
                       for k in range(4)])
 
+    def get_piecewise(self):
+        """
+        s3 = ClimbUp()
+        s3 = ShakeHand()
+        print(s3.get_piecewise()[0])
+        """
+        return self.piecewise
+
 
 class SplineWithBsplines(object):
     def __init__(self):
@@ -447,7 +455,8 @@ class ShakeHand(SplineWithPiecewisePolynomial):
     def __init__(self, name='shake_hand_curve_1',
                  start_knot=0.3625, end_knot=0.4825,
                  start_position=0, end_position=nan,
-                 cons_velocity=-422, mod_velocity=-122):
+                 cons_velocity=-422, mod_velocity=-122,
+                 if_save_pieces=False, if_load_pieces=True):
         """
         s1 = ShakeHand()
         """
@@ -476,13 +485,49 @@ class ShakeHand(SplineWithPiecewisePolynomial):
         ]
         orders = [6 for i in range(len(knots) - 1)]
         SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
-                                               name='shake_hand_curve_1')
+                                               name=name)
+        if if_save_pieces:
+            self.update_with_solution()
+            self.save_solved_pieces()
+        if if_load_pieces:
+            self.load_solved_pieces()
+
+    def build_smoothness_condition(self, depths=None):
+        """
+        s1 = ShakeHand(if_save_pieces=False, if_load_pieces=False)
+        print(len(s1.build_smoothness_condition()))
+        print(len(s1.build_interpolating_condition()))
+        for i in range(len(s1.equations)):
+            print(s1.equations[i])
+        """
+        if self.count_of_smoothness != 0:
+            return self.count_of_smoothness
+        if depths is None:
+            depths = {
+                1: 5,
+                2: 4,
+                3: 5,
+                4: 4,
+                5: 5
+            }
+        for i in depths.keys():
+            ki = self.knots[i]  # Knot I
+            pib = self.get_pieces()[i - 1]  # Piece Before knot I
+            pia = self.get_pieces()[i]  # Piece After knot I
+            eib = pib.get_expr()
+            eia = pia.get_expr()
+            for d in range(depths[i]):
+                eq = Eq(eib[d].subs(x, ki), eia[d].subs(x, ki))
+                self.equations.append(eq)
+                self.count_of_smoothness += 1
+        return self.equations[-self.count_of_smoothness:]
 
     def build_spline(self):
         """
-        s1 = ShakeHand()
-        s1.update_with_solution()
+        s1 = ShakeHand(if_save_pieces=True, if_load_pieces=False)
+        s1 = ShakeHand(if_save_pieces=False, if_load_pieces=True)
         s1.build_spline()
+        s1.plot_svaj()
         """
         for k in range(4):
             self.piecewise.append(Piecewise(
@@ -506,7 +551,122 @@ class ShakeHand(SplineWithPiecewisePolynomial):
 
 
 class SmoothPulling(SplineWithPiecewisePolynomial):
-    def __init__(self):
-        pass
+    def __init__(self, name='shake_hand_curve_1',
+                 start_knot=0, end_knot=0.45,
+                 start_position=0, end_position=nan,
+                 cons_velocity=-422):
+        """
+        s2 = SmoothPulling()
+        """
+        self.start_knot = start_knot
+        self.end_knot = end_knot
+        self.start_p = start_position
+        self.end_p = end_position
+        self.cons_v= cons_velocity
+        knots = np.array([
+            self.start_knot,
+            self.end_knot
+        ])
+        pvajp = [
+            [self.start_p, self.end_p],
+            [self.cons_v, nan],
+            [nan, nan],
+            [nan, nan],
+            [nan, nan]
+        ]
+        orders = [2 for i in range(len(knots) - 1)]
+        SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
+                                               name='smooth_pulling_curve_1')
+
+    def build_equations(self):
+        """
+        s1 = SplineWithPiecewisePolynomial()
+        print(len(s1.build_equations()))
+        """
+        if self.count_of_interpolation == 0:
+            self.build_interpolating_condition()
+        return self.equations
+
+    def build_spline(self):
+        """
+        s2 = SmoothPulling()
+        s2.update_with_solution()
+        s2.build_spline()
+        """
+        for k in range(4):
+            self.piecewise.append(Piecewise(
+                (0, x < self.knots[0]),
+                (self.get_kth_expr_of_ith_piece(k, 0), x <= self.knots[1]),
+                (0, True)))
+
+    def get_piecewise(self):
+        """
+        s2 = SmoothPulling()
+        print(s2.get_piecewise()[0])
+        """
+        if len(self.piecewise) == 0:
+            self.build_spline()
+        return self.piecewise
+
+
+class ClimbUp(SplineWithPiecewisePolynomial):
+    def __init__(self, name='climb_up_curve_1',
+                 start_knot=0, cross_knot=0.1075, end_knot=0.21,
+                 start_position=0, cross_position=200, end_position=372.2):
+        """
+        s3 = ClimbUp()
+        """
+        self.start_knot = start_knot
+        self.cross_knot = cross_knot
+        self.end_knot = end_knot
+        self.start_p = start_position
+        self.cross_p = cross_position
+        self.end_p = end_position
+        delta = self.end_knot - self.start_knot
+        knots = np.array([
+            self.start_knot,
+            self.cross_knot,
+            self.end_knot
+        ])
+        pvajp = [
+            [self.start_p, self.cross_p, self.end_p],
+            [0, nan, 0],
+            [30000, nan, -30000],
+            [nan, nan, nan],
+            [nan, nan, nan]
+        ]
+        orders = [6 for i in range(len(knots) - 1)]
+        SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
+                                               name='climb_up_curve_1')
+
+    def build_smoothness_condition(self, depths=None):
+        """
+        s3 = ClimbUp()
+        print(len(s3.build_smoothness_condition()))
+        for i in range(len(s3.equations)):
+            print(s3.equations[i])
+        s3 = ClimbUp()
+        s3.update_with_solution()
+        s3.build_spline()
+        s3.plot_svaj()
+        """
+        if self.count_of_smoothness != 0:
+            return self.count_of_smoothness
+        if depths is None:
+            depths = {
+                1: 5,
+            }
+        for i in depths.keys():
+            ki = self.knots[i]  # Knot I
+            pib = self.get_pieces()[i - 1]  # Piece Before knot I
+            pia = self.get_pieces()[i]  # Piece After knot I
+            eib = pib.get_expr()
+            eia = pia.get_expr()
+            for d in range(depths[i]):
+                eq = Eq(eib[d].subs(x, ki), eia[d].subs(x, ki))
+                self.equations.append(eq)
+                self.count_of_smoothness += 1
+        return self.equations[-self.count_of_smoothness:]
+
 
 

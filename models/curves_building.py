@@ -6,9 +6,10 @@ from analysis import O4DriveA, ANeedO4
 from helper_functions import degree_to_time, time_to_degree, \
     move_sympyplot_to_axes, print_list_items_in_row
 from packages import Package
-from splines_building import SplineWithPiecewisePolynomial, Polynomial
+from splines_building import Polynomial, SplineWithPiecewisePolynomial, \
+    ShakeHand
 from sympy import symbols, Symbol, diff, lambdify, Eq, solve, \
-    Piecewise, linsolve
+    Piecewise, linsolve, nan, piecewise_fold
 from sympy.abc import x
 from sympy.plotting import plot
 
@@ -634,7 +635,7 @@ class YorkCurve(SplineWithPiecewisePolynomial):
             symbols('acc_folded'),
             symbols('jerk_folded'),
             symbols('ping_folded')]]
-        self.accept = [degree_to_time(262), [
+        self.accept = [degree_to_time(264), [
             symbols('pos_accepting'),
             symbols('vel_accepting'),
             symbols('acc_accepting'),
@@ -1281,6 +1282,91 @@ def resolve_york(if_reload_touching_piece=True):
     j2.save_solved_pieces()
     j2.load_solved_pieces()
     j2.plot_svaj()
+
+
+class Touch(ShakeHand):
+    def __init__(self):
+        """
+        t1 = Touch()
+        """
+        ShakeHand.__init__(self,
+                           name='shake_hand_curve_1',
+                           start_knot=degree_to_time(264),
+                           end_knot=degree_to_time(318),
+                           start_position=0, end_position=nan,
+                           cons_velocity=-422, mod_velocity=-122,
+                           if_save_pieces = False, if_load_pieces = True)
+        self.O2lO1_piecewise = self.get_piecewise()[0].subs(x, x+0.45)
+        self.joy = JawOnYorkCurve()
+        self.trace = TraceOfA(load_memo=True)
+        self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
+
+    def build_expr(self):
+        """
+        t1 = Touch()
+        t1.build_expr()
+        :return:
+        """
+        y_R_AO5_expr = self.trace.get_y_R_AO5_when_touching_expr()
+        y_R_AO2_expr = self.trace.get_y_R_AO2_when_touching_expr()
+        r_O5O2 = self.package.height + \
+                 self.package.hs_sealing_length + \
+                 self.trace.joy_mechanism_forward.r_DC_value
+        new_touch_curve_expr = piecewise_fold(
+            y_R_AO5_expr + r_O5O2 + self.O2lO1_piecewise - y_R_AO2_expr)
+        self.piecewise.clear()
+        self.piecewise.append(new_touch_curve_expr)
+
+    def plot_svaj(self):
+        """
+        t1 = Touch()
+        t1.build_expr()
+        t1.plot_svaj()
+        """
+        expr = self.piecewise[0]
+        p0 = plot(expr, (x, self.knots[0], self.knots[-1]),
+                  title="Position",
+                  ylabel="(mm)",
+                  show=False)
+        # v0 = plot(diff(expr, x), (x, self.knots[0], self.knots[-1]),
+        #           title="Velocity",
+        #           ylabel="(mm/sec)",
+        #           show=False)
+        # a0 = plot(diff(expr, x, 2), (x, self.knots[0], self.knots[-1]),
+        #           title="Acceleration",
+        #           ylabel="(mm/sec^2)",
+        #           show=False)
+        # j0 = plot(diff(expr, x, 3), (x, self.knots[0], self.knots[-1]),
+        #           title="Jerk",
+        #           ylabel="(mm/sec^3)",
+        #           show=False)
+        fig, (ax1, ax2, ax3, ax4) = plt.subplots(nrows=4)
+        move_sympyplot_to_axes(p0, ax1)
+        ax1.set_xticks([self.knots[i] for i in range(len(self.knots))])
+        ax1.set_xticklabels([(i % 2) * '\n' +
+                             str(time_to_degree(self.knots[i]))
+                             for i in range(len(self.knots))])
+        ax1.grid(True)
+        # move_sympyplot_to_axes(v0, ax2)
+        # ax2.set_xticks([self.knots[i] for i in range(len(self.knots))])
+        # ax2.set_xticklabels([(i % 2) * '\n' +
+        #                      str(time_to_degree(self.knots[i]))
+        #                      for i in range(len(self.knots))])
+        # ax2.grid(True)
+        # move_sympyplot_to_axes(a0, ax3)
+        # ax3.set_xticks([self.knots[i] for i in range(len(self.knots))])
+        # ax3.set_xticklabels([(i % 2) * '\n' +
+        #                      str(time_to_degree(self.knots[i]))
+        #                      for i in range(len(self.knots))])
+        # ax3.grid(True)
+        # move_sympyplot_to_axes(j0, ax4)
+        # ax4.set_xticks([self.knots[i] for i in range(len(self.knots))])
+        # ax4.set_xticklabels([(i % 2) * '\n' +
+        #                      str(time_to_degree(self.knots[i]))
+        #                      for i in range(len(self.knots))])
+        # ax4.grid(True)
+        # ax4.set_xlabel('machine degree')
+        plt.show()
 
 
 if __name__ == '__main__':
