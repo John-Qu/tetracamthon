@@ -633,25 +633,31 @@ class ClimbUp(SplineWithPiecewisePolynomial):
                  touch_p=365,
                  start_v=-422,
                  touch_v=-200,
-                 touch_a=-10000,
-                 touch_j=3000000):
+                 touch_a=-5000,
+                 touch_j=500000):
         """
         s3 = ClimbUp()
         """
         self.name=name
         knots = np.array([
             start_knot,
+            degree_to_time(-18),
             0,
-            cross_knot,
-            high_knot,
+            # cross_knot,
+            # high_knot,
             touch_knot
         ])
         pvajp = [
-            [start_p, 0, cross_p, high_p, touch_p],
-            [start_v, 0, nan, 0, touch_v],
-            [0, nan, nan, nan, touch_a],
-            [nan, nan, nan, nan, touch_j],
-            [nan, nan, nan, nan, nan]
+            # [start_p, 0, cross_p, high_p, touch_p],
+            # [start_v, 0, nan, 0, touch_v],
+            # [0, nan, nan, nan, touch_a],
+            # [nan, nan, nan, nan, touch_j],
+            # [nan, nan, nan, nan, nan]
+            [start_p, nan, 0, touch_p],
+            [start_v, -450, 0, touch_v],
+            [0, 0, nan, touch_a],
+            [nan, nan, nan, nan],
+            [nan, nan, nan, nan]
         ]
         orders = [6 for i in range(len(knots) - 1)]
         SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
@@ -674,7 +680,7 @@ class ClimbUp(SplineWithPiecewisePolynomial):
             depths = {
                 1: 4,
                 2: 4,
-                3: 4,
+                # 3: 4,
             }
         for i in depths.keys():
             ki = self.knots[i]  # Knot I
