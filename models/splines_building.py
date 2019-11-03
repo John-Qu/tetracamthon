@@ -627,12 +627,12 @@ class ClimbUp(SplineWithPiecewisePolynomial):
                  cross_knot=degree_to_time(43),
                  high_knot=degree_to_time(84),
                  touch_knot=degree_to_time(92),
-                 start_p=50,
+                 start_p=-50,
                  cross_p=200,
                  high_p=372.2,
                  touch_p=365,
                  start_v=-422,
-                 touch_v=-160,
+                 touch_v=-200,
                  touch_a=-10000,
                  touch_j=3000000):
         """
