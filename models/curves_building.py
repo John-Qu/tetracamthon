@@ -342,7 +342,7 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
 
 
 class TraceOfA(object):
-    def __init__(self, load_memo=False):
+    def __init__(self, load_memo=True):
         self.joy_curve = JawOnYorkCurve()
         self.joy_mechanism_forward = O4DriveA()
         self.joy_mechanism_backward = ANeedO4()
@@ -455,6 +455,8 @@ class TraceOfA(object):
             -24.2500000000004
         print(t1.get_x_R_AO2_when_touching_expr().subs(x, degree_to_time(138)))
             -7.81597009336110e-14
+        print(t1.get_x_R_AO2_when_touching_expr().subs(x, degree_to_time(84)))
+            -39.4824497428945
         :return:
         """
         if 'x_R_AO2_when_touching_expr' in self.memo:
@@ -477,6 +479,8 @@ class TraceOfA(object):
             24.2500000000000
         print(t1.get_y_R_AO5_when_touching_expr().subs(x, degree_to_time(138)))
             1.93692169299983e-6
+        print(t1.get_y_R_AO5_when_touching_expr().subs(x, degree_to_time(84)))
+            18.8688890724969
         """
         if 'y_R_AO5_when_touching_expr' in self.memo:
             return self.memo['y_R_AO5_when_touching_expr']
@@ -1291,20 +1295,21 @@ class Touch(ShakeHand):
         """
         ShakeHand.__init__(self,
                            name='shake_hand_curve_1',
-                           start_knot=degree_to_time(264),
-                           end_knot=degree_to_time(318),
+                           start_knot=degree_to_time(84),
+                           end_knot=degree_to_time(138),
                            start_position=0, end_position=nan,
                            cons_velocity=-422, mod_velocity=-122,
-                           if_save_pieces = False, if_load_pieces = True)
-        self.O2lO1_piecewise = self.get_piecewise()[0].subs(x, x+0.45)
+                           if_save_pieces=False, if_load_pieces=True)
+        self.get_pieces()
         self.joy = JawOnYorkCurve()
         self.trace = TraceOfA(load_memo=True)
         self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
 
-    def build_expr(self):
+    def modify_pieces_expr(self):
         """
         t1 = Touch()
-        t1.build_expr()
+        t1.modify_pieces_expr()
+        t1.plot_s()
         :return:
         """
         y_R_AO5_expr = self.trace.get_y_R_AO5_when_touching_expr()
@@ -1312,22 +1317,26 @@ class Touch(ShakeHand):
         r_O5O2 = self.package.height + \
                  self.package.hs_sealing_length + \
                  self.trace.joy_mechanism_forward.r_DC_value
-        new_touch_curve_expr = piecewise_fold(
-            y_R_AO5_expr + r_O5O2 + self.O2lO1_piecewise - y_R_AO2_expr)
-        self.piecewise.clear()
-        self.piecewise.append(new_touch_curve_expr)
+        expr_added = y_R_AO5_expr + r_O5O2 - y_R_AO2_expr
+        value_add_to_x = degree_to_time(180)
+        self.add_expr_to_pieces(expr_added, value_add_to_x)
+        return self.get_pieces()
 
-    def plot_svaj(self):
+    def plot_s(self):
         """
         t1 = Touch()
-        t1.build_expr()
-        t1.plot_svaj()
+        t1.modify_pieces_expr()
         """
-        expr = self.piecewise[0]
-        p0 = plot(expr, (x, self.knots[0], self.knots[-1]),
+        p0 = plot(0, (x, self.knots[0], self.knots[-1]),
                   title="Position",
                   ylabel="(mm)",
                   show=False)
+        for i in range(self.num_of_pieces):
+            expr_p_i = self.get_kth_expr_of_ith_piece(0, i)
+            pi = plot(expr_p_i, (x, self.knots[i], self.knots[i + 1]),
+                      show=False)
+            p0.extend(pi)
+
         # v0 = plot(diff(expr, x), (x, self.knots[0], self.knots[-1]),
         #           title="Velocity",
         #           ylabel="(mm/sec)",

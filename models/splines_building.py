@@ -134,6 +134,17 @@ class Polynomial(object):
             what = str(self.expr[0]) + '\n'
         return who + "\n" + what
 
+    def update_expr_with_new_expr(self, expr_added, value_add_to_x):
+        ori_expr = self.expr[0]
+        self.expr.clear()
+        new_expr = ori_expr.subs(x, x + value_add_to_x) + expr_added
+        self.expr.append(new_expr)
+        self.piece = (self.s - value_add_to_x, self.e - value_add_to_x)
+        # self.build_diffs()
+        for i in range(1, self.order):
+            self.expr.append(0)
+        return self.expr
+
 
 class SplineWithPiecewisePolynomial(object):
     """
@@ -441,6 +452,11 @@ class SplineWithPiecewisePolynomial(object):
         """
         return self.piecewise
 
+    def add_expr_to_pieces(self, expr_added, value_add_to_x):
+        for i in range(self.num_of_pieces):
+            self.pieces[i].update_expr_with_new_expr(expr_added,
+                                                     value_add_to_x)
+
 
 class SplineWithBsplines(object):
     def __init__(self):
@@ -453,12 +469,13 @@ class ShakeHand(SplineWithPiecewisePolynomial):
     #              start_position=0, end_position=symbols('end_p'),
     #              cons_velocity=-422, mod_velocity=-122):
     def __init__(self, name='shake_hand_curve_1',
-                 start_knot=0.3625, end_knot=0.4825,
+                 start_knot=degree_to_time(264),
+                 end_knot=degree_to_time(318),
                  start_position=0, end_position=nan,
                  cons_velocity=-422, mod_velocity=-122,
                  if_save_pieces=False, if_load_pieces=True):
         """
-        s1 = ShakeHand()
+        s1 = ShakeHand(if_save_pieces=True, if_load_pieces=False)
         """
         self.start_knot = start_knot
         self.end_knot = end_knot
@@ -544,6 +561,7 @@ class ShakeHand(SplineWithPiecewisePolynomial):
         """
         s1 = ShakeHand()
         print(s1.get_piecewise()[0])
+        s1.plot_svaj()
         """
         if len(self.piecewise) == 0:
             self.build_spline()
