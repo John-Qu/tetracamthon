@@ -698,19 +698,19 @@ class YorkCurve(SplineWithPiecewisePolynomial):
             # orders = [6 for i in range(len(self.kp) - 1)]
         # SplineWithPiecewisePolynomial.__init__(self, knots, orders)
         knots_0 = np.linspace(self.start[0], self.cross[0], 4, endpoint=True)
-        orders_0 = np.array([6 for i in range(len(knots_0)-1)])
+        orders_0 = np.array([6 for i in range(len(knots_0) - 1)])
         piece_0 = SplineWithPiecewisePolynomial(knots_0, orders_0)
         knots_1 = np.linspace(self.cross[0], self.highest[0], 4, endpoint=True)
-        orders_1 = np.array([6 for i in range(len(knots_1)-1)])
+        orders_1 = np.array([6 for i in range(len(knots_1) - 1)])
         piece_1 = SplineWithPiecewisePolynomial(knots_1, orders_1)
         knots_2 = np.linspace(self.highest[0], self.touch[0], 4, endpoint=True)
-        orders_2 = np.array([6 for i in range(len(knots_2)-1)])
+        orders_2 = np.array([6 for i in range(len(knots_2) - 1)])
         piece_2 = SplineWithPiecewisePolynomial(knots_2, orders_2)
-        knots_3 = np.linspace(self.accept[0], self.accepted[0], 4, endpoint=True)
-        orders_3 = np.array([6 for i in range(len(knots_3)-1)])
+        knots_3 = np.linspace(self.accept[0], self.accepted[0], 4,
+                              endpoint=True)
+        orders_3 = np.array([6 for i in range(len(knots_3) - 1)])
         piece_3 = SplineWithPiecewisePolynomial(knots_3, orders_3)
         piece_4 = None
-
 
         self.pvajp = pvajp
         self.equations = []
@@ -1335,6 +1335,16 @@ class Touch(ShakeHand):
     def narrow_start_and_end(self):
         self.knots[0] += degree_to_time(6)
         self.knots[-1] -= degree_to_time(1)
+
+    def get_touching_point_pvaj(self):
+        """
+        t2 = Touch(if_rebuild_pieces=False)
+        print(t2.get_touching_point_pvaj())
+        """
+        touching_time = self.trace.get_touch_time()
+        return tuple(
+            [self.get_kth_expr_of_ith_piece(k, 1).subs(x, touching_time)
+             for k in range(4)])
 
     def plot_s(self):
         """

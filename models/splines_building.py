@@ -562,7 +562,7 @@ class ShakeHand(SplineWithPiecewisePolynomial):
         return self.piecewise
 
 
-class SmoothPulling(SplineWithPiecewisePolynomial):
+class Pull(SplineWithPiecewisePolynomial):
     def __init__(self, name='shake_hand_curve_1',
                  start_knot=0, end_knot=0.45,
                  start_position=0, end_position=nan,
@@ -621,7 +621,7 @@ class SmoothPulling(SplineWithPiecewisePolynomial):
         return self.piecewise
 
 
-class ClimbUp(SplineWithPiecewisePolynomial):
+class Climb(SplineWithPiecewisePolynomial):
     def __init__(self, name='climb_up_curve_325_92',
                  start_knot=degree_to_time(-35),
                  cross_knot=degree_to_time(43),
@@ -633,7 +633,7 @@ class ClimbUp(SplineWithPiecewisePolynomial):
                  touch_p=365,
                  start_v=-422,
                  touch_v=-200,
-                 touch_a=-5000,
+                 touch_a=-4444,
                  touch_j=500000):
         """
         s3 = ClimbUp()
@@ -641,6 +641,7 @@ class ClimbUp(SplineWithPiecewisePolynomial):
         self.name=name
         knots = np.array([
             start_knot,
+            degree_to_time(-25),
             degree_to_time(-18),
             0,
             # cross_knot,
@@ -653,11 +654,11 @@ class ClimbUp(SplineWithPiecewisePolynomial):
             # [0, nan, nan, nan, touch_a],
             # [nan, nan, nan, nan, touch_j],
             # [nan, nan, nan, nan, nan]
-            [start_p, nan, 0, touch_p],
-            [start_v, -450, 0, touch_v],
-            [0, 0, nan, touch_a],
-            [nan, nan, nan, nan],
-            [nan, nan, nan, nan]
+            [start_p, nan, nan, 0, touch_p],
+            [start_v, nan, -430, 0, touch_v],
+            [0, -5700, nan, nan, touch_a],
+            [nan, 0, nan, nan, nan],
+            [nan, nan, nan, nan, nan]
         ]
         orders = [6 for i in range(len(knots) - 1)]
         SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
@@ -671,7 +672,6 @@ class ClimbUp(SplineWithPiecewisePolynomial):
             print(s3.equations[i])
         s3 = ClimbUp()
         s3.update_with_solution()
-        s3.build_spline()
         s3.plot_svaj()
         """
         if self.count_of_smoothness != 0:
@@ -680,7 +680,81 @@ class ClimbUp(SplineWithPiecewisePolynomial):
             depths = {
                 1: 4,
                 2: 4,
-                # 3: 4,
+                3: 4,
+            }
+        for i in depths.keys():
+            ki = self.knots[i]  # Knot I
+            pib = self.get_pieces()[i - 1]  # Piece Before knot I
+            pia = self.get_pieces()[i]  # Piece After knot I
+            eib = pib.get_expr()
+            eia = pia.get_expr()
+            for d in range(depths[i]):
+                eq = Eq(eib[d].subs(x, ki), eia[d].subs(x, ki))
+                self.equations.append(eq)
+                self.count_of_smoothness += 1
+        return self.equations[-self.count_of_smoothness:]
+
+
+class Throw(SplineWithPiecewisePolynomial):
+    def __init__(self, name='climb_up_curve_325_92',
+                 start_knot=degree_to_time(-35),
+                 cross_knot=degree_to_time(43),
+                 high_knot=degree_to_time(84),
+                 touch_knot=degree_to_time(92),
+                 start_p=-50,
+                 cross_p=200,
+                 high_p=372.2,
+                 touch_p=365,
+                 start_v=-422,
+                 touch_v=-200,
+                 touch_a=-4444,
+                 touch_j=500000):
+        """
+        s3 = ClimbUp()
+        """
+        self.name=name
+        knots = np.array([
+            start_knot,
+            degree_to_time(-25),
+            degree_to_time(-18),
+            0,
+            # cross_knot,
+            # high_knot,
+            touch_knot
+        ])
+        pvajp = [
+            # [start_p, 0, cross_p, high_p, touch_p],
+            # [start_v, 0, nan, 0, touch_v],
+            # [0, nan, nan, nan, touch_a],
+            # [nan, nan, nan, nan, touch_j],
+            # [nan, nan, nan, nan, nan]
+            [start_p, nan, nan, 0, touch_p],
+            [start_v, nan, -430, 0, touch_v],
+            [0, -5700, nan, nan, touch_a],
+            [nan, 0, nan, nan, nan],
+            [nan, nan, nan, nan, nan]
+        ]
+        orders = [6 for i in range(len(knots) - 1)]
+        SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
+                                               name=name)
+
+    def build_smoothness_condition(self, depths=None):
+        """
+        s3 = ClimbUp()
+        print(len(s3.build_smoothness_condition()))
+        for i in range(len(s3.equations)):
+            print(s3.equations[i])
+        s3 = ClimbUp()
+        s3.update_with_solution()
+        s3.plot_svaj()
+        """
+        if self.count_of_smoothness != 0:
+            return self.count_of_smoothness
+        if depths is None:
+            depths = {
+                1: 4,
+                2: 4,
+                3: 4,
             }
         for i in depths.keys():
             ki = self.knots[i]  # Knot I
