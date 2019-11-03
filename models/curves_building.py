@@ -1289,27 +1289,37 @@ def resolve_york(if_reload_touching_piece=True):
 
 
 class Touch(ShakeHand):
-    def __init__(self):
+    def __init__(self,
+                 name='touch_curve_1',
+                 start_knot=degree_to_time(84),
+                 end_knot=degree_to_time(138),
+                 if_rebuild_pieces=False
+                 ):
         """
-        t1 = Touch()
+        t1 = Touch(if_rebuild_pieces=True)
         """
         ShakeHand.__init__(self,
                            name='shake_hand_curve_1',
-                           start_knot=degree_to_time(84),
-                           end_knot=degree_to_time(138),
+                           start_knot=start_knot,
+                           end_knot=end_knot,
                            start_position=0, end_position=nan,
                            cons_velocity=-422, mod_velocity=-122,
-                           if_save_pieces=False, if_load_pieces=True)
+                           if_rebuild_pieces=False)
+        self.name = name
         self.get_pieces()
         self.joy = JawOnYorkCurve()
         self.trace = TraceOfA(load_memo=True)
         self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
+        if if_rebuild_pieces:
+            self.modify_pieces_expr()
+            self.save_solved_pieces()
+        else:
+            self.load_solved_pieces()
 
     def modify_pieces_expr(self):
         """
-        t1 = Touch()
-        t1.modify_pieces_expr()
-        t1.plot_s()
+        t2 = Touch()
+        t2.plot_svaj()
         :return:
         """
         y_R_AO5_expr = self.trace.get_y_R_AO5_when_touching_expr()
@@ -1321,6 +1331,8 @@ class Touch(ShakeHand):
         value_add_to_x = degree_to_time(180)
         self.add_expr_to_pieces(expr_added, value_add_to_x)
         return self.get_pieces()
+
+
 
     def plot_s(self):
         """

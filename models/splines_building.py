@@ -140,9 +140,9 @@ class Polynomial(object):
         new_expr = ori_expr.subs(x, x + value_add_to_x) + expr_added
         self.expr.append(new_expr)
         self.piece = (self.s - value_add_to_x, self.e - value_add_to_x)
-        # self.build_diffs()
-        for i in range(1, self.order):
-            self.expr.append(0)
+        self.build_diffs()
+        # for i in range(1, self.order):
+        #     self.expr.append(0)
         return self.expr
 
 
@@ -458,12 +458,6 @@ class SplineWithPiecewisePolynomial(object):
                                                      value_add_to_x)
 
 
-class SplineWithBsplines(object):
-    def __init__(self):
-        # TODO: add b-spline ability
-        pass
-
-
 class ShakeHand(SplineWithPiecewisePolynomial):
     # def __init__(self, start_knot=0.3625, end_knot=0.4825,
     #              start_position=0, end_position=symbols('end_p'),
@@ -473,7 +467,7 @@ class ShakeHand(SplineWithPiecewisePolynomial):
                  end_knot=degree_to_time(318),
                  start_position=0, end_position=nan,
                  cons_velocity=-422, mod_velocity=-122,
-                 if_save_pieces=False, if_load_pieces=True):
+                 if_rebuild_pieces=False):
         """
         s1 = ShakeHand(if_save_pieces=True, if_load_pieces=False)
         """
@@ -503,10 +497,10 @@ class ShakeHand(SplineWithPiecewisePolynomial):
         orders = [6 for i in range(len(knots) - 1)]
         SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
                                                name=name)
-        if if_save_pieces:
+        if if_rebuild_pieces:
             self.update_with_solution()
             self.save_solved_pieces()
-        if if_load_pieces:
+        else:
             self.load_solved_pieces()
 
     def build_smoothness_condition(self, depths=None):
