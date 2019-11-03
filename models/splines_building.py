@@ -463,13 +463,13 @@ class ShakeHand(SplineWithPiecewisePolynomial):
     #              start_position=0, end_position=symbols('end_p'),
     #              cons_velocity=-422, mod_velocity=-122):
     def __init__(self, name='shake_hand_curve_1',
-                 start_knot=degree_to_time(264),
-                 end_knot=degree_to_time(318),
+                 start_knot=degree_to_time(262),
+                 end_knot=degree_to_time(317),
                  start_position=0, end_position=nan,
                  cons_velocity=-422, mod_velocity=-122,
                  if_rebuild_pieces=False):
         """
-        s1 = ShakeHand(if_save_pieces=True, if_load_pieces=False)
+        s1 = ShakeHand(name='shake_hand_curve_262_317', if_rebuild_pieces=True)
         """
         self.start_knot = start_knot
         self.end_knot = end_knot
@@ -622,34 +622,40 @@ class SmoothPulling(SplineWithPiecewisePolynomial):
 
 
 class ClimbUp(SplineWithPiecewisePolynomial):
-    def __init__(self, name='climb_up_curve_1',
-                 start_knot=0, cross_knot=0.1075, end_knot=0.21,
-                 start_position=0, cross_position=200, end_position=372.2):
+    def __init__(self, name='climb_up_curve_325_92',
+                 start_knot=degree_to_time(-35),
+                 cross_knot=degree_to_time(43),
+                 high_knot=degree_to_time(84),
+                 touch_knot=degree_to_time(92),
+                 start_p=50,
+                 cross_p=200,
+                 high_p=372.2,
+                 touch_p=365,
+                 start_v=-422,
+                 touch_v=-160,
+                 touch_a=-10000,
+                 touch_j=3000000):
         """
         s3 = ClimbUp()
         """
-        self.start_knot = start_knot
-        self.cross_knot = cross_knot
-        self.end_knot = end_knot
-        self.start_p = start_position
-        self.cross_p = cross_position
-        self.end_p = end_position
-        delta = self.end_knot - self.start_knot
+        self.name=name
         knots = np.array([
-            self.start_knot,
-            self.cross_knot,
-            self.end_knot
+            start_knot,
+            0,
+            cross_knot,
+            high_knot,
+            touch_knot
         ])
         pvajp = [
-            [self.start_p, self.cross_p, self.end_p],
-            [0, nan, 0],
-            [30000, nan, -30000],
-            [nan, nan, nan],
-            [nan, nan, nan]
+            [start_p, 0, cross_p, high_p, touch_p],
+            [start_v, 0, nan, 0, touch_v],
+            [0, nan, nan, nan, touch_a],
+            [nan, nan, nan, nan, touch_j],
+            [nan, nan, nan, nan, nan]
         ]
         orders = [6 for i in range(len(knots) - 1)]
         SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
-                                               name='climb_up_curve_1')
+                                               name=name)
 
     def build_smoothness_condition(self, depths=None):
         """
@@ -666,7 +672,9 @@ class ClimbUp(SplineWithPiecewisePolynomial):
             return self.count_of_smoothness
         if depths is None:
             depths = {
-                1: 5,
+                1: 4,
+                2: 4,
+                3: 4,
             }
         for i in depths.keys():
             ki = self.knots[i]  # Knot I
@@ -679,6 +687,5 @@ class ClimbUp(SplineWithPiecewisePolynomial):
                 self.equations.append(eq)
                 self.count_of_smoothness += 1
         return self.equations[-self.count_of_smoothness:]
-
 
 
