@@ -51,13 +51,13 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
             symbols('acc_end'),
             symbols('jerk_end'),
             symbols('ping_end')]]
-        if knots == None:
+        if knots is None:
             knots = np.array([start[0], widest[0], closed[0],
                               open[0], end[0]])
-        if pvajp == None:
+        if pvajp is None:
             pvajp = np.array([[start[1][i], widest[1][i], closed[1][i],
                                open[1][i], end[1][i]] for i in range(5)])
-        if orders == None:
+        if orders is None:
             orders = [6, 6, 2, 6]
         SplineWithPiecewisePolynomial.__init__(self, knots, orders)
         self.pvajp = pvajp
@@ -272,7 +272,7 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
             self.update_with_solution()
         try:
             return self.get_pieces()[i].get_expr()[k]
-        except:
+        except IndexError:
             return 0
 
     def build_spline(self):
@@ -496,9 +496,10 @@ class TraceOfA(object):
         t1 = TraceOfA()
         print(t1.get_y_R_AO5_when_touching_func()(t1.get_touch_time()))
             error
-            File "/Users/johnqu/.conda/envs/Tetracamthon/lib/python3.7/site-packages/numpy/lib/scimath.py", line 226, in sqrt
-    return nx.sqrt(x)
-AttributeError: 'Float' object has no attribute 'sqrt'
+            File "/Users/johnqu/.conda/envs/Tetracamthon/lib/python3.7/site
+            -packages/numpy/lib/scimath.py", line 226, in sqrt
+            return nx.sqrt(x)
+            AttributeError: 'Float' object has no attribute 'sqrt'
         print(t1.get_y_R_AO5_when_touching_func()(degree_to_time(138)))
         """
         expr = self.get_y_R_AO5_when_touching_expr()
@@ -513,7 +514,7 @@ AttributeError: 'Float' object has no attribute 'sqrt'
         end_time = float(degree_to_time(138 - 1))
         t = np.linspace(start_time,
                         end_time,
-                        num=360, endpoint=True)
+                        num=num, endpoint=True)
         degree = time_to_degree(t)
         x_R_AO5_e = self.get_x_R_AO2_when_touching_expr()
         x_R_AO5_f = lambdify(x, x_R_AO5_e)
@@ -692,9 +693,9 @@ class Touch(ShakeHand):
         """
         y_R_AO5_expr = self.trace.get_y_R_AO5_when_touching_expr()
         y_R_AO2_expr = self.trace.get_y_R_AO2_when_touching_expr()
-        r_O5O2 = self.package.height + \
-                 self.package.hs_sealing_length + \
-                 self.trace.joy_mechanism_forward.r_DC_value
+        r_O5O2 = (self.package.height +
+                  self.package.hs_sealing_length +
+                  self.trace.joy_mechanism_forward.r_DC_value)
         expr_added = y_R_AO5_expr + r_O5O2 - y_R_AO2_expr
         value_add_to_x = degree_to_time(180)
         self.add_expr_to_pieces(expr_added, value_add_to_x)
@@ -771,7 +772,7 @@ class Touch(ShakeHand):
 
 
 class Pull(SplineWithPiecewisePolynomial):
-    def __init__(self, name='shake_hand_curve_1',
+    def __init__(self, name='constant_velocity_pull_1',
                  start_knot=0, end_knot=0.45,
                  start_position=0, end_position=nan,
                  cons_velocity=-422):
@@ -796,7 +797,7 @@ class Pull(SplineWithPiecewisePolynomial):
         ]
         orders = [2 for i in range(len(knots) - 1)]
         SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
-                                               name='smooth_pulling_curve_1')
+                                               name=name)
 
     def build_equations(self):
         """
@@ -975,7 +976,4 @@ class Throw(SplineWithPiecewisePolynomial):
                 self.equations.append(eq)
                 self.count_of_smoothness += 1
         return self.equations[-self.count_of_smoothness:]
-
-
-
 

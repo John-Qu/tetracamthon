@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/curves_building.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/curves_building.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/splines_building.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/splines_building.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/shape_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/shape_stage.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -278,6 +277,11 @@
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/ex5-3.py</url>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/models/curves_building.py</url>
+          <line>343</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
