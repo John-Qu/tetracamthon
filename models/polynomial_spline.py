@@ -145,21 +145,51 @@ class SplineWithPiecewisePolynomial(object):
     s1 = SplineWithPiecewisePolynomial()
     print(s1)
     """
-
     def __init__(self, knots=None, orders=None, pvajp=None,
                  name='polynomials_curve'):
+        start = (0, (
+            0,
+            0,
+            0,
+            nan,
+            nan,
+        ))
+        knot1 = (1, (
+            0.3,
+            nan,
+            nan,
+            nan,
+            nan,
+        ))
+        knot2 = (2, (
+            0.6,
+            nan,
+            nan,
+            nan,
+            nan,
+        ))
+        end = (3, (
+            1,
+            0,
+            0,
+            nan,
+            nan,
+        ))
+        self.took_knot_at = [start, knot1, knot2, end]
+        smooth_depth = {
+            knot1: 5,
+            knot2: 5,
+        }
         if knots is None:
-            knots = np.linspace(0, 3, 4, endpoint=True)
-        if orders is None:
-            orders = [6 for i in range(len(knots) - 1)]
+            knots = [self.took_knot_at[i][0]
+                     for i in range(len(self.took_knot_at))]
         if pvajp is None:
-            pvajp = [
-                [0, 0.3, 0.6, 1],
-                [0, nan, nan, 0],
-                [0, nan, nan, 0],
-                [nan, nan, nan, nan],
-                [nan, nan, nan, nan]
-            ]
+            pvajp = [[self.took_knot_at[i][1][j]
+                      for i in range(len(self.took_knot_at))]
+                     for j in range(5)]
+        if orders is None:
+            orders = [6] * len(self.took_knot_at)
+        self.smooth_depth = smooth_depth
         self._name = name
         self.knots = knots
         self.orders = orders
@@ -268,17 +298,25 @@ class SplineWithPiecewisePolynomial(object):
         if self.count_of_smoothness != 0:
             return self.count_of_smoothness
         if depths is None:
-            depths = {
-                1: 5,
-                2: 5
-            }
-        for i in depths.keys():
-            ki = self.knots[i]  # Knot I
+            depths = self.smooth_depth
+        # for i in depths.keys():
+        #     ki = self.knots[i]  # Knot I
+        #     pib = self.get_pieces()[i - 1]  # Piece Before knot I
+        #     pia = self.get_pieces()[i]  # Piece After knot I
+        #     eib = pib.get_expr()
+        #     eia = pia.get_expr()
+        #     for d in range(depths[i]):
+        #         eq = Eq(eib[d].subs(x, ki), eia[d].subs(x, ki))
+        #         self.equations.append(eq)
+        #         self.count_of_smoothness += 1
+        for i in range(1, len(self.took_knot_at) - 1):
+            kpi = self.took_knot_at[i]  # Knot Point I
+            ki = kpi[0]
             pib = self.get_pieces()[i - 1]  # Piece Before knot I
             pia = self.get_pieces()[i]  # Piece After knot I
             eib = pib.get_expr()
             eia = pia.get_expr()
-            for d in range(depths[i]):
+            for d in range(depths[kpi]):
                 eq = Eq(eib[d].subs(x, ki), eia[d].subs(x, ki))
                 self.equations.append(eq)
                 self.count_of_smoothness += 1
@@ -487,7 +525,7 @@ class SplineWithPiecewisePolynomial(object):
         ax4.grid(True)
         ax4.set_xlabel('machine degree')
         if whether_save_png:
-            plt.savefig('plot_of_{}'.format(self.name))
+            plt.savefig('plot_of_{}.png'.format(self.name), dpi=720)
         plt.show()
 
     def get_start_pvaj(self):

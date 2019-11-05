@@ -674,11 +674,20 @@ class ShakeHand(SplineWithPiecewisePolynomial):
                 nan,
                 nan,
             ))
-        took_knot_at = [start, knot1, knot2, knot3, knot4, knot5, end]
-        knots = [took_knot_at[i][0] for i in range(len(took_knot_at))]
-        pvajp = [[took_knot_at[i][1][j] for i in range(len(took_knot_at))]
+        self.took_knot_at = [start, knot1, knot2, knot3, knot4, knot5, end]
+        smooth_depth = {
+            knot1: 5,
+            knot2: 5,
+            knot3: 5,
+            knot4: 4,
+            knot5: 5,
+        }
+        knots = [self.took_knot_at[i][0]
+                 for i in range(len(self.took_knot_at))]
+        pvajp = [[self.took_knot_at[i][1][j]
+                  for i in range(len(self.took_knot_at))]
                  for j in range(5)]
-        orders = [6] * len(took_knot_at)
+        orders = [6] * len(self.took_knot_at)
         SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
                                                name=name)
         if if_rebuild_pieces:
@@ -705,13 +714,14 @@ class ShakeHand(SplineWithPiecewisePolynomial):
                 4: 4,
                 5: 5
             }
-        for i in depths.keys():
-            ki = self.knots[i]  # Knot I
+        for i in range(1, len(self.took_knot_at) - 1):
+            kpi = self.took_knot_at[i]  # Knot Point I
+            ki = kpi[0]
             pib = self.get_pieces()[i - 1]  # Piece Before knot I
             pia = self.get_pieces()[i]  # Piece After knot I
             eib = pib.get_expr()
             eia = pia.get_expr()
-            for d in range(depths[i]):
+            for d in range(depths[kpi]):
                 eq = Eq(eib[d].subs(x, ki), eia[d].subs(x, ki))
                 self.equations.append(eq)
                 self.count_of_smoothness += 1
