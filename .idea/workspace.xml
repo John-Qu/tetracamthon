@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/Track of A to O5 curves.png" beforeDir="false" afterPath="$PROJECT_DIR$/models/Track of A to O5 curves.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/shape_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/shape_stage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/trace_of_A_memo.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/models/trace_of_A_memo.pkl" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -290,7 +288,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/shape_stage.py</url>
-          <line>750</line>
+          <line>746</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>

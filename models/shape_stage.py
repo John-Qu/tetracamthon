@@ -610,71 +610,68 @@ class ShakeHand(SplineWithPiecewisePolynomial):
     #              start_position=0, end_position=symbols('end_p'),
     #              cons_velocity=-422, mod_velocity=-122):
     def __init__(self, name='shake_hand_curve_1',
-                 start=None, end=None,
+                 start=None, knot1=None, knot2=None, knot3=None, knot4=None,
+                 knot5=None, end=None,
                  if_rebuild_pieces=False):
         """
-        s1 = ShakeHand(name='shake_hand_curve_262_317', if_rebuild_pieces=True)
+        s1 = ShakeHand(name='shake_hand_curve_264_318', if_rebuild_pieces=True)
         """
         if start is None:
-            start = (degree_to_time(262), (
+            start = (degree_to_time(264), (
                 0,
                 -422,
                 0,
+                0,
+                nan,
+            ))
+        if knot1 is None:
+            knot1 = (degree_to_time(273), (
+                nan,
+                nan,
+                nan,
+                0,
+                nan,
+            ))
+        if knot2 is None:
+            knot2 = (degree_to_time(282), (
+                nan,
+                nan,
+                nan,
+                nan,
+                0,
+            ))
+        if knot3 is None:
+            knot3 = (degree_to_time(291), (
+                nan,
+                nan,
+                0,
+                nan,
+                nan,
+            ))
+        if knot4 is None:
+            knot4 = (degree_to_time(300), (
+                nan,
+                nan,
+                nan,
+                nan,
+                0,
+            ))
+        if knot5 is None:
+            knot5 = (degree_to_time(309), (
+                nan,
+                nan,
+                nan,
                 0,
                 nan,
             ))
         if end is None:
-            end = (degree_to_time(317), (
-                nan,
+            end = (degree_to_time(318), (
+                degree_to_time(318-264)*(-422) + 24.25,
                 -422,
                 0,
                 0,
                 nan,
             ))
-        delta = end[0] - start[0]
-        knot1 = (start[0] + delta / 10 * 2, (
-            nan,
-            nan,
-            nan,
-            0,
-            nan,
-        ))
-        knot2 = (start[0] + delta / 10 * 3, (
-            nan,
-            nan,
-            nan,
-            nan,
-            0,
-        ))
-        knot3 = (start[0] + delta / 10 * 5, (
-            nan,
-            -122,
-            0,
-            nan,
-            nan,
-        ))
-        knot4 = (start[0] + delta / 10 * 7, (
-            nan,
-            nan,
-            nan,
-            nan,
-            0,
-        ))
-        knot5 = (start[0] + delta / 10 * 8, (
-            nan,
-            nan,
-            nan,
-            0,
-            nan,
-        ))
-        # pvajp = [
-        #     [self.start_p, nan, nan, nan, nan, nan, self.end_p],
-        #     [self.cons_v, nan, nan, self.mod_v, nan, nan, self.cons_v],
-        #     [0, nan, nan, 0, nan, nan, 0],
-        #     [0, 0, nan, nan, nan, 0, 0],
-        #     [nan, nan, 0, nan, 0, nan, nan]
-        # ]
-        # orders = [6 for i in range(len(knots) - 1)]
         took_knot_at = [start, knot1, knot2, knot3, knot4, knot5, end]
         knots = [took_knot_at[i][0] for i in range(len(took_knot_at))]
         pvajp = [[took_knot_at[i][1][j] for i in range(len(took_knot_at))]
