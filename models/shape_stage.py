@@ -154,16 +154,24 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
 
 class TraceOfA(object):
     def __init__(self, load_memo=True):
-        self.joy_curve = JawOnYorkCurve()
+        """
+        t1 = TraceOfA(load_memo=False)
+        """
+        # Jaw on York spline Curve
+        self.joy_curve = JawOnYorkCurve(whether_rebuild_pieces=False)
+        # Jaw on York mechanism analysis driving forward
         self.joy_mechanism_forward = O4DriveA()
+        # Jaw on York mechanism analysis driving backward
         self.joy_mechanism_backward = ANeedO4()
         self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
         if load_memo:
             self.load_memo_from_file()
         else:
             self.memo = {}
+            self.plot_svaj()
+            self.save_memo_to_file()
 
-    def write_memo_to_file(self):
+    def save_memo_to_file(self):
         """
         t1 = TraceOfA()
         t1.write_memo_to_file()
@@ -180,7 +188,6 @@ class TraceOfA(object):
         pkl_file = open('trace_of_A_memo.pkl', 'rb')
         self.memo = pickle.load(pkl_file)
         pkl_file.close()
-        return self.memo
 
     def get_close_rO4O2(self):
         """
@@ -215,16 +222,23 @@ class TraceOfA(object):
         """
         t1 = TraceOfA()
         print(t1.get_touch_time())
-            0.232561894257538
+         r_O4O2_touch = t1.get_touch_rO4O2()
+        r_O4O2_close = t1.get_close_rO4O2()
+        position_touch = - (r_O4O2_touch - r_O4O2_close)
+        curve = t1.joy_curve.get_kth_expr_of_ith_piece(0, 3)
+        equation = Eq(curve, position_touch)
+        touch_time = solve(equation, x)
+        print(touch_time)
+            0.243849713905805
         """
         if 'touch_time' in self.memo:
             return self.memo['touch_time']
         r_O4O2_touch = self.get_touch_rO4O2()
         r_O4O2_close = self.get_close_rO4O2()
         position_touch = - (r_O4O2_touch - r_O4O2_close)
-        curve = self.joy_curve.get_kth_expr_of_ith_piece(0, 1)
+        curve = self.joy_curve.get_kth_expr_of_ith_piece(0, 3)
         equation = Eq(curve, position_touch)
-        touch_time = solve(equation, x)[2]
+        touch_time = solve(equation, x)[0]
         self.memo['touch_time'] = touch_time
         return touch_time
 
@@ -233,6 +247,7 @@ class TraceOfA(object):
         t1 = TraceOfA()
         print(t1.get_touch_degree())
             93.0247577030154
+            97.5398855623221
         """
         return time_to_degree(self.get_touch_time())
 
@@ -244,19 +259,40 @@ class TraceOfA(object):
             171.354752195555
         print(t1.get_y_R_AO2_when_touching_expr().subs(x, degree_to_time(138)))
             164.440000000000
+            164.603098392656
         :return:
         """
         if 'y_R_AO2_when_touching_expr' in self.memo:
             return self.memo['y_R_AO2_when_touching_expr']
         expr = self.joy_mechanism_forward.get_y_R_AO2_of_r_O4O2_expr()
         r_O4O2_symbol = self.joy_mechanism_forward.r_O4O2
-        curve = self.joy_curve.get_kth_expr_of_ith_piece(0, 1)
+        curve = self.joy_curve.get_kth_expr_of_ith_piece(0, 3)
         r_O4O2_close = self.get_close_rO4O2()
         r_O4O2_value = - (curve - r_O4O2_close)
         y_R_AO2_when_touching_expr = expr.subs(r_O4O2_symbol, r_O4O2_value)
         self.memo['y_R_AO2_when_touching_expr'] = y_R_AO2_when_touching_expr
-        self.write_memo_to_file()
         return y_R_AO2_when_touching_expr
+
+    def get_y_R_AO2_when_closing_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_y_R_AO2_when_touching_expr())
+        print(t1.get_y_R_AO2_when_touching_expr().subs(x, t1.get_touch_time()))
+            171.354752195555
+        print(t1.get_y_R_AO2_when_closing_expr().subs(x, degree_to_time(138)))
+            164.440000000000
+        :return:
+        """
+        if 'y_R_AO2_when_closing_expr' in self.memo:
+            return self.memo['y_R_AO2_when_closing_expr']
+        expr = self.joy_mechanism_forward.get_y_R_AO2_of_r_O4O2_expr()
+        r_O4O2_symbol = self.joy_mechanism_forward.r_O4O2
+        curve_closing = self.joy_curve.get_kth_expr_of_ith_piece(0, 4)
+        r_O4O2_close = self.get_close_rO4O2()
+        r_O4O2_value = - (curve_closing - r_O4O2_close)
+        y_R_AO2_when_closing_expr = expr.subs(r_O4O2_symbol, r_O4O2_value)
+        self.memo['y_R_AO2_when_closing_expr'] = y_R_AO2_when_closing_expr
+        return y_R_AO2_when_closing_expr
 
     def get_x_R_AO2_when_touching_expr(self):
         """
@@ -274,13 +310,29 @@ class TraceOfA(object):
             return self.memo['x_R_AO2_when_touching_expr']
         expr = self.joy_mechanism_forward.get_x_R_AO2_of_r_O4O2_expr()
         r_O4O2_symbol = self.joy_mechanism_forward.r_O4O2
-        curve = self.joy_curve.get_kth_expr_of_ith_piece(0, 1)
+        curve = self.joy_curve.get_kth_expr_of_ith_piece(0, 3)
         r_O4O2_close = self.get_close_rO4O2()
         r_O4O2_value = - (curve - r_O4O2_close)
         x_R_AO2_when_touching_expr = expr.subs(r_O4O2_symbol, r_O4O2_value)
         self.memo['x_R_AO2_when_touching_expr'] = x_R_AO2_when_touching_expr
-        self.write_memo_to_file()
         return x_R_AO2_when_touching_expr
+
+    def get_x_R_AO2_when_closing_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_x_R_AO2_when_closing_expr().subs(x, degree_to_time(138)))
+            -7.81597009336110e-14
+        """
+        if 'x_R_AO2_when_closing_expr' in self.memo:
+            return self.memo['x_R_AO2_when_closing_expr']
+        expr = self.joy_mechanism_forward.get_x_R_AO2_of_r_O4O2_expr()
+        r_O4O2_symbol = self.joy_mechanism_forward.r_O4O2
+        curve_closing = self.joy_curve.get_kth_expr_of_ith_piece(0, 4)
+        r_O4O2_close = self.get_close_rO4O2()
+        r_O4O2_value = - (curve_closing - r_O4O2_close)
+        x_R_AO2_when_closing_expr = expr.subs(r_O4O2_symbol, r_O4O2_value)
+        self.memo['x_R_AO2_when_closing_expr'] = x_R_AO2_when_closing_expr
+        return x_R_AO2_when_closing_expr
 
     def get_y_R_AO5_when_touching_expr(self):
         """
@@ -302,69 +354,255 @@ class TraceOfA(object):
         y_R_AO5_when_touching_expr = \
             (r_AG ** 2 - (r_AG + x_R_AO5_when_touching_expr) ** 2) ** 0.5
         self.memo['y_R_AO5_when_touching_expr'] = y_R_AO5_when_touching_expr
-        self.write_memo_to_file()
         return y_R_AO5_when_touching_expr
 
-    def get_y_R_AO5_when_touching_func(self):
+    def get_y_R_AO5_when_closing_expr(self):
         """
         t1 = TraceOfA()
-        print(t1.get_y_R_AO5_when_touching_func()(t1.get_touch_time()))
-            error
-            File "/Users/johnqu/.conda/envs/Tetracamthon/lib/python3.7/site
-            -packages/numpy/lib/scimath.py", line 226, in sqrt
-            return nx.sqrt(x)
-            AttributeError: 'Float' object has no attribute 'sqrt'
-        print(t1.get_y_R_AO5_when_touching_func()(degree_to_time(138)))
+        print(t1.get_y_R_AO5_when_closing_expr())
+        print(t1.get_y_R_AO5_when_closing_expr().subs(x, degree_to_time(138)))
+            1.93692169299983e-6
         """
-        expr = self.get_y_R_AO5_when_touching_expr()
-        return lambdify(x, expr)
+        if 'y_R_AO5_when_closing_expr' in self.memo:
+            return self.memo['y_R_AO5_when_closing_expr']
+        x_R_AO2_when_closing_expr = \
+            self.get_x_R_AO2_when_closing_expr()
+        x_R_AO5_when_closing_expr = x_R_AO2_when_closing_expr
+        r_AG = self.package.depth / 2
+        y_R_AO5_when_closing_expr = \
+            (r_AG ** 2 - (r_AG + x_R_AO5_when_closing_expr) ** 2) ** 0.5
+        self.memo['y_R_AO5_when_closing_expr'] = y_R_AO5_when_closing_expr
+        return y_R_AO5_when_closing_expr
 
-    def plot_numerical(self, num=360):
+    def get_x_V_AO5_when_touching_expr(self):
+        if 'x_V_AO5_when_touching' in self.memo:
+            return self.memo['x_V_AO5_when_touching']
+        x_V_AO5_when_touching = diff(self.get_x_R_AO2_when_touching_expr(), x)
+        self.memo['x_V_AO5_when_touching'] = x_V_AO5_when_touching
+        return self.memo['x_V_AO5_when_touching']
+
+    def get_y_V_AO5_when_touching_expr(self):
+        if 'y_V_AO5_when_touching' in self.memo:
+            return self.memo['y_V_AO5_when_touching']
+        y_V_AO5_when_touching = diff(self.get_y_R_AO5_when_touching_expr(), x)
+        self.memo['y_V_AO5_when_touching'] = y_V_AO5_when_touching
+        return self.memo['y_V_AO5_when_touching']
+
+    def get_x_A_AO5_when_touching_expr(self):
+        if 'x_A_AO5_when_touching' in self.memo:
+            return self.memo['x_A_AO5_when_touching']
+        x_A_AO5_when_touching = diff(self.get_x_V_AO5_when_touching_expr(), x)
+        self.memo['x_A_AO5_when_touching'] = x_A_AO5_when_touching
+        return self.memo['x_A_AO5_when_touching']
+
+    def get_y_A_AO5_when_touching_expr(self):
+        if 'y_A_AO5_when_touching' in self.memo:
+            return self.memo['y_A_AO5_when_touching']
+        y_A_AO5_when_touching = diff(self.get_y_V_AO5_when_touching_expr(), x)
+        self.memo['y_A_AO5_when_touching'] = y_A_AO5_when_touching
+        return self.memo['y_A_AO5_when_touching']
+
+    def get_x_V_AO5_when_closing_expr(self):
+        if 'x_V_AO5_when_closing' in self.memo:
+            return self.memo['x_V_AO5_when_closing']
+        x_V_AO5_when_closing = diff(self.get_x_R_AO2_when_closing_expr(), x)
+        self.memo['x_V_AO5_when_closing'] = x_V_AO5_when_closing
+        return self.memo['x_V_AO5_when_closing']
+
+    def get_y_V_AO5_when_closing_expr(self):
+        if 'y_V_AO5_when_closing' in self.memo:
+            return self.memo['y_V_AO5_when_closing']
+        y_V_AO5_when_closing = diff(self.get_y_R_AO5_when_closing_expr(), x)
+        self.memo['y_V_AO5_when_closing'] = y_V_AO5_when_closing
+        return self.memo['y_V_AO5_when_closing']
+
+    def get_x_A_AO5_when_closing_expr(self):
+        if 'x_A_AO5_when_closing' in self.memo:
+            return self.memo['x_A_AO5_when_closing']
+        x_A_AO5_when_closing = diff(self.get_x_V_AO5_when_closing_expr(), x)
+        self.memo['x_A_AO5_when_closing'] = x_A_AO5_when_closing
+        return self.memo['x_A_AO5_when_closing']
+
+    def get_y_A_AO5_when_closing_expr(self):
+        if 'y_A_AO5_when_closing' in self.memo:
+            return self.memo['y_A_AO5_when_closing']
+        y_A_AO5_when_closing = diff(self.get_y_V_AO5_when_closing_expr(), x)
+        self.memo['y_A_AO5_when_closing'] = y_A_AO5_when_closing
+        return self.memo['y_A_AO5_when_closing']
+
+    def plot_svaj(self):
         """
         t1 = TraceOfA()
-        t1.plot_numerical()
+        t1.plot_svaj()
         """
         start_time = float(self.get_touch_time())
-        end_time = float(degree_to_time(138 - 1))
-        t = np.linspace(start_time,
-                        end_time,
-                        num=num, endpoint=True)
-        degree = time_to_degree(t)
-        x_R_AO5_e = self.get_x_R_AO2_when_touching_expr()
-        x_R_AO5_f = lambdify(x, x_R_AO5_e)
-        y_R_AO5_e = self.get_y_R_AO5_when_touching_expr()
-        y_R_AO5_f = lambdify(x, y_R_AO5_e)
-        y_V_AO5_e = diff(y_R_AO5_e, x)
-        y_V_AO5_f = lambdify(x, y_V_AO5_e)
-        y_A_AO5_e = diff(y_V_AO5_e, x)
-        y_A_AO5_f = lambdify(x, y_A_AO5_e)
-        fig = plt.figure(figsize=(15, 12), dpi=80)
-        fig.suptitle('R_AO5 SVA curves.', fontsize='x-large')
-        plt.subplot(4, 1, 1)
-        plt.grid()
-        plt.ylabel("x position of AtoO5 (mm)")
-        plt.plot(degree, x_R_AO5_f(t),
-                 color="blue", linewidth=3.0, linestyle="-")
-        plt.xlim(time_to_degree(start_time), time_to_degree(end_time))
-        plt.subplot(4, 1, 2)
-        plt.grid()
-        plt.ylabel("y position of AtoO5 (mm)")
-        plt.plot(degree, y_R_AO5_f(t),
-                 color="blue", linewidth=3.0, linestyle="-")
-        plt.xlim(time_to_degree(start_time), time_to_degree(end_time))
-        plt.subplot(4, 1, 3)
-        plt.grid()
-        plt.ylabel("y velocity of AtoO5 (mm/s)")
-        plt.plot(degree, y_V_AO5_f(t),
-                 color="blue", linewidth=3.0, linestyle="-")
-        plt.xlim(time_to_degree(start_time), time_to_degree(end_time))
-        plt.subplot(4, 1, 4)
-        plt.grid()
-        plt.ylabel("y acceleration of AtoO5 (m/s^2)")
-        plt.plot(degree, y_A_AO5_f(t) / 1000,
-                 color="blue", linewidth=3.0, linestyle="-")
-        plt.xlim(time_to_degree(start_time), time_to_degree(end_time))
-        plt.savefig("Track of A to O5 curves.png", dpi=720)
+        knot120 = degree_to_time(120)
+        end_time = float(degree_to_time(138))
+        knots = [start_time, knot120, end_time]
+        # Plot jaw on york curve on touching and closing stage
+        # Position
+        plot_joy_curve_p = plot(0, (x, knots[0], knots[-1]),
+                                title="Position of jaw on york curve",
+                                ylabel="(mm)",
+                                show=False)
+        for i in range(2):
+            expr_joy_curve_p_i = \
+                self.joy_curve.get_kth_expr_of_ith_piece(0, 3 + i)
+            plot_joy_curve_p_i = plot(expr_joy_curve_p_i,
+                                      (x, knots[i], knots[i + 1]),
+                                      show=False)
+            plot_joy_curve_p.extend(plot_joy_curve_p_i)
+        # Plot jaw on york curve on touching and closing stage
+        # Velocity
+        plot_joy_curve_v = plot(0, (x, knots[0], knots[-1]),
+                                title="Velocity of jaw on york curve",
+                                ylabel="(mm/s)",
+                                show=False)
+        for i in range(2):
+            joy_curve_v_expr_i = \
+                self.joy_curve.get_kth_expr_of_ith_piece(1, 3 + i)
+            plot_joy_curve_v_i = plot(joy_curve_v_expr_i,
+                                      (x, knots[i], knots[i + 1]),
+                                      show=False)
+            plot_joy_curve_v.extend(plot_joy_curve_v_i)
+        # Plot A to O5 curve on touching and closing stage
+        # xy of A position
+        plot_xy_R_AO5 = plot(0, (x, knots[0], knots[-1]),
+                             title="xy of A to O5 position",
+                             ylabel="(mm)",
+                             show=False)
+        x_R_AO5_expr = [self.get_x_R_AO2_when_touching_expr(),
+                        self.get_x_R_AO2_when_closing_expr()]
+        y_R_AO5_expr = [self.get_y_R_AO5_when_touching_expr(),
+                        self.get_y_R_AO5_when_closing_expr()]
+        for i in range(2):
+            plot_x_R_AO5_i = plot(x_R_AO5_expr[i],
+                                  (x, knots[i], knots[i + 1]),
+                                  show=False)
+            plot_y_R_AO5_i = plot(y_R_AO5_expr[i],
+                                  (x, knots[i], knots[i + 1]),
+                                  show=False)
+            plot_xy_R_AO5.extend(plot_x_R_AO5_i)
+            plot_xy_R_AO5.extend(plot_y_R_AO5_i)
+        # Plot A to O5 curve on touching and closing stage
+        # xy of A velocity
+        plot_xy_V_AO5 = plot(0, (x, knots[0], knots[-1]),
+                             title="xy of A to O5 velocity",
+                             ylabel="(mm/s)",
+                             show=False)
+        x_V_AO5_expr = [self.get_x_V_AO5_when_touching_expr(),
+                        self.get_x_V_AO5_when_closing_expr()]
+        y_V_AO5_expr = [self.get_y_V_AO5_when_touching_expr(),
+                        self.get_y_V_AO5_when_closing_expr()]
+        for i in range(2):
+            plot_x_V_AO5_i = plot(x_V_AO5_expr[i],
+                                  (x, knots[i], knots[i + 1]),
+                                  show=False)
+            plot_y_V_AO5_i = plot(y_V_AO5_expr[i],
+                                  (x, knots[i], knots[i + 1]),
+                                  show=False)
+            plot_xy_V_AO5.extend(plot_x_V_AO5_i)
+            plot_xy_V_AO5.extend(plot_y_V_AO5_i)
+        # Plot A to O5 curve on touching and closing stage
+        # xy of A acceleration
+        plot_xy_A_AO5 = plot(0, (x, knots[0], knots[-1]),
+                             title="xy of A to O5 acceleration",
+                             ylabel="(mm/s^2)",
+                             show=False)
+        x_A_AO5_expr = [self.get_x_A_AO5_when_touching_expr(),
+                        self.get_x_A_AO5_when_closing_expr()]
+        y_A_AO5_expr = [self.get_y_A_AO5_when_touching_expr(),
+                        self.get_y_A_AO5_when_closing_expr()]
+        for i in range(2):
+            plot_x_A_AO5_i = plot(x_A_AO5_expr[i],
+                                  (x, knots[i], knots[i + 1]),
+                                  show=False)
+            plot_y_A_AO5_i = plot(y_A_AO5_expr[i],
+                                  (x, knots[i], knots[i + 1]),
+                                  show=False)
+            plot_xy_A_AO5.extend(plot_x_A_AO5_i)
+            plot_xy_A_AO5.extend(plot_y_A_AO5_i)
+
+        fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(nrows=5)
+        move_sympyplot_to_axes(plot_joy_curve_p, ax1)
+        ax1.set_xticks([knots[i] for i in range(len(knots))])
+        ax1.set_xticklabels([(i % 2) * '\n' +
+                             str(time_to_degree(knots[i]))
+                             for i in range(len(knots))])
+        ax1.grid(True)
+        move_sympyplot_to_axes(plot_joy_curve_v, ax2)
+        ax2.set_xticks([knots[i] for i in range(len(knots))])
+        ax2.set_xticklabels([(i % 2) * '\n' +
+                             str(time_to_degree(knots[i]))
+                             for i in range(len(knots))])
+        ax2.grid(True)
+        move_sympyplot_to_axes(plot_xy_R_AO5, ax3)
+        ax3.set_xticks([knots[i] for i in range(len(knots))])
+        ax3.set_xticklabels([(i % 2) * '\n' +
+                             str(time_to_degree(knots[i]))
+                             for i in range(len(knots))])
+        ax3.grid(True)
+        move_sympyplot_to_axes(plot_xy_V_AO5, ax4)
+        ax4.set_xticks([knots[i] for i in range(len(knots))])
+        ax4.set_xticklabels([(i % 2) * '\n' +
+                             str(time_to_degree(knots[i]))
+                             for i in range(len(knots))])
+        ax4.grid(True)
+        move_sympyplot_to_axes(plot_xy_A_AO5, ax5)
+        ax5.set_xticks([knots[i] for i in range(len(knots))])
+        ax5.set_xticklabels([(i % 2) * '\n' +
+                             str(time_to_degree(knots[i]))
+                             for i in range(len(knots))])
+        ax5.grid(True)
+        ax5.set_xlabel('machine degree')
+        plt.show()
+
+    # def plot_numerical(self, num=360):
+    #     """
+    #     t1 = TraceOfA()
+    #     t1.plot_numerical()
+    #     """
+    #     start_time = float(self.get_touch_time())
+    #     end_time = float(degree_to_time(138 - 1))
+    #     t = np.linspace(start_time,
+    #                     end_time,
+    #                     num=num, endpoint=True)
+    #     degree = time_to_degree(t)
+    #     x_R_AO5_e = self.get_x_R_AO2_when_touching_expr()
+    #     x_R_AO5_f = lambdify(x, x_R_AO5_e)
+    #     y_R_AO5_e = self.get_y_R_AO5_when_touching_expr()
+    #     y_R_AO5_f = lambdify(x, y_R_AO5_e)
+    #     y_V_AO5_e = diff(y_R_AO5_e, x)
+    #     y_V_AO5_f = lambdify(x, y_V_AO5_e)
+    #     y_A_AO5_e = diff(y_V_AO5_e, x)
+    #     y_A_AO5_f = lambdify(x, y_A_AO5_e)
+    #     fig = plt.figure(figsize=(15, 12), dpi=80)
+    #     fig.suptitle('R_AO5 SVA curves.', fontsize='x-large')
+    #     plt.subplot(4, 1, 1)
+    #     plt.grid()
+    #     plt.ylabel("x position of AtoO5 (mm)")
+    #     plt.plot(degree, x_R_AO5_f(t),
+    #              color="blue", linewidth=3.0, linestyle="-")
+    #     plt.xlim(time_to_degree(start_time), time_to_degree(end_time))
+    #     plt.subplot(4, 1, 2)
+    #     plt.grid()
+    #     plt.ylabel("y position of AtoO5 (mm)")
+    #     plt.plot(degree, y_R_AO5_f(t),
+    #              color="blue", linewidth=3.0, linestyle="-")
+    #     plt.xlim(time_to_degree(start_time), time_to_degree(end_time))
+    #     plt.subplot(4, 1, 3)
+    #     plt.grid()
+    #     plt.ylabel("y velocity of AtoO5 (mm/s)")
+    #     plt.plot(degree, y_V_AO5_f(t),
+    #              color="blue", linewidth=3.0, linestyle="-")
+    #     plt.xlim(time_to_degree(start_time), time_to_degree(end_time))
+    #     plt.subplot(4, 1, 4)
+    #     plt.grid()
+    #     plt.ylabel("y acceleration of AtoO5 (m/s^2)")
+    #     plt.plot(degree, y_A_AO5_f(t) / 1000,
+    #              color="blue", linewidth=3.0, linestyle="-")
+    #     plt.xlim(time_to_degree(start_time), time_to_degree(end_time))
+    #     plt.savefig("Track of A to O5 curves.png", dpi=720)
 
 
 class ShakeHand(SplineWithPiecewisePolynomial):
