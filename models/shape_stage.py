@@ -97,126 +97,58 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
             4: 4,
             5: 4,
             6: 4,
-            7: 4
+            7: 4,
         }
+        self.periodic_depth = 6
         knots = [took_knot_at[i][0] for i in range(len(took_knot_at))]
         pvajp = [
             [took_knot_at[i][1][j] for i in range(len(took_knot_at))]
             for j in range(5)
         ]
-        # orders = [6, 6, 2, 6]
         orders = [6] * len(took_knot_at)
         SplineWithPiecewisePolynomial.__init__(self, knots, orders,
                                                pvajp, name=name)
-        self.count_of_var = sum(self.orders)
-        # if whether_rebuild_pieces:
-        #     self.update_with_solution()
-        #     self.save_solved_pieces()
-        # else:
-        #     self.load_solved_pieces()
-
-    def how_many_smoothness_equations_available(self):
-        """
-        j1 = JawOnYorkCurve(whether_rebuild_pieces=True)
-        # print(j1.how_many_smoothness_equations_available())
-        j1.update_with_solution()
-        j1.plot_svaj()
-        """
-        if self.count_of_interpolation == 0:
-            self.build_interpolating_condition()
-        if self.count_of_boundary == 0:
-            self.build_boundary_condition()
-        if self.count_of_periodic == 0:
-            self.build_periodic_condition()
-        if self.count_of_not_at_knot == 0:
-            self.build_not_at_knot_condition()
-        result = (self.count_of_var - self.count_of_interpolation -
-                  self.count_of_boundary - self.count_of_periodic -
-                  self.count_of_not_at_knot)
-        return result
-
-    def build_smoothness_condition(self, depths=None):
-        """
-        j1 = JawOnYorkCurve(whether_rebuild_pieces=True)
-        print(len(j1.build_smoothness_condition()))
-        print(len(j1.build_interpolating_condition()))
-        for i in range(len(s1.equations)):
-            print(s1.equations[i])
-        """
-        if self.count_of_smoothness != 0:
-            return self.count_of_smoothness
-        if depths is None:
-            depths = {
-                1: 5,
-                2: 4,
-                3: 3,
-            }
-        for i in depths.keys():
-            ki = self.knots[i]  # Knot I
-            pib = self.get_pieces()[i - 1]  # Piece Before knot I
-            pia = self.get_pieces()[i]  # Piece After knot I
-            eib = pib.get_expr()
-            eia = pia.get_expr()
-            for d in range(depths[i]):
-                eq = Eq(eib[d].subs(x, ki), eia[d].subs(x, ki))
-                self.equations.append(eq)
-                self.count_of_smoothness += 1
-        return self.equations[-self.count_of_smoothness:]
-
-    # def build_equations(self):
-    #     if self.count_of_interpolation == 0:
-    #         self.build_interpolating_condition()
-    #     # if self.count_of_boundary == 0:
-    #     #     self.build_boundary_condition()
-    #     if self.count_of_periodic == 0:
-    #         self.build_periodic_condition()
-    #     if self.count_of_smoothness == 0:
-    #         self.build_smoothness_condition()
-    #     return len(self.equations)
+        if whether_rebuild_pieces:
+            self.update_with_solution()
+            self.save_solved_pieces()
+        else:
+            self.load_solved_pieces()
 
     def build_equations(self):
         """
-        s1 = SplineWithPiecewisePolynomial()
-        print(len(s1.build_equations()))
+        j1 = JawOnYorkCurve(whether_rebuild_pieces=True)
+        j1.update_with_solution()
+        j1.plot_svaj()
+        j2 = JawOnYorkCurve(whether_rebuild_pieces=False)
+        j2.plot_svaj()
         """
         if self.count_of_interpolation == 0:
             self.build_interpolating_condition()
         if self.count_of_smoothness == 0:
             self.build_smoothness_condition(depths=self.smooth_depth)
         if self.count_of_periodic == 0:
-            self.build_periodic_condition(depth=6)
-        # if self.count_of_not_at_knot == 0:
-        #     self.build_not_at_knot_condition(
-        #         points=[degree_to_time(345), degree_to_time(122)],
-        #         depths=[3, 3],
-        #         values=[0, 0]
-        #     )
-        return self.equations
-
-    def get_equations(self):
-        if len(self.equations) == 0:
-            self.build_equations()
+            self.build_periodic_condition(depth=self.periodic_depth)
         return self.equations
 
     def build_spline(self):
         """
-        j1 = JawOnYorkCurve(whether_rebuild_pieces=True)
-        print(j1.build_equations())
-        j1.plot_svaj()
+        j1 = JawOnYorkCurve(whether_rebuild_pieces=False)
+        j1.get_piecewise()
         """
-        self.update_with_solution()
-        if len(self.piecewise) == 0:
-            for k in range(max(self.orders)):
-                self.piecewise.append(Piecewise(
-                    (0, x < self.knots[0]),
-                    (self.get_kth_expr_of_ith_piece(k, 0), x <= self.knots[1]),
-                    (self.get_kth_expr_of_ith_piece(k, 1), x <= self.knots[2]),
-                    (self.get_kth_expr_of_ith_piece(k, 2), x <= self.knots[3]),
-                    (self.get_kth_expr_of_ith_piece(k, 3), x <= self.knots[4]),
-                    (0, True)))
-
-    def get_piecewise(self):
-        self.build_spline()
+        if len(self.piecewise) != 0:
+            return self.piecewise
+        for k in range(max(self.orders)):
+            self.piecewise.append(Piecewise(
+                (0, x < self.knots[0]),
+                (self.get_kth_expr_of_ith_piece(k, 0), x <= self.knots[1]),
+                (self.get_kth_expr_of_ith_piece(k, 1), x <= self.knots[2]),
+                (self.get_kth_expr_of_ith_piece(k, 2), x <= self.knots[3]),
+                (self.get_kth_expr_of_ith_piece(k, 3), x <= self.knots[4]),
+                (self.get_kth_expr_of_ith_piece(k, 4), x <= self.knots[5]),
+                (self.get_kth_expr_of_ith_piece(k, 5), x <= self.knots[6]),
+                (self.get_kth_expr_of_ith_piece(k, 6), x <= self.knots[7]),
+                (self.get_kth_expr_of_ith_piece(k, 7), x <= self.knots[8]),
+                (0, True)))
         return self.piecewise
 
 

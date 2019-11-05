@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/models/jaw_on_york_relative_pieces.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/polynomial_spline.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/polynomial_spline.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/shake_hand_curve_262_317_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/models/shake_hand_curve_262_317_pieces.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/shape_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/shape_stage.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -290,7 +290,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/shape_stage.py</url>
-          <line>579</line>
+          <line>510</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>

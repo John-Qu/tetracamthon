@@ -71,7 +71,6 @@ class Polynomial(object):
 
     def update_expr(self, solution):
         """ Update the coefficients with solution dictionary.
-
         :param solution: dict of coefficient and value pair
         :return: None
         """
@@ -80,9 +79,9 @@ class Polynomial(object):
         self.expr.clear()
         for i in range(len(old_expr)):
             expr_i = old_expr[i]
-            self.expr.append(expr_i.subs([(coe[index_of_coe],
-                                           solution[coe[index_of_coe]])
-                                          for index_of_coe in range(self.order)]))
+            self.expr.append(
+                expr_i.subs([(coe[index_of_coe], solution[coe[index_of_coe]])
+                             for index_of_coe in range(self.order)]))
 
     def replace_expr(self, new_expr, new_coe):
         self.expr.clear()
@@ -91,34 +90,35 @@ class Polynomial(object):
         self.coe.extend(new_coe)
         self.build_diffs()
 
-    def build_functions(self):
-        if len(self.func) >= self.order:
-            return len(self.func)
-        expr = self.get_expr()
-        for i in range(len(expr)):
-            f_i = lambdify(x, expr[i])
-            self.func.append(f_i)
-        return len(self.func)
-
-    def build_functions_with_subs(self, value):
-        if len(self.func) >= self.order:
-            return len(self.func)
-        expr = self.get_expr()
-        for i in range(len(expr)):
-            f_i = expr[i].subs(x, value).evalf()
-            self.func.append(f_i)
-        return len(self.func)
-
-    def update_functions(self):
-        self.func.clear()
-        self.build_functions()
-
-    def get_functions(self):
-        if len(self.func) <= self.order:
-            self.build_functions()
-            return self.func
-        else:
-            return self.func
+# These codes are useless.
+    # def build_functions(self):
+    #     if len(self.func) >= self.order:
+    #         return len(self.func)
+    #     expr = self.get_expr()
+    #     for i in range(len(expr)):
+    #         f_i = lambdify(x, expr[i])
+    #         self.func.append(f_i)
+    #     return len(self.func)
+    #
+    # def build_functions_with_subs(self, value):
+    #     if len(self.func) >= self.order:
+    #         return len(self.func)
+    #     expr = self.get_expr()
+    #     for i in range(len(expr)):
+    #         f_i = expr[i].subs(x, value).evalf()
+    #         self.func.append(f_i)
+    #     return len(self.func)
+    #
+    # def update_functions(self):
+    #     self.func.clear()
+    #     self.build_functions()
+    #
+    # def get_functions(self):
+    #     if len(self.func) <= self.order:
+    #         self.build_functions()
+    #         return self.func
+    #     else:
+    #         return self.func
 
     def __str__(self, all_depth=False):
         if len(self.expr) < self.order:
@@ -156,7 +156,7 @@ class SplineWithPiecewisePolynomial(object):
         if knots is None:
             knots = np.linspace(0, 3, 4, endpoint=True)
         if orders is None:
-            orders = [6 for i in range(len(knots)-1)]
+            orders = [6 for i in range(len(knots) - 1)]
         if pvajp is None:
             pvajp = [
                 [0, 0.3, 0.6, 1],
@@ -179,6 +179,7 @@ class SplineWithPiecewisePolynomial(object):
         self.count_of_periodic = 0
         self.piecewise = []
         self.solution = {}
+        self.count_of_var = sum(self.orders)
 
     def build_pieces(self):
         for piece_id in range(self.num_of_pieces):
@@ -303,10 +304,11 @@ class SplineWithPiecewisePolynomial(object):
             for k in range(self.num_of_pieces, -1, -1):
                 if points[i] >= self.knots[k]:
                     p = self.get_pieces()[k]
-                    f = p.get_functions()
-                    # e = p.get_expr()
+                    e = p.get_expr()
+                    # f = p.get_functions()
                     knot = self.knots[k]
-                    eq = Eq(f[depths[i]](knot), values[i])
+                    # eq = Eq(f[depths[i]](knot), values[i])
+                    eq = Eq(e[depths[i]].subs(x, knot), values[i])
                     self.equations.append(eq)
                     self.count_of_not_at_knot += 1
                     break
@@ -319,20 +321,37 @@ class SplineWithPiecewisePolynomial(object):
         """
         if self.count_of_periodic != 0:
             return self.count_of_periodic
-        ps = self.get_pieces()[0]
-        fs = ps.get_functions()
-        s = self.knots[0]
-        pe = self.get_pieces()[-1]
-        fe = pe.get_functions()
-        e = self.knots[-1]
+        s = self.knots[0]  # Start knot
+        ps = self.get_pieces()[0]  # Piece of Start
+        es = ps.get_expr()  # Expressions of Start piece
+        # fs = ps.get_functions()
+        e = self.knots[-1]  # End knot
+        pe = self.get_pieces()[-1]  # Piece of End
+        ee = pe.get_expr()  # Expression of End piece
+        # fe = pe.get_functions()
         if depth is None:
             depth = min(ps.order, pe.order)
         for d in range(depth):
-            eq = Eq(fs[d](s), fe[d](e))
+            eq = Eq(es[d].subs(x, s), ee[d].subs(x, e))
             self.equations.append(eq)
             self.count_of_periodic += 1
             # TODO: less than 6 order condition?
         return self.equations[-self.count_of_periodic:]
+
+    def how_many_smoothness_equations_available(self):
+        """
+        j1 = JawOnYorkCurve(whether_rebuild_pieces=True)
+        print(j1.how_many_smoothness_equations_available())
+        """
+        if self.count_of_interpolation == 0:
+            self.build_interpolating_condition()
+        if self.count_of_periodic == 0:
+            self.build_periodic_condition()
+        if self.count_of_not_at_knot == 0:
+            self.build_not_at_knot_condition()
+        result = (self.count_of_var - self.count_of_interpolation -
+                  self.count_of_periodic - self.count_of_not_at_knot)
+        return result
 
     def build_equations(self,
                         whether_build_periodic=False,
@@ -397,7 +416,6 @@ class SplineWithPiecewisePolynomial(object):
         pkl_file = open('{}_pieces.pkl'.format(self.name), 'rb')
         self.pieces = pickle.load(pkl_file)
         pkl_file.close()
-
 
     def get_kth_expr_of_ith_piece(self, k, i):
         try:
@@ -497,15 +515,24 @@ class SplineWithPiecewisePolynomial(object):
         return tuple([self.get_kth_expr_of_ith_piece(k, -1).subs(x, k_e)
                       for k in range(4)])
 
+    def build_spline(self):
+        """
+        To be replaced by subclass method.
+        """
+        pass
+
     def get_piecewise(self):
         """
         s3 = ClimbUp()
         s3 = ShakeHand()
         print(s3.get_piecewise()[0])
         """
+        if len(self.piecewise) == 0:
+            self.build_spline()
         return self.piecewise
 
     def add_expr_to_pieces(self, expr_added, value_add_to_x):
         for i in range(self.num_of_pieces):
             self.pieces[i].update_expr_with_new_expr(expr_added,
                                                      value_add_to_x)
+
