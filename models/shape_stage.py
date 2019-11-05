@@ -4,7 +4,7 @@ from sympy.abc import x
 import numpy as np
 from helper_functions import degree_to_time, time_to_degree, \
     move_sympyplot_to_axes
-from polynomial_spline import SplineWithPiecewisePolynomial
+from polynomial_spline import SplineWithPiecewisePolynomial, Polynomial
 from analysis import O4DriveA, ANeedO4
 from packages import Package
 import pickle
@@ -15,148 +15,112 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
     """
     """
 
-    def __init__(self, knots=None, orders=None, pvajp=None):
-        # 0
-        start = [degree_to_time(0), [
-            symbols('pos_start'),
-            symbols('vel_start'),
-            symbols('acc_start'),
-            symbols('jerk_start'),
-            symbols('ping_start')]]
-        # 1
-        widest = [degree_to_time(43), [
-            -131,
+    def __init__(self, name="jaw_on_york_relative",
+                 start=None, widest=None, closed=None,
+                 release=None, end=None,
+                 whether_rebuild_pieces=False):
+        if start is None:
+            start = (degree_to_time(0), (
+                nan,
+                nan,
+                nan,
+                nan,
+                nan,
+            ))
+        knot1 = (degree_to_time(30), (
+            nan,
+            nan,
+            nan,
             0,
-            symbols('acc_widest'),
-            symbols('jerk_widest'),
-            symbols('ping_widest')]]
-        # 2
-        closed = [degree_to_time(138), [
+            nan,
+        ))
+        if widest is None:
+            widest = (degree_to_time(43), (
+                -131,
+                0,
+                nan,
+                nan,
+                nan,
+            ))
+        knot4 = (degree_to_time(90), (
+            nan,
+            nan,
             0,
-            symbols('vel_closed'),
-            symbols('acc_closed'),
-            symbols('jerk_closed'),
-            symbols('ping_closed')]]
-        # 3
-        open = [degree_to_time(330), [
+            nan,
+            nan,
+        ))
+        knot2 = (degree_to_time(120), (
+            nan,
+            nan,
+            nan,
             0,
-            symbols('vel_open'),
-            symbols('acc_open'),
-            symbols('jerk_open'),
-            symbols('ping_open')]]
-        # 4
-        end = [degree_to_time(360), [
-            symbols('pos_end'),
-            symbols('vel_end'),
-            symbols('acc_end'),
-            symbols('jerk_end'),
-            symbols('ping_end')]]
-        if knots is None:
-            knots = np.array([start[0], widest[0], closed[0],
-                              open[0], end[0]])
-        if pvajp is None:
-            pvajp = np.array([[start[1][i], widest[1][i], closed[1][i],
-                               open[1][i], end[1][i]] for i in range(5)])
-        if orders is None:
-            orders = [6, 6, 2, 6]
-        SplineWithPiecewisePolynomial.__init__(self, knots, orders)
-        self.pvajp = pvajp
-        self.equations = []
-        self.variables = []
+            nan,
+        ))
+        if closed is None:
+            closed = (degree_to_time(138), (
+                0,
+                0,
+                0,
+                nan,
+                nan,
+            ))
+        if release is None:
+            release = (degree_to_time(330), (
+                0,
+                0,
+                0,
+                nan,
+                nan,
+            ))
+        knot3 = (degree_to_time(345), (
+            nan,
+            nan,
+            nan,
+            0,
+            nan,
+        ))
+        if end is None:
+            end = (degree_to_time(360), (
+                nan,
+                nan,
+                nan,
+                nan,
+                nan,
+            ))
+        took_knot_at = [
+            start, knot1, widest, knot4, knot2, closed, release, knot3, end
+        ]
+        self.smooth_depth = {
+            1: 4,
+            2: 6,
+            3: 4,
+            4: 4,
+            5: 4,
+            6: 4,
+            7: 4
+        }
+        knots = [took_knot_at[i][0] for i in range(len(took_knot_at))]
+        pvajp = [
+            [took_knot_at[i][1][j] for i in range(len(took_knot_at))]
+            for j in range(5)
+        ]
+        # orders = [6, 6, 2, 6]
+        orders = [6] * len(took_knot_at)
+        SplineWithPiecewisePolynomial.__init__(self, knots, orders,
+                                               pvajp, name=name)
         self.count_of_var = sum(self.orders)
-        self.count_of_interpolation = 0
-        self.count_of_boundary = 0
-        self.count_of_not_at_knot = 0
-        self.count_of_periodic = 0
-        self.count_of_smoothness = 0
-        self.piecewise = []
-
-    def build_interpolating_condition(self):
-        """
-        j1 = JawOnYorkCurve()
-        print(j1.build_interpolating_condition())
-        """
-        if self.count_of_interpolation != 0:
-            return self.count_of_interpolation
-        for d in range(5):
-            for k in range(1, len(self.kp) - 1):
-                if isinstance(self.pvajp[d][k], Symbol):
-                    continue
-                else:
-                    p = self.get_pieces()[k]
-                    f = p.get_functions()
-                    knot = self.knots[k]
-                    eq = Eq(f[d](knot), self.pvajp[d][k])
-                    self.equations.append(eq)
-                    self.count_of_interpolation += 1
-        return self.count_of_interpolation
-
-    def build_boundary_condition(self):
-        """
-        j1 = JawOnYorkCurve()
-        print(j1.build_boundary_condition())
-        """
-        if self.count_of_boundary != 0:
-            return self.count_of_boundary
-        for d in range(5):
-            for k in [0, -1]:
-                if isinstance(self.pvajp[d][k], Symbol):
-                    continue
-                else:
-                    p = self.get_pieces()[k]
-                    f = p.get_functions()
-                    knot = self.knots[k]
-                    eq = Eq(f[d](knot), self.pvajp[d][k])
-                    self.equations.append(eq)
-                    self.count_of_boundary += 1
-        return self.count_of_boundary
-
-    def build_not_at_knot_condition(self, points, depths, values):
-        """
-        j1 = JawOnYorkCurve()
-        points = [degree_to_time(23), degree_to_time(123)]
-        depths = [3, 3]
-        values = [0, 0]
-        print(j1.build_not_at_knot_condition(points, depths, values))
-        """
-        if self.count_of_not_at_knot != 0:
-            return self.count_of_not_at_knot
-        for i in range(len(points)):
-            for k in range(self.num_of_pieces, -1, -1):
-                if points[i] >= self.knots[k]:
-                    p = self.get_pieces()[k]
-                    f = p.get_functions()
-                    knot = self.knots[k]
-                    eq = Eq(f[depths[i]](knot), values[i])
-                    self.equations.append(eq)
-                    self.count_of_not_at_knot += 1
-                    break
-        return self.count_of_not_at_knot
-
-    def build_periodic_condition(self):
-        """
-        j1 = JawOnYorkCurve()
-        print(j1.build_periodic_condition())
-        """
-        if self.count_of_periodic != 0:
-            return self.count_of_period
-        ps = self.get_pieces()[0]
-        fs = ps.get_functions()
-        s = self.knots[0]
-        pe = self.get_pieces()[-1]
-        fe = pe.get_functions()
-        e = self.knots[-1]
-        for d in range(min(ps.order, pe.order)):
-            eq = Eq(fs[d](s), fe[d](e))
-            self.equations.append(eq)
-            self.count_of_periodic += 1
-            # TODO: less than 6 order condition?
-        return self.count_of_periodic
+        # if whether_rebuild_pieces:
+        #     self.update_with_solution()
+        #     self.save_solved_pieces()
+        # else:
+        #     self.load_solved_pieces()
 
     def how_many_smoothness_equations_available(self):
         """
-        j1 = JawOnYorkCurve()
-        print(j1.how_many_smoothness_equations_available())
+        j1 = JawOnYorkCurve(whether_rebuild_pieces=True)
+        # print(j1.how_many_smoothness_equations_available())
+        j1.update_with_solution()
+        j1.plot_svaj()
         """
         if self.count_of_interpolation == 0:
             self.build_interpolating_condition()
@@ -164,118 +128,82 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
             self.build_boundary_condition()
         if self.count_of_periodic == 0:
             self.build_periodic_condition()
+        if self.count_of_not_at_knot == 0:
+            self.build_not_at_knot_condition()
         result = (self.count_of_var - self.count_of_interpolation -
-                  self.count_of_boundary - self.count_of_periodic)
+                  self.count_of_boundary - self.count_of_periodic -
+                  self.count_of_not_at_knot)
         return result
 
-    def build_smoothness_condition(self):
+    def build_smoothness_condition(self, depths=None):
         """
-        j1 = JawOnYorkCurve()
-        print(j1.build_smoothness_condition())
+        j1 = JawOnYorkCurve(whether_rebuild_pieces=True)
+        print(len(j1.build_smoothness_condition()))
+        print(len(j1.build_interpolating_condition()))
+        for i in range(len(s1.equations)):
+            print(s1.equations[i])
         """
         if self.count_of_smoothness != 0:
             return self.count_of_smoothness
-        k1 = self.knots[1]
-        p1b = self.get_pieces()[0]
-        p1a = self.get_pieces()[1]
-        f1b = p1b.get_functions()
-        f1a = p1a.get_functions()
-        for d in range(4):
-            eq = Eq(f1b[d](k1), f1a[d](k1))
-            self.equations.append(eq)
-            self.count_of_smoothness += 1
-        k2 = self.knots[2]
-        p2b = self.get_pieces()[1]
-        p2a = self.get_pieces()[2]
-        f2b = p2b.get_functions()
-        f2a = p2a.get_functions()
-        for d in range(2):
-            eq = Eq(f2b[d](k2), f2a[d](k2))
-            self.equations.append(eq)
-            self.count_of_smoothness += 1
-        eq = Eq(f2b[2](k2), 0)
-        self.equations.append(eq)
-        self.count_of_smoothness += 1
-        k3 = self.knots[3]
-        p3b = self.get_pieces()[2]
-        p3a = self.get_pieces()[3]
-        f3b = p3b.get_functions()
-        f3a = p3a.get_functions()
-        for d in range(2):
-            eq = Eq(f3b[d](k3), f3a[d](k3))
-            self.equations.append(eq)
-            self.count_of_smoothness += 1
-        eq = Eq(0, f3a[2](k3))
-        self.equations.append(eq)
-        self.count_of_smoothness += 1
-        return self.count_of_smoothness
+        if depths is None:
+            depths = {
+                1: 5,
+                2: 4,
+                3: 3,
+            }
+        for i in depths.keys():
+            ki = self.knots[i]  # Knot I
+            pib = self.get_pieces()[i - 1]  # Piece Before knot I
+            pia = self.get_pieces()[i]  # Piece After knot I
+            eib = pib.get_expr()
+            eia = pia.get_expr()
+            for d in range(depths[i]):
+                eq = Eq(eib[d].subs(x, ki), eia[d].subs(x, ki))
+                self.equations.append(eq)
+                self.count_of_smoothness += 1
+        return self.equations[-self.count_of_smoothness:]
+
+    # def build_equations(self):
+    #     if self.count_of_interpolation == 0:
+    #         self.build_interpolating_condition()
+    #     # if self.count_of_boundary == 0:
+    #     #     self.build_boundary_condition()
+    #     if self.count_of_periodic == 0:
+    #         self.build_periodic_condition()
+    #     if self.count_of_smoothness == 0:
+    #         self.build_smoothness_condition()
+    #     return len(self.equations)
 
     def build_equations(self):
         """
-        j1 = JawOnYorkCurve()
-        print(j1.build_equations())
+        s1 = SplineWithPiecewisePolynomial()
+        print(len(s1.build_equations()))
         """
         if self.count_of_interpolation == 0:
             self.build_interpolating_condition()
-        if self.count_of_boundary == 0:
-            self.build_boundary_condition()
-        if self.count_of_periodic == 0:
-            self.build_periodic_condition()
         if self.count_of_smoothness == 0:
-            self.build_smoothness_condition()
-        return len(self.equations)
+            self.build_smoothness_condition(depths=self.smooth_depth)
+        if self.count_of_periodic == 0:
+            self.build_periodic_condition(depth=6)
+        # if self.count_of_not_at_knot == 0:
+        #     self.build_not_at_knot_condition(
+        #         points=[degree_to_time(345), degree_to_time(122)],
+        #         depths=[3, 3],
+        #         values=[0, 0]
+        #     )
+        return self.equations
 
     def get_equations(self):
         if len(self.equations) == 0:
             self.build_equations()
         return self.equations
 
-    def build_variables(self):
-        """
-        j1 = JawOnYorkCurve()
-        print(j1.build_variables())
-        """
-        if len(self.variables) != 0:
-            return len(self.variables)
-        for i in range(self.num_of_pieces):
-            polynomial_i = self.get_pieces()[i]
-            coe_i = polynomial_i.coe
-            for j in range(len(coe_i)):
-                self.variables.append(coe_i[j])
-        return len(self.variables)
-
-    def get_variables(self):
-        if len(self.variables) == 0:
-            self.build_variables()
-        return self.variables
-
-    def solve_coefficients(self):
-        """
-        j1 = JawOnYorkCurve()
-        print(j1.solve_coefficients())
-        """
-        equations = self.get_equations()
-        variables = self.get_variables()
-        solutions = solve(equations, variables)
-        return solutions
-
-    def update_with_solution(self):
-        """
-        j1 = JawOnYorkCurve()
-        j1.update_with_solution()
-        """
-        solution = self.solve_coefficients()
-        self.involve_solutions(solution)
-
-    def get_kth_expr_of_ith_piece(self, k, i, without_symbol_coe=True):
-        if without_symbol_coe:
-            self.update_with_solution()
-        try:
-            return self.get_pieces()[i].get_expr()[k]
-        except IndexError:
-            return 0
-
     def build_spline(self):
+        """
+        j1 = JawOnYorkCurve(whether_rebuild_pieces=True)
+        print(j1.build_equations())
+        j1.plot_svaj()
+        """
         self.update_with_solution()
         if len(self.piecewise) == 0:
             for k in range(max(self.orders)):
@@ -290,52 +218,6 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
     def get_piecewise(self):
         self.build_spline()
         return self.piecewise
-
-    def plot_numerical(self, num=3600):
-        """
-        j1 = JawOnYorkCurve()
-        j1.plot_numerical()
-        """
-        t = np.linspace(0, degree_to_time(360),
-                        num, endpoint=True)
-        degree = time_to_degree(t)
-        position = lambdify(x, self.get_piecewise()[0])(t)
-        velocity = lambdify(x, self.get_piecewise()[1])(t)
-        acceleration = lambdify(x, self.get_piecewise()[2])(t)
-        jerk = lambdify(x, self.get_piecewise()[3])(t)
-        fig = plt.figure(figsize=(15, 12), dpi=80)
-        fig.suptitle('Jaw on York curves, with knots on \n' +
-                     str(time_to_degree(self.knots)),
-                     fontsize='xx-large')
-        plt.subplot(4, 1, 1)
-        plt.grid()
-        plt.ylabel("Position (mm)")
-        plt.plot(degree, position,
-                 color="blue", linewidth=3.0, linestyle="-")
-        plt.xlim(0.0, 360.0)
-        plt.xticks(np.linspace(0, 360, 37, endpoint=True))
-        plt.subplot(4, 1, 2)
-        plt.grid()
-        plt.ylabel("Velocity (mm/s)")
-        plt.plot(degree, velocity,
-                 color="blue", linewidth=3.0, linestyle="-")
-        plt.xlim(0.0, 360.0)
-        plt.xticks(np.linspace(0, 360, 37, endpoint=True))
-        plt.subplot(4, 1, 3)
-        plt.grid()
-        plt.ylabel("Acceleration (m/s^3)")
-        plt.plot(degree, acceleration / 1000,
-                 color="blue", linewidth=3.0, linestyle="-")
-        plt.xlim(0.0, 360.0)
-        plt.xticks(np.linspace(0, 360, 37, endpoint=True))
-        plt.subplot(4, 1, 4)
-        plt.grid()
-        plt.ylabel("Jerk (m/s^4)")
-        plt.plot(degree, jerk / 1000,
-                 color="blue", linewidth=3.0, linestyle="-")
-        plt.xlim(0.0, 360.0)
-        plt.xticks(np.linspace(0, 360, 37, endpoint=True))
-        plt.savefig("svaj_of_jaw_on_york.png", dpi=720)
 
 
 class TraceOfA(object):
@@ -558,38 +440,76 @@ class ShakeHand(SplineWithPiecewisePolynomial):
     #              start_position=0, end_position=symbols('end_p'),
     #              cons_velocity=-422, mod_velocity=-122):
     def __init__(self, name='shake_hand_curve_1',
-                 start_knot=degree_to_time(262),
-                 end_knot=degree_to_time(317),
-                 start_position=0, end_position=nan,
-                 cons_velocity=-422, mod_velocity=-122,
+                 start=None, end=None,
                  if_rebuild_pieces=False):
         """
         s1 = ShakeHand(name='shake_hand_curve_262_317', if_rebuild_pieces=True)
         """
-        self.start_knot = start_knot
-        self.end_knot = end_knot
-        self.start_p = start_position
-        self.end_p = end_position
-        self.cons_v = cons_velocity
-        self.mod_v = mod_velocity
-        delta = self.end_knot - self.start_knot
-        knots = np.array([
-            self.start_knot,
-            self.start_knot + delta / 10 * 2,
-            self.start_knot + delta / 10 * 3,
-            self.start_knot + delta / 2,
-            self.end_knot - delta / 10 * 3,
-            self.end_knot - delta / 10 * 2,
-            self.end_knot
-        ])
-        pvajp = [
-            [self.start_p, nan, nan, nan, nan, nan, self.end_p],
-            [self.cons_v, nan, nan, self.mod_v, nan, nan, self.cons_v],
-            [0, nan, nan, 0, nan, nan, 0],
-            [0, 0, nan, nan, nan, 0, 0],
-            [nan, nan, 0, nan, 0, nan, nan]
-        ]
-        orders = [6 for i in range(len(knots) - 1)]
+        if start is None:
+            start = (degree_to_time(262), (
+                0,
+                -422,
+                0,
+                0,
+                nan,
+            ))
+        if end is None:
+            end = (degree_to_time(317), (
+                nan,
+                -422,
+                0,
+                0,
+                nan,
+            ))
+        delta = end[0] - start[0]
+        knot1 = (start[0] + delta / 10 * 2, (
+            nan,
+            nan,
+            nan,
+            0,
+            nan,
+        ))
+        knot2 = (start[0] + delta / 10 * 3, (
+            nan,
+            nan,
+            nan,
+            nan,
+            0,
+        ))
+        knot3 = (start[0] + delta / 10 * 5, (
+            nan,
+            -122,
+            0,
+            nan,
+            nan,
+        ))
+        knot4 = (start[0] + delta / 10 * 7, (
+            nan,
+            nan,
+            nan,
+            nan,
+            0,
+        ))
+        knot5 = (start[0] + delta / 10 * 8, (
+            nan,
+            nan,
+            nan,
+            0,
+            nan,
+        ))
+        # pvajp = [
+        #     [self.start_p, nan, nan, nan, nan, nan, self.end_p],
+        #     [self.cons_v, nan, nan, self.mod_v, nan, nan, self.cons_v],
+        #     [0, nan, nan, 0, nan, nan, 0],
+        #     [0, 0, nan, nan, nan, 0, 0],
+        #     [nan, nan, 0, nan, 0, nan, nan]
+        # ]
+        # orders = [6 for i in range(len(knots) - 1)]
+        took_knot_at = [start, knot1, knot2, knot3, knot4, knot5, end]
+        knots = [took_knot_at[i][0] for i in range(len(took_knot_at))]
+        pvajp = [[took_knot_at[i][1][j] for i in range(len(took_knot_at))]
+                 for j in range(5)]
+        orders = [6] * len(took_knot_at)
         SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
                                                name=name)
         if if_rebuild_pieces:
@@ -831,57 +751,58 @@ class Pull(SplineWithPiecewisePolynomial):
 
 
 class Climb(SplineWithPiecewisePolynomial):
-    def __init__(self, name='climb_up_curve_325_92',
-                 start_knot=degree_to_time(-35),
-                 cross_knot=degree_to_time(43),
-                 high_knot=degree_to_time(84),
-                 touch_knot=degree_to_time(92),
-                 start_p=-50,
-                 cross_p=200,
-                 high_p=372.2,
-                 touch_p=365,
-                 start_v=-422,
-                 touch_v=-200,
-                 touch_a=-4444,
-                 touch_j=500000):
+    def __init__(self, name='climb_up_curve_0_92',
+                 start=None,
+                 cross=None,
+                 high=None,
+                 touch=None,
+                 ):
         """
-        s3 = ClimbUp()
+        c3 = Climb()
         """
-        self.name = name
-        knots = np.array([
-            start_knot,
-            degree_to_time(-25),
-            degree_to_time(-18),
-            0,
-            # cross_knot,
-            # high_knot,
-            touch_knot
-        ])
-        pvajp = [
-            # [start_p, 0, cross_p, high_p, touch_p],
-            # [start_v, 0, nan, 0, touch_v],
-            # [0, nan, nan, nan, touch_a],
-            # [nan, nan, nan, nan, touch_j],
-            # [nan, nan, nan, nan, nan]
-            [start_p, nan, nan, 0, touch_p],
-            [start_v, nan, -430, 0, touch_v],
-            [0, -5700, nan, nan, touch_a],
-            [nan, 0, nan, nan, nan],
-            [nan, nan, nan, nan, nan]
-        ]
-        orders = [6 for i in range(len(knots) - 1)]
+        if start is None:
+            start = (degree_to_time(0),
+                     (0,
+                      0,
+                      nan,
+                      nan,
+                      nan))
+        if cross is None:
+            cross = (degree_to_time(43),
+                     (200,
+                      nan,
+                      0,
+                      nan,
+                      nan))
+        if high is None:
+            high = (degree_to_time(84),
+                    (372.2,
+                     0,
+                     nan,
+                     nan,
+                     nan))
+        if touch is None:
+            self.trace = TraceOfA(load_memo=True)
+            touching_time = self.trace.get_touch_time()
+            touch = (touching_time,
+                     (320 + 147.490658039069,
+                      -154.513293430448,
+                      -3659.71088510222,
+                      470384.967511957,
+                      nan))
+        took_knot_at = [start, cross, high, touch]
+        knots = [took_knot_at[i][0] for i in range(len(took_knot_at))]
+        pvajp = [[took_knot_at[i][1][j] for i in range(len(took_knot_at))]
+                 for j in range(5)]
+        orders = [6] * len(took_knot_at)
         SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
                                                name=name)
 
     def build_smoothness_condition(self, depths=None):
         """
-        s3 = ClimbUp()
-        print(len(s3.build_smoothness_condition()))
-        for i in range(len(s3.equations)):
-            print(s3.equations[i])
-        s3 = ClimbUp()
-        s3.update_with_solution()
-        s3.plot_svaj()
+        c3 = Climb()
+        c3.update_with_solution()
+        c3.plot_svaj()
         """
         if self.count_of_smoothness != 0:
             return self.count_of_smoothness
@@ -889,7 +810,6 @@ class Climb(SplineWithPiecewisePolynomial):
             depths = {
                 1: 4,
                 2: 4,
-                3: 4,
             }
         for i in depths.keys():
             ki = self.knots[i]  # Knot I
@@ -905,65 +825,50 @@ class Climb(SplineWithPiecewisePolynomial):
 
 
 class Throw(SplineWithPiecewisePolynomial):
-    def __init__(self, name='climb_up_curve_325_92',
-                 start_knot=degree_to_time(-35),
-                 cross_knot=degree_to_time(43),
-                 high_knot=degree_to_time(84),
-                 touch_knot=degree_to_time(92),
-                 start_p=-50,
-                 cross_p=200,
-                 high_p=372.2,
-                 touch_p=365,
-                 start_v=-422,
-                 touch_v=-200,
-                 touch_a=-4444,
-                 touch_j=500000):
+    def __init__(self, start=None, release=None, end=None, name='throw_325_0'):
         """
-        s3 = ClimbUp()
+        t3 = Throw()
         """
-        self.name = name
-        knots = np.array([
-            start_knot,
-            degree_to_time(-25),
-            degree_to_time(-18),
-            0,
-            # cross_knot,
-            # high_knot,
-            touch_knot
-        ])
-        pvajp = [
-            # [start_p, 0, cross_p, high_p, touch_p],
-            # [start_v, 0, nan, 0, touch_v],
-            # [0, nan, nan, nan, touch_a],
-            # [nan, nan, nan, nan, touch_j],
-            # [nan, nan, nan, nan, nan]
-            [start_p, nan, nan, 0, touch_p],
-            [start_v, nan, -430, 0, touch_v],
-            [0, -5700, nan, nan, touch_a],
-            [nan, 0, nan, nan, nan],
-            [nan, nan, nan, nan, nan]
-        ]
-        orders = [6 for i in range(len(knots) - 1)]
+        if start is None:
+            start = (degree_to_time(325),
+                     (50,
+                      -422,
+                      0,
+                      nan,
+                      nan))
+        if release is None:
+            release = (degree_to_time(330),
+                       (30,
+                        nan,
+                        nan,
+                        nan,
+                        nan))
+        if end is None:
+            end = (degree_to_time(360),
+                   (0,
+                    0,
+                    30000,
+                    nan,
+                    nan))
+        took_knot_at = [start, release, end]
+        knots = [took_knot_at[i][0] for i in range(len(took_knot_at))]
+        pvajp = [[took_knot_at[i][1][j] for i in range(len(took_knot_at))]
+                 for j in range(5)]
+        orders = [6] * len(took_knot_at)
         SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
                                                name=name)
 
     def build_smoothness_condition(self, depths=None):
         """
-        s3 = ClimbUp()
-        print(len(s3.build_smoothness_condition()))
-        for i in range(len(s3.equations)):
-            print(s3.equations[i])
-        s3 = ClimbUp()
-        s3.update_with_solution()
-        s3.plot_svaj()
+        t3 = Throw()
+        t3.update_with_solution()
+        t3.plot_svaj()
         """
         if self.count_of_smoothness != 0:
             return self.count_of_smoothness
         if depths is None:
             depths = {
-                1: 4,
-                2: 4,
-                3: 4,
+                1: 5,
             }
         for i in depths.keys():
             ki = self.knots[i]  # Knot I
@@ -977,3 +882,46 @@ class Throw(SplineWithPiecewisePolynomial):
                 self.count_of_smoothness += 1
         return self.equations[-self.count_of_smoothness:]
 
+
+class Combine(SplineWithPiecewisePolynomial):
+    def __init__(self):
+        self.joy = JawOnYorkCurve()
+        self.trace = TraceOfA(load_memo=True)
+        touching_time = self.trace.get_touch_time()
+        self.climb = Climb(name="climb_to_touch",
+                           start=(degree_to_time(0), (
+                               0,
+                               0,
+                               nan,
+                               nan,
+                               nan,
+                           )),
+                           cross=(degree_to_time(43), (
+                               symbols("climb_cross_p"),
+                               nan,
+                               nan,
+                               nan,
+                               nan,
+                           )),
+                           high=(degree_to_time(84), (
+                               symbols("climb_high_p"),
+                               0,
+                               nan,
+                               nan,
+                               nan,
+                           )),
+                           touch=(touching_time, (
+                               symbols("climb_touch_p"),
+                               symbols("climb_touch_v"),
+                               symbols("climb_touch_a"),
+                               symbols("climb_touch_j"),
+                               nan,
+                           )),
+                           )
+        self.touch = Touch(name="touch_to_fold")
+        self.pull1 = Pull(name="pull_1")
+        self.shake1 = ShakeHand(name="shake_for_pulling_ear")
+        self.pull2 = Pull(name="pull_2")
+        self.shake2 = ShakeHand(name="shake_for_touching")
+        self.pull3 = Pull(name="pull_3")
+        self.throw = Throw(name="throw_to_bottom")

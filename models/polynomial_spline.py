@@ -175,6 +175,8 @@ class SplineWithPiecewisePolynomial(object):
         self.variables = []
         self.count_of_interpolation = 0
         self.count_of_smoothness = 0
+        self.count_of_not_at_knot = 0
+        self.count_of_periodic = 0
         self.piecewise = []
         self.solution = {}
 
@@ -286,7 +288,55 @@ class SplineWithPiecewisePolynomial(object):
                 self.count_of_smoothness += 1
         return self.equations[-self.count_of_smoothness:]
 
-    def build_equations(self):
+    def build_not_at_knot_condition(self,
+                                    points=None, depths=None, values=None):
+        """
+        j1 = JawOnYorkCurve()
+        points = [degree_to_time(23), degree_to_time(123)]
+        depths = [3, 3]
+        values = [0, 0]
+        print(j1.build_not_at_knot_condition(points, depths, values))
+        """
+        if self.count_of_not_at_knot != 0:
+            return self.count_of_not_at_knot
+        for i in range(len(points)):
+            for k in range(self.num_of_pieces, -1, -1):
+                if points[i] >= self.knots[k]:
+                    p = self.get_pieces()[k]
+                    f = p.get_functions()
+                    # e = p.get_expr()
+                    knot = self.knots[k]
+                    eq = Eq(f[depths[i]](knot), values[i])
+                    self.equations.append(eq)
+                    self.count_of_not_at_knot += 1
+                    break
+        return self.equations[-self.count_of_not_at_knot:]
+
+    def build_periodic_condition(self, depth=None):
+        """
+        j1 = JawOnYorkCurve()
+        print(j1.build_periodic_condition())
+        """
+        if self.count_of_periodic != 0:
+            return self.count_of_periodic
+        ps = self.get_pieces()[0]
+        fs = ps.get_functions()
+        s = self.knots[0]
+        pe = self.get_pieces()[-1]
+        fe = pe.get_functions()
+        e = self.knots[-1]
+        if depth is None:
+            depth = min(ps.order, pe.order)
+        for d in range(depth):
+            eq = Eq(fs[d](s), fe[d](e))
+            self.equations.append(eq)
+            self.count_of_periodic += 1
+            # TODO: less than 6 order condition?
+        return self.equations[-self.count_of_periodic:]
+
+    def build_equations(self,
+                        whether_build_periodic=False,
+                        whether_build_not_at_knot=False):
         """
         s1 = SplineWithPiecewisePolynomial()
         print(len(s1.build_equations()))
@@ -295,6 +345,10 @@ class SplineWithPiecewisePolynomial(object):
             self.build_interpolating_condition()
         if self.count_of_smoothness == 0:
             self.build_smoothness_condition()
+        if whether_build_periodic:
+            self.build_periodic_condition()
+        if whether_build_not_at_knot:
+            self.build_not_at_knot_condition()
         return self.equations
 
     def get_equations(self):
