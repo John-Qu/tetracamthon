@@ -133,15 +133,10 @@ class Polynomial(object):
             what = str(self.expr[0]) + '\n'
         return who + "\n" + what
 
-    def update_expr_with_new_expr(self, expr_added, value_add_to_x):
-        ori_expr = self.expr[0]
+    def update_with_new_expr(self, new_expr):
         self.expr.clear()
-        new_expr = ori_expr.subs(x, x + value_add_to_x) + expr_added
         self.expr.append(new_expr)
-        self.piece = (self.s - value_add_to_x, self.e - value_add_to_x)
         self.build_diffs()
-        # for i in range(1, self.order):
-        #     self.expr.append(0)
         return self.expr
 
 
@@ -423,7 +418,7 @@ class SplineWithPiecewisePolynomial(object):
         except:
             return 0
 
-    def plot_svaj(self):
+    def plot_svaj(self, whether_save_png=False):
         """
         s1 = SplineWithPiecewisePolynomial()
         s1.update_with_solution()
@@ -491,6 +486,8 @@ class SplineWithPiecewisePolynomial(object):
                              for i in range(len(self.knots))])
         ax4.grid(True)
         ax4.set_xlabel('machine degree')
+        if whether_save_png:
+            plt.savefig('plot_of_{}'.format(self.name))
         plt.show()
 
     def get_start_pvaj(self):
@@ -515,6 +512,16 @@ class SplineWithPiecewisePolynomial(object):
         return tuple([self.get_kth_expr_of_ith_piece(k, -1).subs(x, k_e)
                       for k in range(4)])
 
+    def get_point_pvaj(self, point):
+        """
+        s1 = SplineWithPiecewisePolynomial()
+        s1.load_solved_pieces()
+        print(s1.get_end_pvaj())
+        :return: tuple of pvaj on the point knot
+        """
+        return tuple([self.get_kth_expr_of_ith_piece(k, -1).subs(x, point)
+                      for k in range(4)])
+
     def build_spline(self):
         """
         To be replaced by subclass method.
@@ -531,8 +538,6 @@ class SplineWithPiecewisePolynomial(object):
             self.build_spline()
         return self.piecewise
 
-    def add_expr_to_pieces(self, expr_added, value_add_to_x):
-        for i in range(self.num_of_pieces):
-            self.pieces[i].update_expr_with_new_expr(expr_added,
-                                                     value_add_to_x)
+    def update_piece_with_new_expr(self, index, new_expr):
+        self.pieces[index].update_with_new_expr(new_expr)
 

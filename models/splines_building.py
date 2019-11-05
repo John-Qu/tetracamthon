@@ -58,8 +58,8 @@ class Polynomial(object):
             self.build_expression()
         elif len(self.expr) == self.order:
             return self.expr
-        # for depth in range(1, self.order):
-        for depth in range(1, 6):
+        for depth in range(1, self.order):
+        # for depth in range(1, 6):
             self.expr.append(diff(self.expr[0], x, depth))
         return self.expr
 
@@ -134,7 +134,7 @@ class Polynomial(object):
             what = str(self.expr[0]) + '\n'
         return who + "\n" + what
 
-    def update_expr_with_new_expr(self, expr_added, value_add_to_x):
+    def update_with_new_expr(self, expr_added, value_add_to_x):
         ori_expr = self.expr[0]
         self.expr.clear()
         new_expr = ori_expr.subs(x, x + value_add_to_x) + expr_added
