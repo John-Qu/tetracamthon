@@ -561,7 +561,7 @@ class SplineWithPiecewisePolynomial(object):
         print(s1.get_end_pvaj())
         :return: tuple of pvaj on the point knot
         """
-        return tuple([self.get_kth_expr_of_ith_piece(k, -1).subs(x, point)
+        return tuple([self.get_piecewise()[k].subs(x, point)
                       for k in range(4)])
 
     def build_spline(self):

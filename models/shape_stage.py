@@ -1221,11 +1221,10 @@ class Climb(SplineWithPiecewisePolynomial):
             start = (degree_to_time(0), (
                 0,
                 0,
-                nan,
-                nan,
+                38000,
+                567486.791390715,
                 nan,
             ))
-
         knot1 = (degree_to_time(13), (
             nan,
             nan,
@@ -1265,12 +1264,13 @@ class Climb(SplineWithPiecewisePolynomial):
                 93189.8259805306,
                 nan,
             ))
-        key_knots = [start, knot1, cross, knot2, high, touch]
+        # key_knots = [start, knot1, cross, knot2, high, touch]
+        key_knots = [start, cross, high, touch]
         smooth_depth = {
             knot1: 5,
-            cross: 5,
+            cross: 4,
             knot2: 5,
-            high: 5,
+            high: 4,
         }
         SplineWithPiecewisePolynomial.__init__(self,
                                                key_knots=key_knots,
@@ -1327,7 +1327,6 @@ class Throw(SplineWithPiecewisePolynomial):
                 nan,
             ))
         key_knots = [start, release, knot1, end]
-        # key_knots = [start, knot1, end]
         smooth_depth = {
             release: 5,
             knot1: 5,
