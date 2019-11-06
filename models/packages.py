@@ -52,7 +52,7 @@ class Package(object):
                 str(self.hs_sealing_width))
 
     def get_pulling_velocity(self, cycle_time=0.9):
-        return self.web_repeated_length / cycle_time * 2
+        return -self.web_repeated_length / cycle_time * 2
 
     def get_x_when_touching_tube(self):
         return self.depth / 2.0

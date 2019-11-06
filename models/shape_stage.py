@@ -18,7 +18,7 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
     def __init__(self, name="jaw_on_york_relative",
                  start=None, widest=None, closed=None,
                  release=None, end=None,
-                 whether_rebuild_pieces=False):
+                 whether_rebuild=False):
         if start is None:
             start = (degree_to_time(0), (
                 nan,
@@ -106,7 +106,7 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
                                                orders=orders,
                                                smooth_depth=smooth_depth,
                                                name=name)
-        if whether_rebuild_pieces:
+        if whether_rebuild:
             self.update_with_solution()
             self.save_solved_pieces()
         else:
@@ -153,7 +153,7 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
 class TraceOfA(object):
     def __init__(self, whether_load_memo=True):
         """
-        t1 = TraceOfA(load_memo=False)
+        t1 = TraceOfA(whether_load_memo=False)
         """
         # Jaw on York spline Curve
         self.joy_curve = JawOnYorkCurve(whether_rebuild_pieces=False)
@@ -249,6 +249,7 @@ class TraceOfA(object):
         """
         return time_to_degree(self.get_touch_time())
 
+    # xy of R_AO2 position expression
     def get_y_R_AO2_when_touching_expr(self):
         """
         t1 = TraceOfA()
@@ -332,6 +333,7 @@ class TraceOfA(object):
         self.memo['x_R_AO2_when_closing_expr'] = x_R_AO2_when_closing_expr
         return x_R_AO2_when_closing_expr
 
+    # y of R_AO5 position expressionn
     def get_y_R_AO5_when_touching_expr(self):
         """
         t1 = TraceOfA()
@@ -372,22 +374,36 @@ class TraceOfA(object):
         self.memo['y_R_AO5_when_closing_expr'] = y_R_AO5_when_closing_expr
         return self.memo['y_R_AO5_when_closing_expr']
 
+    #
     def get_x_V_AO5_when_touching_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_x_V_AO5_when_touching_expr().subs(x, t1.get_touch_time()))
+            # 605.377269017069
+        print(t1.get_x_V_AO5_when_touching_expr().subs(x, degree_to_time(120)))
+            # 154.168911849550
+        """
         if 'x_V_AO5_when_touching' in self.memo:
             return self.memo['x_V_AO5_when_touching']
         x_V_AO5_when_touching = diff(self.get_x_R_AO2_when_touching_expr(), x)
         self.memo['x_V_AO5_when_touching'] = x_V_AO5_when_touching
         return self.memo['x_V_AO5_when_touching']
 
+    def get_x_V_AO5_when_closing_expr(self):
+        if 'x_V_AO5_when_closing' in self.memo:
+            return self.memo['x_V_AO5_when_closing']
+        x_V_AO5_when_closing = diff(self.get_x_R_AO2_when_closing_expr(), x)
+        self.memo['x_V_AO5_when_closing'] = x_V_AO5_when_closing
+        return self.memo['x_V_AO5_when_closing']
+
+    #
     def get_x_V_AO2_when_touching_expr(self):
         """
         t1 = TraceOfA()
-        x_V_AO2_of_vr_O4O2 = t1.joy_mechanism_forward.get_x_V_AO2_of_vr_O4O2()
-        x_V_AO2_when_touching = x_V_AO2_of_vr_O4O2.subs(
-            (t1.joy_mechanism_forward.r,
-             t1.joy_curve.get_kth_expr_of_ith_piece(0, 3)),
-            (t1.joy_mechanism_forward.v,
-             t1.joy_curve.get_kth_expr_of_ith_piece(1, 3)))
+        print(t1.get_x_V_AO2_when_touching_expr().subs(x, t1.get_touch_time()))
+            # 605.377269017069
+        print(t1.get_x_V_AO2_when_touching_expr().subs(x, degree_to_time(120)))
+            # 154.168911849550
         """
         if 'x_V_AO2_when_touching' in self.memo:
             return self.memo['x_V_AO2_when_touching']
@@ -397,11 +413,18 @@ class TraceOfA(object):
              (-self.joy_curve.get_kth_expr_of_ith_piece(0, 3)
               + self.get_close_rO4O2())),
             (self.joy_mechanism_forward.v,
-             self.joy_curve.get_kth_expr_of_ith_piece(1, 3))])
+             -self.joy_curve.get_kth_expr_of_ith_piece(1, 3))])
         self.memo['x_V_AO2_when_touching'] = x_V_AO2_when_touching
         return self.memo['x_V_AO2_when_touching']
 
     def get_x_V_AO2_when_closing_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_x_V_AO2_when_closing_expr().subs(x, degree_to_time(138)))
+        # 4.36802480797050e-13
+        print(t1.get_x_V_AO2_when_closing_expr().subs(x, degree_to_time(120)))
+        # 154.168911849551
+        """
         if 'x_V_AO2_when_closing' in self.memo:
             return self.memo['x_V_AO2_when_closing']
         x_V_AO2_of_vr_O4O2 = self.joy_mechanism_forward.get_x_V_AO2_of_vr_O4O2()
@@ -410,11 +433,21 @@ class TraceOfA(object):
              (-self.joy_curve.get_kth_expr_of_ith_piece(0, 4)
               + self.get_close_rO4O2())),
             (self.joy_mechanism_forward.v,
-             self.joy_curve.get_kth_expr_of_ith_piece(1, 4))])
+             -self.joy_curve.get_kth_expr_of_ith_piece(1, 4))])
         self.memo['x_V_AO2_when_closing'] = x_V_AO2_when_closing
         return self.memo['x_V_AO2_when_closing']
 
+    #
     def get_y_V_AO2_when_touching_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_y_V_AO2_when_touching_expr().subs(x, t1.get_touch_time()))
+        # -126.300771294982
+        print(t1.get_y_V_AO2_when_touching_expr().subs(x, degree_to_time(120)))
+        # -54.1663345694120
+        print(t1.get_y_V_AO2_when_touching_expr().subs(x, degree_to_time(84)))
+        # -54.8571400797708
+        """
         if 'y_V_AO2_when_touching' in self.memo:
             return self.memo['y_V_AO2_when_touching']
         y_V_AO2_of_vr_O4O2 = self.joy_mechanism_forward.get_y_V_AO2_of_vr_O4O2()
@@ -423,11 +456,18 @@ class TraceOfA(object):
              (-self.joy_curve.get_kth_expr_of_ith_piece(0, 3)
               + self.get_close_rO4O2())),
             (self.joy_mechanism_forward.v,
-             self.joy_curve.get_kth_expr_of_ith_piece(1, 3))])
+             -self.joy_curve.get_kth_expr_of_ith_piece(1, 3))])
         self.memo['y_V_AO2_when_touching'] = y_V_AO2_when_touching
         return self.memo['y_V_AO2_when_touching']
 
     def get_y_V_AO2_when_closing_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_y_V_AO2_when_closing_expr().subs(x, degree_to_time(138)))
+        # -1.59378185647184e-13
+        print(t1.get_y_V_AO2_when_closing_expr().subs(x, degree_to_time(120)))
+        -54.1663345694121
+        """
         if 'y_V_AO2_when_closing' in self.memo:
             return self.memo['y_V_AO2_when_closing']
         y_V_AO2_of_vr_O4O2 = self.joy_mechanism_forward.get_y_V_AO2_of_vr_O4O2()
@@ -436,18 +476,48 @@ class TraceOfA(object):
              (-self.joy_curve.get_kth_expr_of_ith_piece(0, 4)
               + self.get_close_rO4O2())),
             (self.joy_mechanism_forward.v,
-             self.joy_curve.get_kth_expr_of_ith_piece(1, 4))])
+             -self.joy_curve.get_kth_expr_of_ith_piece(1, 4))])
         self.memo['y_V_AO2_when_closing'] = y_V_AO2_when_closing
         return self.memo['y_V_AO2_when_closing']
 
+    #
     def get_y_V_AO5_when_touching_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_y_V_AO5_when_touching_expr().subs(x, t1.get_touch_time()))
+        # 4.39902319100218e-11
+        print(t1.get_y_V_AO5_when_touching_expr().subs(x, degree_to_time(120)))
+        # -358.114618459770
+        """
         if 'y_V_AO5_when_touching' in self.memo:
             return self.memo['y_V_AO5_when_touching']
         y_V_AO5_when_touching = diff(self.get_y_R_AO5_when_touching_expr(), x)
         self.memo['y_V_AO5_when_touching'] = y_V_AO5_when_touching
         return self.memo['y_V_AO5_when_touching']
 
+    def get_y_V_AO5_when_closing_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_y_V_AO5_when_closing_expr().subs(x, degree_to_time(138)))
+        # -6.31220383387539e-6
+        print(t1.get_y_V_AO5_when_closing_expr().subs(x, degree_to_time(120)))
+        # -358.114618459771
+        """
+        if 'y_V_AO5_when_closing' in self.memo:
+            return self.memo['y_V_AO5_when_closing']
+        y_V_AO5_when_closing = diff(self.get_y_R_AO5_when_closing_expr(), x)
+        self.memo['y_V_AO5_when_closing'] = y_V_AO5_when_closing
+        return self.memo['y_V_AO5_when_closing']
+
+    #
     def get_x_A_AO5_when_touching_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_x_A_AO5_when_touching_expr().subs(x, t1.get_touch_time()))
+        # -4841.07447381837
+        print(t1.get_x_A_AO5_when_touching_expr().subs(x, degree_to_time(120)))
+        # -7942.86569052343
+        """
         if 'x_A_AO5_when_touching' in self.memo:
             return self.memo['x_A_AO5_when_touching']
         x_A_AO5_when_touching = diff(self.get_x_V_AO5_when_touching_expr(), x)
@@ -455,27 +525,27 @@ class TraceOfA(object):
         return self.memo['x_A_AO5_when_touching']
 
     def get_y_A_AO5_when_touching_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_y_A_AO5_when_touching_expr().subs(x, t1.get_touch_time()))
+        # -15112.6448594876
+        print(t1.get_y_A_AO5_when_touching_expr().subs(x, degree_to_time(120)))
+        # 2597.04185357227
+        """
         if 'y_A_AO5_when_touching' in self.memo:
             return self.memo['y_A_AO5_when_touching']
         y_A_AO5_when_touching = diff(self.get_y_V_AO5_when_touching_expr(), x)
         self.memo['y_A_AO5_when_touching'] = y_A_AO5_when_touching
         return self.memo['y_A_AO5_when_touching']
 
-    def get_x_V_AO5_when_closing_expr(self):
-        if 'x_V_AO5_when_closing' in self.memo:
-            return self.memo['x_V_AO5_when_closing']
-        x_V_AO5_when_closing = diff(self.get_x_R_AO2_when_closing_expr(), x)
-        self.memo['x_V_AO5_when_closing'] = x_V_AO5_when_closing
-        return self.memo['x_V_AO5_when_closing']
-
-    def get_y_V_AO5_when_closing_expr(self):
-        if 'y_V_AO5_when_closing' in self.memo:
-            return self.memo['y_V_AO5_when_closing']
-        y_V_AO5_when_closing = diff(self.get_y_R_AO5_when_closing_expr(), x)
-        self.memo['y_V_AO5_when_closing'] = y_V_AO5_when_closing
-        return self.memo['y_V_AO5_when_closing']
-
     def get_x_A_AO5_when_closing_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_x_A_AO5_when_closing_expr().subs(x, degree_to_time(138)))
+        # -4.31184330462087e-12
+        print(t1.get_x_A_AO5_when_closing_expr().subs(x, degree_to_time(120)))
+        # -7942.86569052342
+        """
         if 'x_A_AO5_when_closing' in self.memo:
             return self.memo['x_A_AO5_when_closing']
         x_A_AO5_when_closing = diff(self.get_x_V_AO5_when_closing_expr(), x)
@@ -483,11 +553,50 @@ class TraceOfA(object):
         return self.memo['x_A_AO5_when_closing']
 
     def get_y_A_AO5_when_closing_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_y_A_AO5_when_closing_expr().subs(x, degree_to_time(138)))
+        # 3.34129578550133e-5
+        print(t1.get_y_A_AO5_when_closing_expr().subs(x, degree_to_time(120)))
+        # 2597.04185357219
+        print(t1.get_y_A_AO5_when_closing_expr().subs(x, degree_to_time(137)))
+        # 11719.2517761919
+        """
         if 'y_A_AO5_when_closing' in self.memo:
             return self.memo['y_A_AO5_when_closing']
         y_A_AO5_when_closing = diff(self.get_y_V_AO5_when_closing_expr(), x)
         self.memo['y_A_AO5_when_closing'] = y_A_AO5_when_closing
         return self.memo['y_A_AO5_when_closing']
+
+    def get_y_A_AO2_when_touching_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_y_A_AO2_when_touching_expr().subs(x, t1.get_touch_time()))
+        # -1221.82260807299
+        print(t1.get_y_A_AO2_when_touching_expr().subs(x, degree_to_time(120)))
+        # 2628.99301159539
+        """
+        if 'y_A_AO2_when_touching' in self.memo:
+            return self.memo['y_A_AO2_when_touching']
+        y_A_AO2_when_touching = diff(self.get_y_V_AO2_when_touching_expr(), x)
+        self.memo['y_A_AO2_when_touching'] = y_A_AO2_when_touching
+        return self.memo['y_A_AO2_when_touching']
+
+    def get_y_A_AO2_when_closing_expr(self):
+        """
+        t1 = TraceOfA()
+        print(t1.get_y_A_AO2_when_closing_expr().subs(x, degree_to_time(138)))
+        # 1.57328264581155e-12
+        print(t1.get_y_A_AO2_when_closing_expr().subs(x, degree_to_time(120)))
+        # 2628.99301159538
+        print(t1.get_y_A_AO2_when_closing_expr().subs(x, degree_to_time(137)))
+        # 19.9800822443496
+        """
+        if 'y_A_AO2_when_closing' in self.memo:
+            return self.memo['y_A_AO2_when_closing']
+        y_A_AO2_when_closing = diff(self.get_y_V_AO2_when_closing_expr(), x)
+        self.memo['y_A_AO2_when_closing'] = y_A_AO2_when_closing
+        return self.memo['y_A_AO2_when_closing']
 
     def plot_svaj(self):
         """
@@ -690,9 +799,6 @@ class TraceOfA(object):
 
 
 class ShakeHand(SplineWithPiecewisePolynomial):
-    # def __init__(self, start_knot=0.3625, end_knot=0.4825,
-    #              start_position=0, end_position=symbols('end_p'),
-    #              cons_velocity=-422, mod_velocity=-122):
     def __init__(self,
                  name='shake_hand_curve_1',
                  start=None,
@@ -702,10 +808,10 @@ class ShakeHand(SplineWithPiecewisePolynomial):
                  knot4=None,
                  knot5=None,
                  end=None,
-                 if_rebuild_pieces=False):
+                 whether_rebuild=False):
         """
-        s1 = ShakeHand(name='shake_hand_curve_264_318', if_rebuild_pieces=True)
-        s1 = ShakeHand(name='shake_hand_curve_264_318', if_rebuild_pieces=False)
+        s1 = ShakeHand(name='shake_hand_curve_264_318', whether_rebuild=True)
+        s1 = ShakeHand(name='shake_hand_curve_264_318', whether_rebuild=False)
         s1.plot_svaj(whether_save_png=True)
         """
         if start is None:
@@ -758,7 +864,7 @@ class ShakeHand(SplineWithPiecewisePolynomial):
             ))
         if end is None:
             end = (degree_to_time(318), (
-                degree_to_time(318 - 264) * (-422) + 24.25,
+                degree_to_time(318 - 264) * (-422) + 24.25 * 1.3,
                 -422,
                 0,
                 nan,
@@ -772,13 +878,11 @@ class ShakeHand(SplineWithPiecewisePolynomial):
             knot4: 4,
             knot5: 5,
         }
-        orders = [6] * len(key_knots)
         SplineWithPiecewisePolynomial.__init__(self,
                                                key_knots=key_knots,
-                                               orders=orders,
                                                smooth_depth=smooth_depth,
                                                name=name)
-        if if_rebuild_pieces:
+        if whether_rebuild:
             self.update_with_solution()
             self.save_solved_pieces()
         else:
@@ -786,7 +890,7 @@ class ShakeHand(SplineWithPiecewisePolynomial):
 
     # def build_smoothness_condition(self, depths=None):
     #     """
-    #     s1 = ShakeHand(if_save_pieces=False, if_load_pieces=False)
+    #     s1 = ShakeHand(whether_rebuild=False)
     #     print(len(s1.build_smoothness_condition()))
     #     print(len(s1.build_interpolating_condition()))
     #     for i in range(len(s1.equations)):
@@ -817,8 +921,8 @@ class ShakeHand(SplineWithPiecewisePolynomial):
 
     def build_spline(self):
         """
-        s1 = ShakeHand(if_rebuild_pieces=True)
-        s1 = ShakeHand(if_save_pieces=False, if_load_pieces=True)
+        s1 = ShakeHand(whether_rebuild=True)
+        s1 = ShakeHand(whether_rebuild=False)
         s1.build_spline()
         s1.plot_svaj()
         """
@@ -849,9 +953,9 @@ class Touch(SplineWithPiecewisePolynomial):
                  name='touch_curve_1',
                  touch=None, knot2=None, knot3=None,
                  knot4=None, knot5=None, end=None,
-                 if_rebuild_pieces=False):
+                 whether_rebuild=False):
         """
-        t1 = Touch(if_rebuild_pieces=True)
+        t1 = Touch(whether_rebuild=True)
         """
         self.trace = TraceOfA(whether_load_memo=True)
         if touch is None:
@@ -902,17 +1006,21 @@ class Touch(SplineWithPiecewisePolynomial):
                 nan,
                 nan,
             ))
-        took_knot_at = [touch, knot2, knot3, knot4, knot5, end]
-        knots = [took_knot_at[i][0] for i in range(len(took_knot_at))]
-        pvajp = [[took_knot_at[i][1][j] for i in range(len(took_knot_at))]
-                 for j in range(5)]
-        orders = [6] * len(took_knot_at)
-        SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
+        smooth_depth = {
+            knot2: 5,
+            knot3: 5,
+            knot4: 4,
+            knot5: 5,
+        }
+        key_knots = [touch, knot2, knot3, knot4, knot5, end]
+        SplineWithPiecewisePolynomial.__init__(self,
+                                               key_knots=key_knots,
+                                               smooth_depth=smooth_depth,
                                                name=name)
-        self.shake = ShakeHand(if_rebuild_pieces=False)
-        self.joy = JawOnYorkCurve()
+        self.shake = ShakeHand(whether_rebuild=False)
+        self.joy = JawOnYorkCurve(whether_rebuild=False)
         self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
-        if if_rebuild_pieces:
+        if whether_rebuild:
             self.modify_pieces_expr()
             self.save_solved_pieces()
         else:
@@ -920,9 +1028,12 @@ class Touch(SplineWithPiecewisePolynomial):
 
     def modify_pieces_expr(self):
         """
-        t2 = Touch(if_rebuild_pieces=False)
-        t2.narrow_start_and_end()
+        t2 = Touch(whether_rebuild_pieces=False)
+        t2 = Touch(whether_rebuild_pieces=True)
         t2.plot_svaj()
+        r_O5O2 = (t2.package.height +
+                  t2.package.hs_sealing_length +
+                  t2.trace.joy_mechanism_forward.r_DC_value)
         """
         self.build_pieces()
         r_O5O2 = (self.package.height +
@@ -947,6 +1058,10 @@ class Touch(SplineWithPiecewisePolynomial):
         return self.get_pieces()
 
     def narrow_start_and_end(self):
+        """
+        t2 = Touch(whether_rebuild_pieces=False)
+        t2.narrow_start_and_end()
+        """
         self.knots[0] += degree_to_time(6)
         self.knots[-1] -= degree_to_time(1)
 
@@ -1017,32 +1132,47 @@ class Touch(SplineWithPiecewisePolynomial):
 
 
 class Pull(SplineWithPiecewisePolynomial):
-    def __init__(self, name='constant_velocity_pull_1',
-                 start_knot=0, end_knot=0.45,
-                 start_position=0, end_position=nan,
-                 cons_velocity=-422):
+    def __init__(self,
+                 name='constant_velocity_pull_1',
+                 start=None,
+                 end=None,
+                 whether_rebuild=False):
         """
-        s2 = SmoothPulling()
+        s2 = Pull(whether_rebuild=True)
+        s2.plot_svaj()
         """
-        self.start_knot = start_knot
-        self.end_knot = end_knot
-        self.start_p = start_position
-        self.end_p = end_position
-        self.cons_v = cons_velocity
-        knots = np.array([
-            self.start_knot,
-            self.end_knot
-        ])
-        pvajp = [
-            [self.start_p, self.end_p],
-            [self.cons_v, nan],
-            [nan, nan],
-            [nan, nan],
-            [nan, nan]
-        ]
-        orders = [2 for i in range(len(knots) - 1)]
-        SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
+        self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
+        self.cons_v = self.package.get_pulling_velocity()
+        if start is None:
+            start = (degree_to_time(0), (
+                0,
+                self.cons_v,
+                nan,
+                nan,
+                nan,
+            ))
+        if end is None:
+            end = (degree_to_time(180), (
+                nan,
+                nan,
+                nan,
+                nan,
+                nan,
+            ))
+        key_knots = [start, end]
+        smooth_depth = {
+        }
+        orders = [2] * (len(key_knots))
+        SplineWithPiecewisePolynomial.__init__(self,
+                                               key_knots=key_knots,
+                                               orders=orders,
+                                               smooth_depth=smooth_depth,
                                                name=name)
+        if whether_rebuild:
+            self.update_with_solution()
+            self.save_solved_pieces()
+        else:
+            self.load_solved_pieces()
 
     def build_equations(self):
         """
@@ -1084,6 +1214,8 @@ class Climb(SplineWithPiecewisePolynomial):
                  ):
         """
         c3 = Climb()
+        c3.update_with_solution()
+        c3.plot_svaj()
         """
         if start is None:
             start = (degree_to_time(0),
@@ -1107,7 +1239,7 @@ class Climb(SplineWithPiecewisePolynomial):
                      nan,
                      nan))
         if touch is None:
-            self.trace = TraceOfA(load_memo=True)
+            self.trace = TraceOfA(whether_load_memo=True)
             touching_time = self.trace.get_touch_time()
             touch = (touching_time,
                      (320 + 147.490658039069,
@@ -1115,38 +1247,15 @@ class Climb(SplineWithPiecewisePolynomial):
                       -3659.71088510222,
                       470384.967511957,
                       nan))
-        took_knot_at = [start, cross, high, touch]
-        knots = [took_knot_at[i][0] for i in range(len(took_knot_at))]
-        pvajp = [[took_knot_at[i][1][j] for i in range(len(took_knot_at))]
-                 for j in range(5)]
-        orders = [6] * len(took_knot_at)
-        SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
+        key_knots = [start, cross, high, touch]
+        smooth_depth = {
+            cross: 4,
+            high: 4,
+        }
+        SplineWithPiecewisePolynomial.__init__(self,
+                                               key_knots=key_knots,
+                                               smooth_depth=smooth_depth,
                                                name=name)
-
-    def build_smoothness_condition(self, depths=None):
-        """
-        c3 = Climb()
-        c3.update_with_solution()
-        c3.plot_svaj()
-        """
-        if self.count_of_smoothness != 0:
-            return self.count_of_smoothness
-        if depths is None:
-            depths = {
-                1: 4,
-                2: 4,
-            }
-        for i in depths.keys():
-            ki = self.knots[i]  # Knot I
-            pib = self.get_pieces()[i - 1]  # Piece Before knot I
-            pia = self.get_pieces()[i]  # Piece After knot I
-            eib = pib.get_expr()
-            eia = pia.get_expr()
-            for d in range(depths[i]):
-                eq = Eq(eib[d].subs(x, ki), eia[d].subs(x, ki))
-                self.equations.append(eq)
-                self.count_of_smoothness += 1
-        return self.equations[-self.count_of_smoothness:]
 
 
 class Throw(SplineWithPiecewisePolynomial):

@@ -216,10 +216,10 @@ class O4DriveA(JawOnYork):
     def get_x_V_AO2_of_vr_O4O2(self):
         """
         j2 = O4DriveA()
-        x_V_AO2_when_touch = j2.get_x_V_AO2_of_vr_O4O2().subs([(j2.v, 966.6038206895039), (j2.r, 93.14763942596754)]).evalf()
-        print(round(x_V_AO2_when_touch, 4))  # TODO: why negative sence?
+        x_V_AO2_when_touch = j2.get_x_V_AO2_of_vr_O4O2().subs([(j2.v, -966.6038206895039), (j2.r, 93.14763942596754)]).evalf()
+        print(round(x_V_AO2_when_touch, 4))
+        # 686.7686
         print(j2.get_x_V_AO2_of_vr_O4O2())
-        # -686.7686
         """
         x_V_AO2 = self.get_x_R_AO2_of_r_O4O2_expr().subs(
             [(self.r_O4O2, self.r)]).diff(x)
@@ -229,9 +229,9 @@ class O4DriveA(JawOnYork):
     def get_y_V_AO2_of_vr_O4O2(self):
         """
         j2 = O4DriveA()
-        y_V_AO2_when_touch = j1.get_y_V_AO2_of_vr_O4O2().subs([(j2.v, 800), (j2.r, 100.33)]).evalf()
+        y_V_AO2_when_touch = j2.get_y_V_AO2_of_vr_O4O2().subs([(j2.v, -800), (j2.r, 100.33)]).evalf()
         print(round(y_V_AO2_when_touch,2))  # TODO: why negative sence?
-        # 105.16
+        # -105.16
         """
         y_V_AO2 = self.get_y_R_AO2_of_r_O4O2_expr().subs(
             self.r_O4O2, self.r).diff(x)
