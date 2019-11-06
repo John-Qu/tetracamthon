@@ -14,7 +14,6 @@ import matplotlib.pyplot as plt
 class JawOnYorkCurve(SplineWithPiecewisePolynomial):
     """
     """
-
     def __init__(self, name="jaw_on_york_relative",
                  start=None, widest=None, closed=None,
                  release=None, end=None,
@@ -87,32 +86,37 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
                 nan,
                 nan,
             ))
-        took_knot_at = [
+        key_knots= [
             start, knot1, widest, knot4, knot2, closed, release, knot3, end
         ]
-        self.smooth_depth = {
-            1: 4,
-            2: 6,
-            3: 4,
-            4: 4,
-            5: 4,
-            6: 4,
-            7: 4,
+        smooth_depth = {
+            # 1: 4,
+            # 2: 6,
+            # 3: 4,
+            # 4: 4,
+            # 5: 4,
+            # 6: 4,
+            # 7: 4,
+            knot1: 4,
+            widest: 6,
+            knot4: 4,
+            knot2: 4,
+            closed: 4,
+            release: 4,
+            knot3: 4,
         }
         self.periodic_depth = 6
-        knots = [took_knot_at[i][0] for i in range(len(took_knot_at))]
-        pvajp = [
-            [took_knot_at[i][1][j] for i in range(len(took_knot_at))]
-            for j in range(5)
-        ]
-        orders = [6] * len(took_knot_at)
-        SplineWithPiecewisePolynomial.__init__(self, knots, orders,
-                                               pvajp, name=name)
-        if whether_rebuild_pieces:
-            self.update_with_solution()
-            self.save_solved_pieces()
-        else:
-            self.load_solved_pieces()
+        orders = [6] * len(key_knots)
+        SplineWithPiecewisePolynomial.__init__(self,
+                                               key_knots=key_knots,
+                                               orders=orders,
+                                               smooth_depth=smooth_depth,
+                                               name=name)
+        # if whether_rebuild_pieces:
+        #     self.update_with_solution()
+        #     # self.save_solved_pieces()
+        # else:
+        #     self.load_solved_pieces()
 
     def build_equations(self):
         """

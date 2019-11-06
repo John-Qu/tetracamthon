@@ -145,7 +145,7 @@ class SplineWithPiecewisePolynomial(object):
     s1 = SplineWithPiecewisePolynomial()
     print(s1)
     """
-    def __init__(self, knots=None, orders=None, pvajp=None,
+    def __init__(self, key_knots=None, orders=None, smooth_depth=None,
                  name='polynomials_curve'):
         start = (0, (
             0,
@@ -175,20 +175,21 @@ class SplineWithPiecewisePolynomial(object):
             nan,
             nan,
         ))
-        self.took_knot_at = [start, knot1, knot2, end]
-        smooth_depth = {
-            knot1: 5,
-            knot2: 5,
+        if key_knots is None:
+            key_knots = [start, knot1, knot2, end]
+        if smooth_depth is None:
+            smooth_depth = {
+                knot1: 5,
+                knot2: 5,
         }
-        if knots is None:
-            knots = [self.took_knot_at[i][0]
-                     for i in range(len(self.took_knot_at))]
-        if pvajp is None:
-            pvajp = [[self.took_knot_at[i][1][j]
-                      for i in range(len(self.took_knot_at))]
-                     for j in range(5)]
+        knots = [key_knots[i][0]
+                 for i in range(len(key_knots))]
+        pvajp = [[key_knots[i][1][j]
+                  for i in range(len(key_knots))]
+                 for j in range(5)]
         if orders is None:
-            orders = [6] * len(self.took_knot_at)
+            orders = [6] * len(key_knots)
+        self.key_knots = key_knots
         self.smooth_depth = smooth_depth
         self._name = name
         self.knots = knots
@@ -296,7 +297,7 @@ class SplineWithPiecewisePolynomial(object):
             print(s1.equations[i])
         """
         if self.count_of_smoothness != 0:
-            return self.count_of_smoothness
+            return self.equations[-self.count_of_smoothness:]
         if depths is None:
             depths = self.smooth_depth
         # for i in depths.keys():
@@ -309,8 +310,8 @@ class SplineWithPiecewisePolynomial(object):
         #         eq = Eq(eib[d].subs(x, ki), eia[d].subs(x, ki))
         #         self.equations.append(eq)
         #         self.count_of_smoothness += 1
-        for i in range(1, len(self.took_knot_at) - 1):
-            kpi = self.took_knot_at[i]  # Knot Point I
+        for i in range(1, len(self.key_knots) - 1):
+            kpi = self.key_knots[i]  # Knot Point I
             ki = kpi[0]
             pib = self.get_pieces()[i - 1]  # Piece Before knot I
             pia = self.get_pieces()[i]  # Piece After knot I
@@ -353,7 +354,7 @@ class SplineWithPiecewisePolynomial(object):
         print(j1.build_periodic_condition())
         """
         if self.count_of_periodic != 0:
-            return self.count_of_periodic
+            return self.equations[-self.count_of_periodic:]
         s = self.knots[0]  # Start knot
         ps = self.get_pieces()[0]  # Piece of Start
         es = ps.get_expr()  # Expressions of Start piece
