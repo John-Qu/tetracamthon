@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 class JawOnYorkCurve(SplineWithPiecewisePolynomial):
     """
     """
+
     def __init__(self, name="jaw_on_york_relative",
                  start=None, widest=None, closed=None,
                  release=None, end=None,
@@ -86,17 +87,10 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
                 nan,
                 nan,
             ))
-        key_knots= [
+        key_knots = [
             start, knot1, widest, knot4, knot2, closed, release, knot3, end
         ]
         smooth_depth = {
-            # 1: 4,
-            # 2: 6,
-            # 3: 4,
-            # 4: 4,
-            # 5: 4,
-            # 6: 4,
-            # 7: 4,
             knot1: 4,
             widest: 6,
             knot4: 4,
@@ -112,11 +106,11 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
                                                orders=orders,
                                                smooth_depth=smooth_depth,
                                                name=name)
-        # if whether_rebuild_pieces:
-        #     self.update_with_solution()
-        #     # self.save_solved_pieces()
-        # else:
-        #     self.load_solved_pieces()
+        if whether_rebuild_pieces:
+            self.update_with_solution()
+            self.save_solved_pieces()
+        else:
+            self.load_solved_pieces()
 
     def build_equations(self):
         """
@@ -376,7 +370,7 @@ class TraceOfA(object):
         y_R_AO5_when_closing_expr = \
             (r_AG ** 2 - (r_AG + x_R_AO5_when_closing_expr) ** 2) ** 0.5
         self.memo['y_R_AO5_when_closing_expr'] = y_R_AO5_when_closing_expr
-        return y_R_AO5_when_closing_expr
+        return self.memo['y_R_AO5_when_closing_expr']
 
     def get_x_V_AO5_when_touching_expr(self):
         if 'x_V_AO5_when_touching' in self.memo:
@@ -384,6 +378,67 @@ class TraceOfA(object):
         x_V_AO5_when_touching = diff(self.get_x_R_AO2_when_touching_expr(), x)
         self.memo['x_V_AO5_when_touching'] = x_V_AO5_when_touching
         return self.memo['x_V_AO5_when_touching']
+
+    def get_x_V_AO2_when_touching_expr(self):
+        """
+        t1 = TraceOfA()
+        x_V_AO2_of_vr_O4O2 = t1.joy_mechanism_forward.get_x_V_AO2_of_vr_O4O2()
+        x_V_AO2_when_touching = x_V_AO2_of_vr_O4O2.subs(
+            (t1.joy_mechanism_forward.r,
+             t1.joy_curve.get_kth_expr_of_ith_piece(0, 3)),
+            (t1.joy_mechanism_forward.v,
+             t1.joy_curve.get_kth_expr_of_ith_piece(1, 3)))
+        """
+        if 'x_V_AO2_when_touching' in self.memo:
+            return self.memo['x_V_AO2_when_touching']
+        x_V_AO2_of_vr_O4O2 = self.joy_mechanism_forward.get_x_V_AO2_of_vr_O4O2()
+        x_V_AO2_when_touching = x_V_AO2_of_vr_O4O2.subs([
+            (self.joy_mechanism_forward.r,
+             (-self.joy_curve.get_kth_expr_of_ith_piece(0, 3)
+              + self.get_close_rO4O2())),
+            (self.joy_mechanism_forward.v,
+             self.joy_curve.get_kth_expr_of_ith_piece(1, 3))])
+        self.memo['x_V_AO2_when_touching'] = x_V_AO2_when_touching
+        return self.memo['x_V_AO2_when_touching']
+
+    def get_x_V_AO2_when_closing_expr(self):
+        if 'x_V_AO2_when_closing' in self.memo:
+            return self.memo['x_V_AO2_when_closing']
+        x_V_AO2_of_vr_O4O2 = self.joy_mechanism_forward.get_x_V_AO2_of_vr_O4O2()
+        x_V_AO2_when_closing = x_V_AO2_of_vr_O4O2.subs([
+            (self.joy_mechanism_forward.r,
+             (-self.joy_curve.get_kth_expr_of_ith_piece(0, 4)
+              + self.get_close_rO4O2())),
+            (self.joy_mechanism_forward.v,
+             self.joy_curve.get_kth_expr_of_ith_piece(1, 4))])
+        self.memo['x_V_AO2_when_closing'] = x_V_AO2_when_closing
+        return self.memo['x_V_AO2_when_closing']
+
+    def get_y_V_AO2_when_touching_expr(self):
+        if 'y_V_AO2_when_touching' in self.memo:
+            return self.memo['y_V_AO2_when_touching']
+        y_V_AO2_of_vr_O4O2 = self.joy_mechanism_forward.get_y_V_AO2_of_vr_O4O2()
+        y_V_AO2_when_touching = y_V_AO2_of_vr_O4O2.subs([
+            (self.joy_mechanism_forward.r,
+             (-self.joy_curve.get_kth_expr_of_ith_piece(0, 3)
+              + self.get_close_rO4O2())),
+            (self.joy_mechanism_forward.v,
+             self.joy_curve.get_kth_expr_of_ith_piece(1, 3))])
+        self.memo['y_V_AO2_when_touching'] = y_V_AO2_when_touching
+        return self.memo['y_V_AO2_when_touching']
+
+    def get_y_V_AO2_when_closing_expr(self):
+        if 'y_V_AO2_when_closing' in self.memo:
+            return self.memo['y_V_AO2_when_closing']
+        y_V_AO2_of_vr_O4O2 = self.joy_mechanism_forward.get_y_V_AO2_of_vr_O4O2()
+        y_V_AO2_when_closing = y_V_AO2_of_vr_O4O2.subs([
+            (self.joy_mechanism_forward.r,
+             (-self.joy_curve.get_kth_expr_of_ith_piece(0, 4)
+              + self.get_close_rO4O2())),
+            (self.joy_mechanism_forward.v,
+             self.joy_curve.get_kth_expr_of_ith_piece(1, 4))])
+        self.memo['y_V_AO2_when_closing'] = y_V_AO2_when_closing
+        return self.memo['y_V_AO2_when_closing']
 
     def get_y_V_AO5_when_touching_expr(self):
         if 'y_V_AO5_when_touching' in self.memo:
@@ -507,6 +562,25 @@ class TraceOfA(object):
                                   show=False)
             plot_xy_V_AO5.extend(plot_x_V_AO5_i)
             plot_xy_V_AO5.extend(plot_y_V_AO5_i)
+        # Plot A to O2 curve on touching and closing stage
+        # xy of A velocity
+        plot_xy_V_AO2 = plot(0, (x, knots[0], knots[-1]),
+                             title="xy of A to O2 velocity",
+                             ylabel="(mm/s)",
+                             show=False)
+        x_V_AO2_expr = [self.get_x_V_AO2_when_touching_expr(),
+                        self.get_x_V_AO2_when_closing_expr()]
+        y_V_AO2_expr = [self.get_y_V_AO2_when_touching_expr(),
+                        self.get_y_V_AO2_when_closing_expr()]
+        for i in range(2):
+            plot_x_V_AO2_i = plot(x_V_AO2_expr[i],
+                                  (x, knots[i], knots[i + 1]),
+                                  show=False)
+            plot_y_V_AO2_i = plot(y_V_AO2_expr[i],
+                                  (x, knots[i], knots[i + 1]),
+                                  show=False)
+            plot_xy_V_AO2.extend(plot_x_V_AO2_i)
+            plot_xy_V_AO2.extend(plot_y_V_AO2_i)
         # Plot A to O5 curve on touching and closing stage
         # xy of A acceleration
         plot_xy_A_AO5 = plot(0, (x, knots[0], knots[-1]),
@@ -527,7 +601,7 @@ class TraceOfA(object):
             plot_xy_A_AO5.extend(plot_x_A_AO5_i)
             plot_xy_A_AO5.extend(plot_y_A_AO5_i)
 
-        fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(nrows=5)
+        fig, (ax1, ax2, ax3, ax4, ax5, ax6) = plt.subplots(nrows=6)
         move_sympyplot_to_axes(plot_joy_curve_p, ax1)
         ax1.set_xticks([knots[i] for i in range(len(knots))])
         ax1.set_xticklabels([(i % 2) * '\n' +
@@ -552,13 +626,19 @@ class TraceOfA(object):
                              str(time_to_degree(knots[i]))
                              for i in range(len(knots))])
         ax4.grid(True)
-        move_sympyplot_to_axes(plot_xy_A_AO5, ax5)
+        move_sympyplot_to_axes(plot_xy_V_AO2, ax5)
         ax5.set_xticks([knots[i] for i in range(len(knots))])
         ax5.set_xticklabels([(i % 2) * '\n' +
                              str(time_to_degree(knots[i]))
                              for i in range(len(knots))])
         ax5.grid(True)
-        ax5.set_xlabel('machine degree')
+        move_sympyplot_to_axes(plot_xy_A_AO5, ax6)
+        ax6.set_xticks([knots[i] for i in range(len(knots))])
+        ax6.set_xticklabels([(i % 2) * '\n' +
+                             str(time_to_degree(knots[i]))
+                             for i in range(len(knots))])
+        ax6.grid(True)
+        ax6.set_xlabel('machine degree')
         plt.show()
 
     # def plot_numerical(self, num=360):
@@ -613,9 +693,15 @@ class ShakeHand(SplineWithPiecewisePolynomial):
     # def __init__(self, start_knot=0.3625, end_knot=0.4825,
     #              start_position=0, end_position=symbols('end_p'),
     #              cons_velocity=-422, mod_velocity=-122):
-    def __init__(self, name='shake_hand_curve_1',
-                 start=None, knot1=None, knot2=None, knot3=None, knot4=None,
-                 knot5=None, end=None,
+    def __init__(self,
+                 name='shake_hand_curve_1',
+                 start=None,
+                 knot1=None,
+                 knot2=None,
+                 knot3=None,
+                 knot4=None,
+                 knot5=None,
+                 end=None,
                  if_rebuild_pieces=False):
         """
         s1 = ShakeHand(name='shake_hand_curve_264_318', if_rebuild_pieces=True)
@@ -672,13 +758,13 @@ class ShakeHand(SplineWithPiecewisePolynomial):
             ))
         if end is None:
             end = (degree_to_time(318), (
-                degree_to_time(318-264)*(-422) + 24.25,
+                degree_to_time(318 - 264) * (-422) + 24.25,
                 -422,
                 0,
                 nan,
                 nan,
             ))
-        self.took_knot_at = [start, knot1, knot2, knot3, knot4, knot5, end]
+        key_knots = [start, knot1, knot2, knot3, knot4, knot5, end]
         smooth_depth = {
             knot1: 5,
             knot2: 5,
@@ -686,13 +772,11 @@ class ShakeHand(SplineWithPiecewisePolynomial):
             knot4: 4,
             knot5: 5,
         }
-        knots = [self.took_knot_at[i][0]
-                 for i in range(len(self.took_knot_at))]
-        pvajp = [[self.took_knot_at[i][1][j]
-                  for i in range(len(self.took_knot_at))]
-                 for j in range(5)]
-        orders = [6] * len(self.took_knot_at)
-        SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
+        orders = [6] * len(key_knots)
+        SplineWithPiecewisePolynomial.__init__(self,
+                                               key_knots=key_knots,
+                                               orders=orders,
+                                               smooth_depth=smooth_depth,
                                                name=name)
         if if_rebuild_pieces:
             self.update_with_solution()
@@ -700,40 +784,40 @@ class ShakeHand(SplineWithPiecewisePolynomial):
         else:
             self.load_solved_pieces()
 
-    def build_smoothness_condition(self, depths=None):
-        """
-        s1 = ShakeHand(if_save_pieces=False, if_load_pieces=False)
-        print(len(s1.build_smoothness_condition()))
-        print(len(s1.build_interpolating_condition()))
-        for i in range(len(s1.equations)):
-            print(s1.equations[i])
-        """
-        if self.count_of_smoothness != 0:
-            return self.count_of_smoothness
-        if depths is None:
-            depths = {
-                1: 5,
-                2: 5,
-                3: 5,
-                4: 4,
-                5: 5
-            }
-        for i in range(1, len(self.took_knot_at) - 1):
-            kpi = self.took_knot_at[i]  # Knot Point I
-            ki = kpi[0]
-            pib = self.get_pieces()[i - 1]  # Piece Before knot I
-            pia = self.get_pieces()[i]  # Piece After knot I
-            eib = pib.get_expr()
-            eia = pia.get_expr()
-            for d in range(depths[kpi]):
-                eq = Eq(eib[d].subs(x, ki), eia[d].subs(x, ki))
-                self.equations.append(eq)
-                self.count_of_smoothness += 1
-        return self.equations[-self.count_of_smoothness:]
+    # def build_smoothness_condition(self, depths=None):
+    #     """
+    #     s1 = ShakeHand(if_save_pieces=False, if_load_pieces=False)
+    #     print(len(s1.build_smoothness_condition()))
+    #     print(len(s1.build_interpolating_condition()))
+    #     for i in range(len(s1.equations)):
+    #         print(s1.equations[i])
+    #     """
+    #     if self.count_of_smoothness != 0:
+    #         return self.count_of_smoothness
+    #     if depths is None:
+    #         depths = {
+    #             1: 5,
+    #             2: 5,
+    #             3: 5,
+    #             4: 4,
+    #             5: 5
+    #         }
+    #     for i in range(1, len(self.took_knot_at) - 1):
+    #         kpi = self.took_knot_at[i]  # Knot Point I
+    #         ki = kpi[0]
+    #         pib = self.get_pieces()[i - 1]  # Piece Before knot I
+    #         pia = self.get_pieces()[i]  # Piece After knot I
+    #         eib = pib.get_expr()
+    #         eia = pia.get_expr()
+    #         for d in range(depths[kpi]):
+    #             eq = Eq(eib[d].subs(x, ki), eia[d].subs(x, ki))
+    #             self.equations.append(eq)
+    #             self.count_of_smoothness += 1
+    #     return self.equations[-self.count_of_smoothness:]
 
     def build_spline(self):
         """
-        s1 = ShakeHand(if_save_pieces=True, if_load_pieces=False)
+        s1 = ShakeHand(if_rebuild_pieces=True)
         s1 = ShakeHand(if_save_pieces=False, if_load_pieces=True)
         s1.build_spline()
         s1.plot_svaj()

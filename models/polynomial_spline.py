@@ -145,7 +145,10 @@ class SplineWithPiecewisePolynomial(object):
     s1 = SplineWithPiecewisePolynomial()
     print(s1)
     """
-    def __init__(self, key_knots=None, orders=None, smooth_depth=None,
+    def __init__(self,
+                 key_knots=None,
+                 orders=None,
+                 smooth_depth=None,
                  name='polynomials_curve'):
         start = (0, (
             0,
@@ -186,7 +189,7 @@ class SplineWithPiecewisePolynomial(object):
                  for i in range(len(key_knots))]
         pvajp = [[key_knots[i][1][j]
                   for i in range(len(key_knots))]
-                 for j in range(5)]
+                 for j in range(len(key_knots[0][1]))]
         if orders is None:
             orders = [6] * len(key_knots)
         self.key_knots = key_knots
