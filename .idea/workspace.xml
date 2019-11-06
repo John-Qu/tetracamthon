@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/models/constant_velocity_pull_1_pieces.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/climb_up_0_touching_pieces.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/throw_325_0_pieces.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/analysis.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/packages.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/packages.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/shake_hand_curve_264_318_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/models/shake_hand_curve_264_318_pieces.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/shape_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/shape_stage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/touch_curve_1_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/models/touch_curve_1_pieces.pkl" afterDir="false" />
     </list>

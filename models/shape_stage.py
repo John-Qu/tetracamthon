@@ -156,7 +156,7 @@ class TraceOfA(object):
         t1 = TraceOfA(whether_load_memo=False)
         """
         # Jaw on York spline Curve
-        self.joy_curve = JawOnYorkCurve(whether_rebuild_pieces=False)
+        self.joy_curve = JawOnYorkCurve(whether_rebuild=False)
         # Jaw on York mechanism analysis driving forward
         self.joy_mechanism_forward = O4DriveA()
         # Jaw on York mechanism analysis driving backward
@@ -800,7 +800,7 @@ class TraceOfA(object):
 
 class ShakeHand(SplineWithPiecewisePolynomial):
     def __init__(self,
-                 name='shake_hand_curve_1',
+                 name='shake_hand_curve_264_318',
                  start=None,
                  knot1=None,
                  knot2=None,
@@ -1028,12 +1028,9 @@ class Touch(SplineWithPiecewisePolynomial):
 
     def modify_pieces_expr(self):
         """
-        t2 = Touch(whether_rebuild_pieces=False)
-        t2 = Touch(whether_rebuild_pieces=True)
+        t2 = Touch(whether_rebuild=False)
+        t2 = Touch(whether_rebuild=True)
         t2.plot_svaj()
-        r_O5O2 = (t2.package.height +
-                  t2.package.hs_sealing_length +
-                  t2.trace.joy_mechanism_forward.r_DC_value)
         """
         self.build_pieces()
         r_O5O2 = (self.package.height +
@@ -1206,121 +1203,150 @@ class Pull(SplineWithPiecewisePolynomial):
 
 
 class Climb(SplineWithPiecewisePolynomial):
-    def __init__(self, name='climb_up_curve_0_92',
+    def __init__(self, name='climb_up_0_touching',
                  start=None,
                  cross=None,
                  high=None,
                  touch=None,
-                 ):
+                 whether_rebuild=False):
         """
-        c3 = Climb()
+        c3 = Climb(whether_rebuild=False)
+        c3 = Climb(whether_rebuild=True)
         c3.update_with_solution()
         c3.plot_svaj()
         """
+        self.trace = TraceOfA(whether_load_memo=True)
+        self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
         if start is None:
-            start = (degree_to_time(0),
-                     (0,
-                      0,
-                      nan,
-                      nan,
-                      nan))
+            start = (degree_to_time(0), (
+                0,
+                0,
+                nan,
+                nan,
+                nan,
+            ))
+
+        knot1 = (degree_to_time(13), (
+            nan,
+            nan,
+            nan,
+            0,
+            nan,
+        ))
         if cross is None:
-            cross = (degree_to_time(43),
-                     (200,
-                      nan,
-                      0,
-                      nan,
-                      nan))
+            cross = (degree_to_time(43), (
+                200,
+                nan,
+                nan,
+                nan,
+                nan,
+            ))
+        knot2 = (degree_to_time(69), (
+            nan,
+            nan,
+            nan,
+            0,
+            nan,
+        ))
         if high is None:
-            high = (degree_to_time(84),
-                    (372.2,
-                     0,
-                     nan,
-                     nan,
-                     nan))
+            high = (degree_to_time(84), (
+                372.2,
+                0,
+                nan,
+                nan,
+                nan,
+            ))
         if touch is None:
-            self.trace = TraceOfA(whether_load_memo=True)
             touching_time = self.trace.get_touch_time()
-            touch = (touching_time,
-                     (320 + 147.490658039069,
-                      -154.513293430448,
-                      -3659.71088510222,
-                      470384.967511957,
-                      nan))
-        key_knots = [start, cross, high, touch]
+            touch = (touching_time, (
+                nan,
+                -40.6661440887556,
+                -4088.93068846931,
+                93189.8259805306,
+                nan,
+            ))
+        key_knots = [start, knot1, cross, knot2, high, touch]
         smooth_depth = {
-            cross: 4,
-            high: 4,
+            knot1: 5,
+            cross: 5,
+            knot2: 5,
+            high: 5,
         }
         SplineWithPiecewisePolynomial.__init__(self,
                                                key_knots=key_knots,
                                                smooth_depth=smooth_depth,
                                                name=name)
+        if whether_rebuild:
+            self.update_with_solution()
+            self.save_solved_pieces()
+        else:
+            self.load_solved_pieces()
 
 
 class Throw(SplineWithPiecewisePolynomial):
-    def __init__(self, start=None, release=None, end=None, name='throw_325_0'):
+    def __init__(self,
+                 start=None,
+                 release=None,
+                 end=None,
+                 name='throw_325_0',
+                 whether_rebuild=False
+                 ):
         """
-        t3 = Throw()
-        """
-        if start is None:
-            start = (degree_to_time(325),
-                     (50,
-                      -422,
-                      0,
-                      nan,
-                      nan))
-        if release is None:
-            release = (degree_to_time(330),
-                       (30,
-                        nan,
-                        nan,
-                        nan,
-                        nan))
-        if end is None:
-            end = (degree_to_time(360),
-                   (0,
-                    0,
-                    30000,
-                    nan,
-                    nan))
-        took_knot_at = [start, release, end]
-        knots = [took_knot_at[i][0] for i in range(len(took_knot_at))]
-        pvajp = [[took_knot_at[i][1][j] for i in range(len(took_knot_at))]
-                 for j in range(5)]
-        orders = [6] * len(took_knot_at)
-        SplineWithPiecewisePolynomial.__init__(self, knots, orders, pvajp,
-                                               name=name)
-
-    def build_smoothness_condition(self, depths=None):
-        """
-        t3 = Throw()
-        t3.update_with_solution()
+        t3 = Throw(whether_rebuild=True)
         t3.plot_svaj()
         """
-        if self.count_of_smoothness != 0:
-            return self.count_of_smoothness
-        if depths is None:
-            depths = {
-                1: 5,
-            }
-        for i in depths.keys():
-            ki = self.knots[i]  # Knot I
-            pib = self.get_pieces()[i - 1]  # Piece Before knot I
-            pia = self.get_pieces()[i]  # Piece After knot I
-            eib = pib.get_expr()
-            eia = pia.get_expr()
-            for d in range(depths[i]):
-                eq = Eq(eib[d].subs(x, ki), eia[d].subs(x, ki))
-                self.equations.append(eq)
-                self.count_of_smoothness += 1
-        return self.equations[-self.count_of_smoothness:]
+        if start is None:
+            start = (degree_to_time(325), (
+                50,
+                -422,
+                0,
+                nan,
+                nan,
+            ))
+        if release is None:
+            release = (degree_to_time(330), (
+                44.5,
+                nan,
+                nan,
+                nan,
+                nan,
+            ))
+        knot1 = (degree_to_time(335), (
+            nan,
+            nan,
+            nan,
+            0,
+            nan,
+        ))
+        if end is None:
+            end = (degree_to_time(360), (
+                0,
+                0,
+                38000,
+                nan,
+                nan,
+            ))
+        key_knots = [start, release, knot1, end]
+        # key_knots = [start, knot1, end]
+        smooth_depth = {
+            release: 5,
+            knot1: 5,
+        }
+        SplineWithPiecewisePolynomial.__init__(self,
+                                               key_knots=key_knots,
+                                               smooth_depth=smooth_depth,
+                                               name=name)
+        if whether_rebuild:
+            self.update_with_solution()
+            self.save_solved_pieces()
+        else:
+            self.load_solved_pieces()
 
 
 class Combine(SplineWithPiecewisePolynomial):
     def __init__(self):
         self.joy = JawOnYorkCurve()
-        self.trace = TraceOfA(load_memo=True)
+        self.trace = TraceOfA(whether_load_memo=True)
         touching_time = self.trace.get_touch_time()
         self.climb = Climb(name="climb_to_touch",
                            start=(degree_to_time(0), (
