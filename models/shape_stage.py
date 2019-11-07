@@ -1356,6 +1356,11 @@ class Combine(SplineWithPiecewisePolynomial):
     def __init__(self):
         self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
         self.cons_v = self.package.get_pulling_velocity()
+        self.shake2_less_p = 0.3 * (self.package.depth / 2)
+        self.cons_v_faster = (
+                - (self.package.web_repeated_length + self.shake2_less_p) /
+                degree_to_time(180)
+        )
         self.joy = JawOnYorkCurve(whether_rebuild=False)
         self.trace = TraceOfA(whether_load_memo=True)
         self.touching_time = self.trace.get_touch_time()
@@ -1378,18 +1383,21 @@ class Combine(SplineWithPiecewisePolynomial):
         com.build_shake2(whether_rebuild=False)
         com.build_shake2(whether_rebuild=True)
         com.build_shake2().plot_svaj()
+        com.build_shake2().get_start_pvaj()
+        com.build_shake2().get_end_pvaj()
         """
         try:
             return self.shake2[0]
         except IndexError:
             self.shake2.append(
                 ShakeHand(
-                    # name="shake2_for_accepting",
-                    name="shake2_for_accepting_with_symbol",
+                    name="shake2_for_accepting",
+                    # name="shake2_for_accepting_with_symbol",
                     start=(degree_to_time(264), (
-                        symbols('shake2_start_p'),
+                        # symbols('shake2_start_p'),
                         # 0,
-                        self.cons_v,
+                        77.001737931408,
+                        self.cons_v_faster,
                         0,
                         nan,
                         nan,
@@ -1430,12 +1438,12 @@ class Combine(SplineWithPiecewisePolynomial):
                         nan,
                     )),
                     end=(degree_to_time(318), (
-                        # (degree_to_time(318 - 264) * self.cons_v
-                        #  + self.package.depth / 2 * 1.3),
-                        (symbols('shake2_start_p')
-                         + degree_to_time(318 - 264) * self.cons_v
+                        (degree_to_time(318 - 264) * self.cons_v_faster
                          + self.package.depth / 2 * 1.3),
-                        self.cons_v,
+                        # (symbols('shake2_start_p')
+                        #  + degree_to_time(318 - 264) * self.cons_v_faster
+                        #  + self.package.depth / 2 * 1.3),
+                        self.cons_v_faster,
                         0,
                         nan,
                         nan,
@@ -1451,14 +1459,22 @@ class Combine(SplineWithPiecewisePolynomial):
         com.build_touch(whether_rebuild=False)
         com.build_touch(whether_rebuild=True)
         com.build_touch().plot_svaj()
+        com.build_touch().get_start_pvaj()
+        com.build_touch().get_end_pvaj()
+        146.998262068592 - 115.125001936921
+        31.873260131671003
+        224 - 146.998262068592
+        77.001737931408
+        224 - 31.873260131671003
+        192.126739868329
         """
         try:
             return self.touch[0]
         except IndexError:
             self.touch.append(
                 Touch(
-                    # name="touch_to_fold",
-                    name="touch_to_fold_with_symbol",
+                    name="touch_to_fold",
+                    # name="touch_to_fold_with_symbol",
                     touch=(self.trace.get_touch_time(), (
                         nan,
                         nan,
@@ -1512,53 +1528,59 @@ class Combine(SplineWithPiecewisePolynomial):
     def build_climb(self, whether_rebuild=False):
         """
         com = Combine()
-        com.build_climb(whether_rebuild=False)
         com.build_climb(whether_rebuild=True)
         com.build_climb().plot_svaj()
+        com.build_climb().get_end_pvaj()
+        50 + 7.3888888888 + 25.475 + 72.83 + 28.5277777777 + 7.38 + 31.873260131671003
+        223.47492679817103
         """
         try:
             return self.climb[0]
         except IndexError:
             self.climb.append(
                 Climb(
-                    # name="climb_to_touch",
-                    name="climb_to_touch_with_symbol",
+                    name="climb_to_touch",
+                    # name="climb_to_touch_with_symbol",
                     start=(degree_to_time(0), (
                         0,
                         0,
-                        symbols('climb_start_a'),
-                        symbols('climb_start_j'),
+                        # symbols('climb_start_a'),
+                        # symbols('climb_start_j'),
                         # self.build_throw()[1][2],
                         # self.build_throw()[1][3],
-                        # 38000,
-                        # 567486.791390715,
+                        38000,
+                        567486.791390715,
                         nan,
                     )),
                     cross=(degree_to_time(43), (
-                        200,
+                        140,
                         nan,
                         nan,
                         nan,
                         nan,
                     )),
                     high=(degree_to_time(84), (
-                        symbols('climb_high_p'),
+                        # symbols('climb_high_p'),
                         # 372.2,
                         # 350,
                         # 360,
+                        nan,
+                        # 240,
                         0,
                         nan,
                         nan,
                         nan,
                     )),
                     touch=(self.touching_time, (
-                        nan,
-                        symbols('climb_touch_v'),
-                        symbols('climb_touch_a'),
-                        symbols('climb_touch_j'),
-                        # -40.6661440887556,
-                        # -4088.93068846931,
-                        # 93189.8259805306,
+                        # nan,
+                        # 223.47492679817103,
+                        224,
+                        # symbols('climb_touch_v'),
+                        # symbols('climb_touch_a'),
+                        # symbols('climb_touch_j'),
+                        -40.8883663109778,
+                        -4088.93068846931,
+                        93189.8259805306,
                         nan,
                     )),
                     whether_rebuild=whether_rebuild,
@@ -1572,6 +1594,8 @@ class Combine(SplineWithPiecewisePolynomial):
         com.build_pull1(whether_rebuild=False)
         com.build_pull1(whether_rebuild=True)
         com.build_pull1().plot_svaj()
+        com.build_pull1().get_start_pvaj()
+        com.build_pull1().get_end_pvaj()
         """
         try:
             return self.pull1[0]
@@ -1581,9 +1605,10 @@ class Combine(SplineWithPiecewisePolynomial):
                     # name="pull_1",
                     name="pull_1_with_symbol",
                     start=(degree_to_time(138), (
-                        symbols('pull1_start_p'),
+                        # symbols('pull1_start_p'),
+                        192.126739868329,
                         # 0,
-                        self.cons_v,
+                        self.cons_v_faster,
                         nan,
                         nan,
                         nan,
@@ -1606,6 +1631,8 @@ class Combine(SplineWithPiecewisePolynomial):
         com.build_shake1(whether_rebuild=False)
         com.build_shake1(whether_rebuild=True)
         com.build_shake1().plot_svaj()
+        com.build_shake1().get_start_pvaj()
+        com.build_shake1().get_end_pvaj()
         """
         try:
             return self.shake1[0]
@@ -1617,7 +1644,7 @@ class Combine(SplineWithPiecewisePolynomial):
                     start=(degree_to_time(145), (
                         symbols('shake1_start_p'),
                         # 0,
-                        self.cons_v,
+                        self.cons_v_faster,
                         0,
                         nan,
                         nan,
@@ -1659,11 +1686,11 @@ class Combine(SplineWithPiecewisePolynomial):
                     )),
                     end=(degree_to_time(195), (
                         (symbols('shake1_start_p')
-                         + degree_to_time(195 - 145) * self.cons_v
+                         + degree_to_time(195 - 145) * self.cons_v_faster
                          + self.package.depth / 2 * 1.0),
-                        # (degree_to_time(318 - 264) * self.cons_v
+                        # (degree_to_time(318 - 264) * self.cons_v_faster
                         #  + self.package.depth / 2 * 1.0),
-                        self.cons_v,
+                        self.cons_v_faster,
                         0,
                         nan,
                         nan,
@@ -1679,6 +1706,8 @@ class Combine(SplineWithPiecewisePolynomial):
         com.build_pull2(whether_rebuild=False)
         com.build_pull2(whether_rebuild=True)
         com.build_pull2().plot_svaj()
+        com.build_pull2().get_start_pvaj()
+        com.build_pull2().get_end_pvaj()
         """
         try:
             return self.pull2[0]
@@ -1690,7 +1719,7 @@ class Combine(SplineWithPiecewisePolynomial):
                     start=(degree_to_time(195), (
                         symbols('pull2_start_p'),
                         # 0,
-                        self.cons_v,
+                        self.cons_v_faster,
                         nan,
                         nan,
                         nan,
@@ -1713,6 +1742,8 @@ class Combine(SplineWithPiecewisePolynomial):
         com.build_pull3(whether_rebuild=False)
         com.build_pull3(whether_rebuild=True)
         com.build_pull3().plot_svaj()
+        com.build_pull3().get_start_pvaj()
+        com.build_pull3().get_end_pvaj()
         """
         try:
             return self.pull3[0]
@@ -1724,7 +1755,7 @@ class Combine(SplineWithPiecewisePolynomial):
                     start=(degree_to_time(318), (
                         symbols('pull3_start_p'),
                         # 0,
-                        self.cons_v,
+                        self.cons_v_faster,
                         nan,
                         nan,
                         nan,
@@ -1747,6 +1778,7 @@ class Combine(SplineWithPiecewisePolynomial):
         com.build_throw(whether_rebuild=False)
         com.build_throw(whether_rebuild=True)
         com.build_throw().plot_svaj()
+        com.build_throw().get_start_pvaj()
         """
         try:
             return self.throw[0]
@@ -1758,7 +1790,7 @@ class Combine(SplineWithPiecewisePolynomial):
                     start=(degree_to_time(325), (
                         symbols('throw_start_p'),
                         # 50,
-                        self.cons_v,
+                        self.cons_v_faster,
                         0,
                         nan,
                         nan,
@@ -1954,8 +1986,8 @@ class Combine(SplineWithPiecewisePolynomial):
             #        x, self.touching_time)),
             Eq(self.build_climb().get_kth_expr_of_ith_piece(4, 0).subs(
                 x, 0),
-               self.build_throw().get_kth_expr_of_ith_piece(4, 2).subs(
-                   x, degree_to_time(360))),
+                self.build_throw().get_kth_expr_of_ith_piece(4, 2).subs(
+                    x, degree_to_time(360))),
         ]
         self.equations.extend(equations)
         return self.equations
