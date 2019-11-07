@@ -181,10 +181,7 @@ class SplineWithPiecewisePolynomial(object):
         if key_knots is None:
             key_knots = [start, knot1, knot2, end]
         if smooth_depth is None:
-            smooth_depth = {
-                knot1: 5,
-                knot2: 5,
-        }
+            smooth_depth = dict(zip(key_knots[1:-1], [6]*(len(key_knots)-2)))
         knots = [key_knots[i][0]
                  for i in range(len(key_knots))]
         pvajp = [[key_knots[i][1][j]
@@ -506,31 +503,32 @@ class SplineWithPiecewisePolynomial(object):
         move_sympyplot_to_axes(p0, ax1)
         ax1.set_xticks([self.knots[i] for i in range(len(self.knots))])
         ax1.set_xticklabels([(i % 2) * '\n' +
-                             str(time_to_degree(self.knots[i]))
+                             str(round(time_to_degree(self.knots[i]), 1))
                              for i in range(len(self.knots))])
         ax1.grid(True)
         move_sympyplot_to_axes(v0, ax2)
         ax2.set_xticks([self.knots[i] for i in range(len(self.knots))])
         ax2.set_xticklabels([(i % 2) * '\n' +
-                             str(time_to_degree(self.knots[i]))
+                             str(round(time_to_degree(self.knots[i]), 1))
                              for i in range(len(self.knots))])
         ax2.grid(True)
         move_sympyplot_to_axes(a0, ax3)
         ax3.set_xticks([self.knots[i] for i in range(len(self.knots))])
         ax3.set_xticklabels([(i % 2) * '\n' +
-                             str(time_to_degree(self.knots[i]))
+                             str(round(time_to_degree(self.knots[i]), 1))
                              for i in range(len(self.knots))])
         ax3.grid(True)
         move_sympyplot_to_axes(j0, ax4)
         ax4.set_xticks([self.knots[i] for i in range(len(self.knots))])
         ax4.set_xticklabels([(i % 2) * '\n' +
-                             str(time_to_degree(self.knots[i]))
+                             str(round(time_to_degree(self.knots[i]), 1))
                              for i in range(len(self.knots))])
         ax4.grid(True)
         ax4.set_xlabel('machine degree')
         if whether_save_png:
             plt.savefig('plot_of_{}.png'.format(self.name), dpi=720)
         plt.show()
+        return fig
 
     def get_start_pvaj(self):
         """

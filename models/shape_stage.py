@@ -953,6 +953,7 @@ class Touch(SplineWithPiecewisePolynomial):
                  name='touch_curve_1',
                  touch=None, knot2=None, knot3=None,
                  knot4=None, knot5=None, end=None,
+                 shake=None, joy=None, package=None,
                  whether_rebuild=False):
         """
         t1 = Touch(whether_rebuild=True)
@@ -1017,9 +1018,18 @@ class Touch(SplineWithPiecewisePolynomial):
                                                key_knots=key_knots,
                                                smooth_depth=smooth_depth,
                                                name=name)
-        self.shake = ShakeHand(whether_rebuild=False)
-        self.joy = JawOnYorkCurve(whether_rebuild=False)
-        self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
+        if shake is None:
+            self.shake = ShakeHand(whether_rebuild=False)
+        else:
+            self.shake = shake
+        if joy is None:
+            self.joy = JawOnYorkCurve(whether_rebuild=False)
+        else:
+            self.joy = joy
+        if package is None:
+            self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
+        else:
+            self.package = package
         if whether_rebuild:
             self.modify_pieces_expr()
             self.save_solved_pieces()
@@ -1344,43 +1354,510 @@ class Throw(SplineWithPiecewisePolynomial):
 
 class Combine(SplineWithPiecewisePolynomial):
     def __init__(self):
-        self.joy = JawOnYorkCurve()
+        self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
+        self.cons_v = self.package.get_pulling_velocity()
+        self.joy = JawOnYorkCurve(whether_rebuild=False)
         self.trace = TraceOfA(whether_load_memo=True)
-        touching_time = self.trace.get_touch_time()
-        self.climb = Climb(name="climb_to_touch",
-                           start=(degree_to_time(0), (
-                               0,
-                               0,
-                               nan,
-                               nan,
-                               nan,
-                           )),
-                           cross=(degree_to_time(43), (
-                               symbols("climb_cross_p"),
-                               nan,
-                               nan,
-                               nan,
-                               nan,
-                           )),
-                           high=(degree_to_time(84), (
-                               symbols("climb_high_p"),
-                               0,
-                               nan,
-                               nan,
-                               nan,
-                           )),
-                           touch=(touching_time, (
-                               symbols("climb_touch_p"),
-                               symbols("climb_touch_v"),
-                               symbols("climb_touch_a"),
-                               symbols("climb_touch_j"),
-                               nan,
-                           )),
-                           )
-        self.touch = Touch(name="touch_to_fold")
-        self.pull1 = Pull(name="pull_1")
-        self.shake1 = ShakeHand(name="shake_for_pulling_ear")
-        self.pull2 = Pull(name="pull_2")
-        self.shake2 = ShakeHand(name="shake_for_touching")
-        self.pull3 = Pull(name="pull_3")
-        self.throw = Throw(name="throw_to_bottom")
+        self.touching_time = self.trace.get_touch_time()
+        self.climb = []
+        self.touch = []
+        self.pull1 = []
+        self.shake1 = []
+        self.pull2 = []
+        self.shake2 = []
+        self.pull3 = []
+        self.throw = []
+        self.key_knots = []
+
+    def build_shake2(self, whether_rebuild=False):
+        """
+        com = Combine()
+        com.build_shake2(whether_rebuild=False)
+        com.build_shake2(whether_rebuild=True)
+        com.build_shake2().plot_svaj()
+        """
+        try:
+            return self.shake2[0]
+        except IndexError:
+            self.shake2.append(
+                ShakeHand(name="shake2_for_accepting",
+                          start=(degree_to_time(264), (
+                              # symbols('shake2_start_p'),
+                              0,
+                              self.cons_v,
+                              0,
+                              nan,
+                              nan,
+                          )),
+                          knot1=(degree_to_time(274.8), (
+                              nan,
+                              nan,
+                              nan,
+                              0,
+                              nan,
+                          )),
+                          knot2=(degree_to_time(282), (
+                              nan,
+                              nan,
+                              nan,
+                              nan,
+                              0,
+                          )),
+                          knot3=(degree_to_time(291), (
+                              nan,
+                              nan,
+                              0,
+                              nan,
+                              0,
+                          )),
+                          knot4=(degree_to_time(300), (
+                              nan,
+                              nan,
+                              nan,
+                              nan,
+                              0,
+                          )),
+                          knot5=(degree_to_time(307.2), (
+                              nan,
+                              nan,
+                              nan,
+                              0,
+                              nan,
+                          )),
+                          end=(degree_to_time(318), (
+                              (degree_to_time(318 - 264) * self.cons_v
+                               + self.package.depth / 2 * 1.3),
+                               # (symbols('shake2_start_p')
+                               # + degree_to_time(318 - 264) * self.cons_v
+                               # + self.package.depth / 2 * 1.3),
+                              self.cons_v,
+                              0,
+                              nan,
+                              nan,
+                          )),
+                          whether_rebuild=whether_rebuild,
+                          )
+            )
+            return self.shake2[0]
+
+    def build_touch(self, whether_rebuild=False):
+        """
+        com = Combine()
+        com.build_touch(whether_rebuild=False)
+        com.build_touch(whether_rebuild=True)
+        com.build_touch().plot_svaj()
+        """
+        try:
+            return self.touch[0]
+        except IndexError:
+            self.touch.append(
+                Touch(name="touch_to_fold",
+                      touch=(self.trace.get_touch_time(), (
+                          nan,
+                          nan,
+                          nan,
+                          nan,
+                          nan,
+                      )),
+                      knot2=(degree_to_time(102), (
+                          nan,
+                          nan,
+                          nan,
+                          nan,
+                          nan,
+                      )),
+                      knot3=(degree_to_time(111), (
+                          nan,
+                          nan,
+                          nan,
+                          nan,
+                          nan,
+                      )),
+                      knot4=(degree_to_time(120), (
+                          nan,
+                          nan,
+                          nan,
+                          nan,
+                          nan,
+                      )),
+                      knot5=(degree_to_time(127.2), (
+                          nan,
+                          nan,
+                          nan,
+                          nan,
+                          nan,
+                      )),
+                      end=(degree_to_time(138), (
+                          nan,
+                          nan,
+                          nan,
+                          nan,
+                          nan,
+                      )),
+                      package=self.package,
+                      shake=self.build_shake2(whether_rebuild=False),
+                      joy=self.joy,
+                      whether_rebuild=whether_rebuild,
+                      )
+            )
+            return self.touch[0]
+
+    def build_climb(self, whether_rebuild=False):
+        """
+        com = Combine()
+        com.build_climb(whether_rebuild=False)
+        com.build_climb(whether_rebuild=True)
+        com.build_climb().plot_svaj()
+        """
+        try:
+            return self.climb[0]
+        except IndexError:
+            self.climb.append(
+                Climb(name="climb_to_touch",
+                      start=(degree_to_time(0), (
+                          0,
+                          0,
+                          # symbols('climb_start_a'),
+                          # symbols('climb_start_j'),
+                          # self.build_throw()[1][2],
+                          # self.build_throw()[1][3],
+                          38000,
+                          567486.791390715,
+                          nan,
+                      )),
+                      cross=(degree_to_time(43), (
+                          200,
+                          nan,
+                          nan,
+                          nan,
+                          nan,
+                      )),
+                      high=(degree_to_time(84), (
+                          372.2,
+                          0,
+                          nan,
+                          nan,
+                          nan,
+                      )),
+                      touch=(self.touching_time, (
+                          nan,
+                          # symbols('climb_touch_v'),
+                          # symbols('climb_touch_a'),
+                          # symbols('climb_touch_j'),
+                          # self.build_touch()[0][1],
+                          # self.build_touch()[0][2],
+                          # self.build_touch()[0][3],
+                          -40.6661440887556,
+                          -4088.93068846931,
+                          93189.8259805306,
+                          nan,
+                      )),
+                      whether_rebuild=whether_rebuild,
+                      )
+            )
+            return self.climb[0]
+
+    def build_pull1(self, whether_rebuild=False):
+        """
+        com = Combine()
+        com.build_pull1(whether_rebuild=False)
+        com.build_pull1(whether_rebuild=True)
+        com.build_pull1().plot_svaj()
+        """
+        try:
+            return self.pull1[0]
+        except IndexError:
+            self.pull1.append(
+                Pull(name="pull_1",
+                     start=(degree_to_time(138), (
+                         # symbols('pull1_start_p'),
+                         0,
+                         self.cons_v,
+                         nan,
+                         nan,
+                         nan,
+                     )),
+                     end=(degree_to_time(145), (
+                         nan,
+                         nan,
+                         nan,
+                         nan,
+                         nan,
+                     )),
+                     whether_rebuild=whether_rebuild,
+                     )
+            )
+            return self.pull1[0]
+
+    def build_shake1(self, whether_rebuild=False):
+        """
+        com = Combine()
+        com.build_shake1(whether_rebuild=False)
+        com.build_shake1(whether_rebuild=True)
+        com.build_shake1().plot_svaj()
+        """
+        try:
+            return self.shake1[0]
+        except IndexError:
+            self.shake1.append(
+                ShakeHand(
+                    name="shake1_for_ear",
+                    start=(degree_to_time(145), (
+                        0,
+                        -422,
+                        0,
+                        nan,
+                        nan,
+                    )),
+                    knot1=(degree_to_time(155), (
+                        nan,
+                        nan,
+                        nan,
+                        0,
+                        nan,
+                    )),
+                    knot2=(degree_to_time(162), (
+                        nan,
+                        nan,
+                        nan,
+                        nan,
+                        0,
+                    )),
+                    knot3=(degree_to_time(170), (
+                        nan,
+                        nan,
+                        0,
+                        nan,
+                        0,
+                    )),
+                    knot4=(degree_to_time(178), (
+                        nan,
+                        nan,
+                        nan,
+                        nan,
+                        0,
+                    )),
+                    knot5=(degree_to_time(185), (
+                        nan,
+                        nan,
+                        nan,
+                        0,
+                        nan,
+                    )),
+                    end=(degree_to_time(195), (
+                        (degree_to_time(318 - 264) * self.cons_v
+                         + self.package.depth / 2 * 1.0),
+                        -422,
+                        0,
+                        nan,
+                        nan,
+                    )),
+                    whether_rebuild=whether_rebuild,
+                )
+            )
+            return self.shake1[0]
+
+    def build_pull2(self, whether_rebuild=False):
+        """
+        com = Combine()
+        com.build_pull2(whether_rebuild=False)
+        com.build_pull2(whether_rebuild=True)
+        com.build_pull2().plot_svaj()
+        """
+        try:
+            return self.pull2[0]
+        except IndexError:
+            self.pull2.append(
+                Pull(name="pull_2",
+                     start=(degree_to_time(195), (
+                         # symbols('pull2_start_p'),
+                         0,
+                         self.cons_v,
+                         nan,
+                         nan,
+                         nan,
+                     )),
+                     end=(degree_to_time(264), (
+                         nan,
+                         nan,
+                         nan,
+                         nan,
+                         nan,
+                     )),
+                     whether_rebuild=whether_rebuild,
+                     )
+            )
+            return self.pull2[0]
+
+    def build_pull3(self, whether_rebuild=False):
+        """
+        com = Combine()
+        com.build_pull3(whether_rebuild=False)
+        com.build_pull3(whether_rebuild=True)
+        com.build_pull3().plot_svaj()
+        """
+        try:
+            return self.pull3[0]
+        except IndexError:
+            self.pull3.append(
+                Pull(
+                    name="pull_3",
+                    start=(degree_to_time(318), (
+                        # symbols('pull3_start_p'),
+                        0,
+                        self.cons_v,
+                        nan,
+                        nan,
+                        nan,
+                    )),
+                    end=(degree_to_time(325), (
+                        nan,
+                        nan,
+                        nan,
+                        nan,
+                        nan,
+                    )),
+                    whether_rebuild=whether_rebuild,
+                )
+            )
+            return self.pull3[0]
+
+    def build_throw(self, whether_rebuild=False):
+        """
+        com = Combine()
+        com.build_throw(whether_rebuild=False)
+        com.build_throw(whether_rebuild=True)
+        com.build_throw().plot_svaj()
+        """
+        try:
+            return self.throw[0]
+        except IndexError:
+            self.throw.append(
+                Throw(
+                    name="throw_to_bottom",
+                    start=(degree_to_time(325), (
+                        50,
+                        -422,
+                        0,
+                        nan,
+                        nan,
+                    )),
+                    release=(degree_to_time(330), (
+                        44.5,
+                        nan,
+                        nan,
+                        nan,
+                        nan,
+                    )),
+                    end=(degree_to_time(360), (
+                        0,
+                        0,
+                        38000,
+                        nan,
+                        nan,
+                    )),
+                    whether_rebuild=whether_rebuild,
+                )
+            )
+            return self.throw[0]
+
+    def collect_key_knots(self):
+        """
+        com = Combine()
+        key_knots = com.collect_key_knots()
+        for i in range(len(key_knots)):
+            print(time_to_degree(key_knots[i][0]))
+        print(len(com.collect_key_knots()))
+        """
+        if len(self.key_knots) != 0:
+            return self.key_knots
+        self.key_knots.extend(
+            self.build_climb().key_knots
+        )
+        self.key_knots.extend(
+            self.build_touch().key_knots[1:]
+        )
+        self.key_knots.extend(
+            self.build_pull1().key_knots[1:]
+        )
+        self.key_knots.extend(
+            self.build_shake1().key_knots[1:]
+        )
+        self.key_knots.extend(
+            self.build_pull2().key_knots[1:]
+        )
+        self.key_knots.extend(
+            self.build_shake2().key_knots[1:]
+        )
+        self.key_knots.extend(
+            self.build_pull3().key_knots[1:]
+        )
+        self.key_knots.extend(
+            self.build_throw().key_knots[1:]
+        )
+        return self.key_knots
+
+    def construct_spline_of_empty_pieces(self):
+        """
+        com = Combine()
+        num_of_pieces = com.construct_spline_of_empty_pieces()
+        print('num_of_pieces: ', num_of_pieces)
+        """
+        try:
+            return self.num_of_pieces
+        except AttributeError:
+            name = "combined_curve"
+            key_knots = self.collect_key_knots()
+            SplineWithPiecewisePolynomial.__init__(self,
+                                                   key_knots=key_knots,
+                                                   name=name)
+            return self.num_of_pieces
+
+    def collect_stage_pieces(self):
+        """
+        com = Combine()
+        actual_pieces = com.collect_stage_pieces()
+        print('actual num of pieces: ', len(actual_pieces))
+        print('First one of these pieces: ', actual_pieces[0])
+        print('Last one of these pieces: ', actual_pieces[-1])
+        """
+        try:
+            return self.pieces
+        except AttributeError:
+            self.construct_spline_of_empty_pieces()
+        self.pieces.extend(
+            self.build_climb().get_pieces()
+        )
+        self.pieces.extend(
+            self.build_touch().get_pieces()
+        )
+        self.pieces.extend(
+            self.build_pull1().get_pieces()
+        )
+        self.pieces.extend(
+            self.build_shake1().get_pieces()
+        )
+        self.pieces.extend(
+            self.build_pull2().get_pieces()
+        )
+        self.pieces.extend(
+            self.build_shake2().get_pieces()
+        )
+        self.pieces.extend(
+            self.build_pull3().get_pieces()
+        )
+        self.pieces.extend(
+            self.build_throw().get_pieces()
+        )
+        return self.pieces
+
+    def plot_pvaj(self):
+        """
+        com = Combine()
+        actual_pieces = com.collect_stage_pieces()
+        print('actual num of pieces: ', len(actual_pieces))
+        com.plot_pvaj()
+        """
+        fig = self.plot_svaj()
+        fig.savefig("General Curves of not continuous position.png", dpi=720)
+
