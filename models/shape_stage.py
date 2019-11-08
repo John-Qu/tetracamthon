@@ -1296,7 +1296,8 @@ class Climb(SplineWithPiecewisePolynomial):
 class Throw(SplineWithPiecewisePolynomial):
     def __init__(self,
                  start=None,
-                 release=None,
+                 knot1=None,
+                 knot2=None,
                  end=None,
                  name='throw_325_0',
                  whether_rebuild=False
@@ -1307,39 +1308,42 @@ class Throw(SplineWithPiecewisePolynomial):
         """
         if start is None:
             start = (degree_to_time(325), (
-                50,
-                -422,
+                37,
+                -438,
                 0,
                 nan,
                 nan,
             ))
-        if release is None:
-            release = (degree_to_time(330), (
-                44.5,
+        if knot1 is None:
+            knot1 = (degree_to_time(335), (
                 nan,
                 nan,
+                nan,
+                0,
+                nan,
+            ))
+        if knot2 is None:
+            knot2 = (degree_to_time(342), (
+                nan,
+                nan,
+                0,
                 nan,
                 nan,
             ))
-        knot1 = (degree_to_time(335), (
-            nan,
-            nan,
-            nan,
-            0,
-            nan,
-        ))
         if end is None:
             end = (degree_to_time(360), (
                 0,
                 0,
-                38000,
+                22000,
+                # 500000,
                 nan,
                 nan,
             ))
-        key_knots = [start, release, knot1, end]
+        # key_knots = [start, release, knot1, end]
+        key_knots = [start, knot1, knot2, end]
         smooth_depth = {
-            release: 5,
             knot1: 5,
+            knot2: 5,
         }
         SplineWithPiecewisePolynomial.__init__(self,
                                                key_knots=key_knots,
@@ -1353,10 +1357,13 @@ class Throw(SplineWithPiecewisePolynomial):
 
 
 class Combine(SplineWithPiecewisePolynomial):
-    def __init__(self):
+    def __init__(self, whether_rebuild_with_symbol=False):
+        """
+        com = Combine(whether_rebuild_with_symbol=True)
+        """
         self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
         self.cons_v = self.package.get_pulling_velocity()
-        self.shake2_less_p = 0.3 * (self.package.depth / 2)
+        self.shake2_less_p = 0.4 * (self.package.depth / 2)
         self.cons_v_faster = (
                 - (self.package.web_repeated_length + self.shake2_less_p) /
                 degree_to_time(180)
@@ -1364,20 +1371,105 @@ class Combine(SplineWithPiecewisePolynomial):
         self.joy = JawOnYorkCurve(whether_rebuild=False)
         self.trace = TraceOfA(whether_load_memo=True)
         self.touching_time = self.trace.get_touch_time()
-        self.climb = []
-        self.touch = []
-        self.pull1 = []
-        self.shake1 = []
-        self.pull2 = []
-        self.shake2 = []
-        self.pull3 = []
-        self.throw = []
+        self.stages = {}
+        self.connection = {}
+        self.climb_se = []
+        self.touch_se = []
+        self.pull1_se = []
+        self.shake1_se = []
+        self.pull2_se = []
+        self.shake2_se = []
+        self.pull3_se = []
+        self.throw_se = []
         self.key_knots = []
         self.pva_symbols = []
         self.equations = []
         self.solution = {}
+        self.accumulate_distances(
+            whether_with_symbol=True,
+            whether_rebuild=whether_rebuild_with_symbol)
 
-    def build_shake2(self, whether_rebuild=False):
+    def accumulate_distances(self,
+                             whether_with_symbol=True,
+                             whether_rebuild=False
+                             ):
+        throw = self.build_throw(
+            whether_with_symbol=whether_with_symbol,
+            whether_rebuild=whether_rebuild
+        )
+        throw_d = throw.get_start_pvaj()[0] - throw.get_end_pvaj()[0]
+        throw_end_p = 0
+        throw_start_p = throw_end_p + throw_d
+        self.connection['throw'] = (throw_start_p, throw_end_p)
+        pull3 = self.build_pull3(
+            whether_with_symbol=whether_with_symbol,
+            whether_rebuild=whether_rebuild
+        )
+        pull3_d = pull3.get_start_pvaj()[0] - pull3.get_end_pvaj()[0]
+        pull3_end_p = throw_start_p
+        pull3_start_p = pull3_end_p + pull3_d
+        self.connection['pull3'] = (pull3_start_p, pull3_end_p)
+        # shake2 = self.build_shake2(
+        #     whether_with_symbol=whether_with_symbol,
+        #     # whether_with_symbol=True,
+        #     whether_rebuild=whether_rebuild
+        # )
+        shake2_d = -(
+                degree_to_time(318 - 264) * self.cons_v_faster
+                + self.package.depth / 2
+                + self.shake2_less_p
+        )
+        shake2_end_p = pull3_start_p
+        shake2_start_p = shake2_end_p + shake2_d
+        self.connection['shake2'] = (shake2_start_p, shake2_end_p)
+        pull2 = self.build_pull2(
+            whether_with_symbol=whether_with_symbol,
+            whether_rebuild=whether_rebuild
+        )
+        pull2_d = pull2.get_start_pvaj()[0] - pull2.get_end_pvaj()[0]
+        pull2_end_p = shake2_start_p
+        pull2_start_p = pull2_end_p + pull2_d
+        self.connection['pull2'] = (pull2_start_p, pull2_end_p)
+        # shake1 = self.build_shake1(
+        #     whether_with_symbol=whether_with_symbol,
+        #     whether_rebuild=whether_rebuild
+        # )
+        shake1_d = -(
+                degree_to_time(195 - 145) * self.cons_v_faster
+                + self.package.depth / 2
+        )
+        shake1_end_p = pull2_start_p
+        shake1_start_p = shake1_end_p + shake1_d
+        self.connection['shake1'] = (shake1_start_p, shake1_end_p)
+        pull1 = self.build_pull1(
+            whether_with_symbol=whether_with_symbol,
+            whether_rebuild=whether_rebuild
+        )
+        pull1_d = pull1.get_start_pvaj()[0] - pull1.get_end_pvaj()[0]
+        pull1_end_p = shake1_start_p
+        pull1_start_p = pull1_end_p + pull1_d
+        self.connection['pull1'] = (pull1_start_p, pull1_end_p)
+        touch = self.build_touch(
+            whether_with_symbol=whether_with_symbol,
+            whether_rebuild=whether_rebuild
+        )
+        touch_d = touch.get_start_pvaj()[0] - touch.get_end_pvaj()[0]
+        touch_end_p = pull1_start_p
+        touch_start_p = touch_end_p + touch_d
+        self.connection['touch'] = (touch_start_p, touch_end_p)
+        climb = self.build_climb(
+            # whether_with_symbol=True,
+            whether_with_symbol=whether_with_symbol,
+            whether_rebuild=whether_rebuild
+        )
+        climb_d = climb.get_start_pvaj()[0] - climb.get_end_pvaj()[0]
+        climb_end_p = touch_start_p
+        climb_start_p = climb_end_p + climb_d
+        self.connection['climb'] = (climb_start_p, climb_end_p)
+
+    def build_shake2(self,
+                     whether_rebuild=False,
+                     whether_with_symbol=False):
         """
         com = Combine()
         com.build_shake2(whether_rebuild=False)
@@ -1385,75 +1477,88 @@ class Combine(SplineWithPiecewisePolynomial):
         com.build_shake2().plot_svaj()
         com.build_shake2().get_start_pvaj()
         com.build_shake2().get_end_pvaj()
+        37 + 7.67180555555552 + 25.959999999999994 + 75.6220833333334 + 30.548611111111114 + 7.671805555556006 + 31.873260131671003
+        = 218.04506568722704
+        _ - 146.998262068592
+        = 84.001737931408
+        37 + 7.67180555555552 + 27.657500000000002
+         + 75.6220833333334 + 30.548611111111114 + 7.671805555556006 + 31.873260131671003
         """
+        shake2_d = -(
+                degree_to_time(318 - 264) * self.cons_v_faster
+                + self.package.depth / 2
+                + self.shake2_less_p
+        )
+        if whether_with_symbol:
+            name = "shake2_for_accepting_with_symbol"
+            shake2_start_p = symbols('shake2_start_p')
+            shake2_end_p = shake2_start_p - shake2_d
+        else:
+            name = "shake2_for_accepting"
+            shake2_start_p = self.connection['shake2'][0]
+            shake2_end_p = self.connection['shake2'][1]
         try:
-            return self.shake2[0]
-        except IndexError:
-            self.shake2.append(
-                ShakeHand(
-                    name="shake2_for_accepting",
-                    # name="shake2_for_accepting_with_symbol",
-                    start=(degree_to_time(264), (
-                        # symbols('shake2_start_p'),
-                        # 0,
-                        77.001737931408,
-                        self.cons_v_faster,
-                        0,
-                        nan,
-                        nan,
-                    )),
-                    knot1=(degree_to_time(274.8), (
-                        nan,
-                        nan,
-                        nan,
-                        0,
-                        nan,
-                    )),
-                    knot2=(degree_to_time(282), (
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                        0,
-                    )),
-                    knot3=(degree_to_time(291), (
-                        nan,
-                        nan,
-                        0,
-                        nan,
-                        0,
-                    )),
-                    knot4=(degree_to_time(300), (
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                        0,
-                    )),
-                    knot5=(degree_to_time(307.2), (
-                        nan,
-                        nan,
-                        nan,
-                        0,
-                        nan,
-                    )),
-                    end=(degree_to_time(318), (
-                        (degree_to_time(318 - 264) * self.cons_v_faster
-                         + self.package.depth / 2 * 1.3),
-                        # (symbols('shake2_start_p')
-                        #  + degree_to_time(318 - 264) * self.cons_v_faster
-                        #  + self.package.depth / 2 * 1.3),
-                        self.cons_v_faster,
-                        0,
-                        nan,
-                        nan,
-                    )),
-                    whether_rebuild=whether_rebuild,
+            return self.stages[name]
+        except KeyError:
+            self.stages[name] = ShakeHand(
+                name=name,
+                start=(degree_to_time(264), (
+                    shake2_start_p,
+                    self.cons_v_faster,
+                    0,
+                    nan,
+                    nan,
+                )),
+                knot1=(degree_to_time(274.8), (
+                    nan,
+                    nan,
+                    nan,
+                    0,
+                    nan,
+                )),
+                knot2=(degree_to_time(282), (
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                    0,
+                )),
+                knot3=(degree_to_time(291), (
+                    nan,
+                    nan,
+                    0,
+                    nan,
+                    0,
+                )),
+                knot4=(degree_to_time(300), (
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                    0,
+                )),
+                knot5=(degree_to_time(307.2), (
+                    nan,
+                    nan,
+                    nan,
+                    0,
+                    nan,
+                )),
+                end=(degree_to_time(318), (
+                    shake2_end_p,
+                    self.cons_v_faster,
+                    0,
+                    nan,
+                    nan,
+                )),
+                whether_rebuild=whether_rebuild,
                 )
-            )
-            return self.shake2[0]
+            return self.stages[name]
 
-    def build_touch(self, whether_rebuild=False):
+    def build_touch(self,
+                    whether_rebuild=False,
+                    whether_with_symbol=False
+                    ):
         """
         com = Combine()
         com.build_touch(whether_rebuild=False)
@@ -1462,133 +1567,127 @@ class Combine(SplineWithPiecewisePolynomial):
         com.build_touch().get_start_pvaj()
         com.build_touch().get_end_pvaj()
         146.998262068592 - 115.125001936921
-        31.873260131671003
-        224 - 146.998262068592
-        77.001737931408
-        224 - 31.873260131671003
-        192.126739868329
+        = 31.873260131671003
         """
+        if whether_with_symbol:
+            name = "touch_to_fold_with_symbol"
+        else:
+            name = "touch_to_fold"
         try:
-            return self.touch[0]
-        except IndexError:
-            self.touch.append(
-                Touch(
-                    name="touch_to_fold",
-                    # name="touch_to_fold_with_symbol",
-                    touch=(self.trace.get_touch_time(), (
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                    )),
-                    knot2=(degree_to_time(102), (
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                    )),
-                    knot3=(degree_to_time(111), (
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                    )),
-                    knot4=(degree_to_time(120), (
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                    )),
-                    knot5=(degree_to_time(127.2), (
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                    )),
-                    end=(degree_to_time(138), (
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                    )),
-                    package=self.package,
-                    shake=self.build_shake2(whether_rebuild=False),
-                    joy=self.joy,
-                    whether_rebuild=whether_rebuild,
-                )
+            return self.stages[name]
+        except KeyError:
+            self.stages[name] = Touch(
+                name=name,
+                touch=(self.trace.get_touch_time(), (
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                )),
+                knot2=(degree_to_time(102), (
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                )),
+                knot3=(degree_to_time(111), (
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                )),
+                knot4=(degree_to_time(120), (
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                )),
+                knot5=(degree_to_time(127.2), (
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                )),
+                end=(degree_to_time(138), (
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                )),
+                package=self.package,
+                shake=self.build_shake2(
+                    whether_with_symbol=whether_with_symbol,
+                    whether_rebuild=False),
+                joy=self.joy,
+                whether_rebuild=whether_rebuild,
             )
-            return self.touch[0]
+            return self.stages[name]
 
-    def build_climb(self, whether_rebuild=False):
+    def build_climb(self,
+                    whether_rebuild=False,
+                    whether_with_symbol=False
+                    ):
         """
         com = Combine()
         com.build_climb(whether_rebuild=True)
         com.build_climb().plot_svaj()
         com.build_climb().get_end_pvaj()
-        50 + 7.3888888888 + 25.475 + 72.83 + 28.5277777777 + 7.38 + 31.873260131671003
-        223.47492679817103
+        37 + 7.3888888888 + 25.475 + 72.83 + 28.5277777777 + 7.38 + 31.873260131671003
+        210.47492679817103
         """
+        if whether_with_symbol:
+            name = "climb_to_touch_with_symbol"
+            climb_end_p = symbols('climb_end_p')
+        else:
+            name = "climb_to_touch"
+            climb_end_p = self.connection['climb'][1]
         try:
-            return self.climb[0]
-        except IndexError:
-            self.climb.append(
-                Climb(
-                    name="climb_to_touch",
-                    # name="climb_to_touch_with_symbol",
-                    start=(degree_to_time(0), (
-                        0,
-                        0,
-                        # symbols('climb_start_a'),
-                        # symbols('climb_start_j'),
-                        # self.build_throw()[1][2],
-                        # self.build_throw()[1][3],
-                        38000,
-                        567486.791390715,
-                        nan,
-                    )),
-                    cross=(degree_to_time(43), (
-                        140,
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                    )),
-                    high=(degree_to_time(84), (
-                        # symbols('climb_high_p'),
-                        # 372.2,
-                        # 350,
-                        # 360,
-                        nan,
-                        # 240,
-                        0,
-                        nan,
-                        nan,
-                        nan,
-                    )),
-                    touch=(self.touching_time, (
-                        # nan,
-                        # 223.47492679817103,
-                        224,
-                        # symbols('climb_touch_v'),
-                        # symbols('climb_touch_a'),
-                        # symbols('climb_touch_j'),
-                        -40.8883663109778,
-                        -4088.93068846931,
-                        93189.8259805306,
-                        nan,
-                    )),
-                    whether_rebuild=whether_rebuild,
-                )
+            return self.stages[name]
+        except KeyError:
+            self.stages[name] = Climb(
+                name=name,
+                start=(degree_to_time(0), (
+                    0,
+                    0,
+                    22000,
+                    140024.445242645,
+                    nan,
+                )),
+                cross=(degree_to_time(43), (
+                    122,
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                )),
+                high=(degree_to_time(84), (
+                    nan,
+                    0,
+                    nan,
+                    nan,
+                    nan,
+                )),
+                touch=(self.touching_time, (
+                    climb_end_p,
+                    -40.8883663109778,
+                    -4088.93068846931,
+                    93189.8259805306,
+                    nan,
+                )),
+                whether_rebuild=whether_rebuild,
             )
-            return self.climb[0]
+            return self.stages[name]
 
-    def build_pull1(self, whether_rebuild=False):
+    def build_pull1(self,
+                    whether_rebuild=False,
+                    whether_with_symbol=False
+                    ):
         """
         com = Combine()
         com.build_pull1(whether_rebuild=False)
@@ -1597,35 +1696,39 @@ class Combine(SplineWithPiecewisePolynomial):
         com.build_pull1().get_start_pvaj()
         com.build_pull1().get_end_pvaj()
         """
+        if whether_with_symbol:
+            name = "pull_1_with_symbol"
+            pull1_start_p = symbols('pull1_start_p')
+        else:
+            name = "pull_1"
+            pull1_start_p = self.connection['pull1'][0]
         try:
-            return self.pull1[0]
-        except IndexError:
-            self.pull1.append(
-                Pull(
-                    # name="pull_1",
-                    name="pull_1_with_symbol",
-                    start=(degree_to_time(138), (
-                        # symbols('pull1_start_p'),
-                        192.126739868329,
-                        # 0,
-                        self.cons_v_faster,
-                        nan,
-                        nan,
-                        nan,
-                    )),
-                    end=(degree_to_time(145), (
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                    )),
-                    whether_rebuild=whether_rebuild,
-                )
+            return self.stages[name]
+        except KeyError:
+            self.stages[name] = Pull(
+                name=name,
+                start=(degree_to_time(138), (
+                    pull1_start_p,
+                    self.cons_v_faster,
+                    nan,
+                    nan,
+                    nan,
+                )),
+                end=(degree_to_time(145), (
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                )),
+                whether_rebuild=whether_rebuild,
             )
-            return self.pull1[0]
+            return self.stages[name]
 
-    def build_shake1(self, whether_rebuild=False):
+    def build_shake1(self,
+                     whether_rebuild=False,
+                     whether_with_symbol=False
+                     ):
         """
         com = Combine()
         com.build_shake1(whether_rebuild=False)
@@ -1633,74 +1736,80 @@ class Combine(SplineWithPiecewisePolynomial):
         com.build_shake1().plot_svaj()
         com.build_shake1().get_start_pvaj()
         com.build_shake1().get_end_pvaj()
+        37 + 7.67180555555552 + 27.657500000000002 + 75.6220833333334 + 30.548611111111114 + 7.671805555556006 + 31.873260131671003
         """
+        if whether_with_symbol:
+            name = "shake1_for_ear_with_symbols"
+            shake1_start_p = symbols('shake1_start_p')
+            shake1_end_p = (shake1_start_p
+                            + degree_to_time(195 - 145) * self.cons_v_faster
+                            + self.package.depth / 2 * 1.0),
+        else:
+            name = "shake1_for_ear"
+            shake1_start_p = self.connection['shake1'][0]
+            shake1_end_p = self.connection['shake1'][1]
         try:
-            return self.shake1[0]
-        except IndexError:
-            self.shake1.append(
-                ShakeHand(
-                    # name="shake1_for_ear",
-                    name="shake1_for_ear_with_symbols",
-                    start=(degree_to_time(145), (
-                        symbols('shake1_start_p'),
-                        # 0,
-                        self.cons_v_faster,
-                        0,
-                        nan,
-                        nan,
-                    )),
-                    knot1=(degree_to_time(155), (
-                        nan,
-                        nan,
-                        nan,
-                        0,
-                        nan,
-                    )),
-                    knot2=(degree_to_time(162), (
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                        0,
-                    )),
-                    knot3=(degree_to_time(170), (
-                        nan,
-                        nan,
-                        0,
-                        nan,
-                        0,
-                    )),
-                    knot4=(degree_to_time(178), (
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                        0,
-                    )),
-                    knot5=(degree_to_time(185), (
-                        nan,
-                        nan,
-                        nan,
-                        0,
-                        nan,
-                    )),
-                    end=(degree_to_time(195), (
-                        (symbols('shake1_start_p')
-                         + degree_to_time(195 - 145) * self.cons_v_faster
-                         + self.package.depth / 2 * 1.0),
-                        # (degree_to_time(318 - 264) * self.cons_v_faster
-                        #  + self.package.depth / 2 * 1.0),
-                        self.cons_v_faster,
-                        0,
-                        nan,
-                        nan,
-                    )),
-                    whether_rebuild=whether_rebuild,
-                )
+            return self.stages[name]
+        except KeyError:
+            self.stages[name] = ShakeHand(
+                name=name,
+                start=(degree_to_time(145), (
+                    shake1_start_p,
+                    self.cons_v_faster,
+                    0,
+                    nan,
+                    nan,
+                )),
+                knot1=(degree_to_time(155), (
+                    nan,
+                    nan,
+                    nan,
+                    0,
+                    nan,
+                )),
+                knot2=(degree_to_time(162), (
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                    0,
+                )),
+                knot3=(degree_to_time(170), (
+                    nan,
+                    nan,
+                    0,
+                    nan,
+                    0,
+                )),
+                knot4=(degree_to_time(178), (
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                    0,
+                )),
+                knot5=(degree_to_time(185), (
+                    nan,
+                    nan,
+                    nan,
+                    0,
+                    nan,
+                )),
+                end=(degree_to_time(195), (
+                    shake1_end_p,
+                    self.cons_v_faster,
+                    0,
+                    nan,
+                    nan,
+                )),
+                whether_rebuild=whether_rebuild,
             )
-            return self.shake1[0]
+            return self.stages[name]
 
-    def build_pull2(self, whether_rebuild=False):
+    def build_pull2(self,
+                    whether_rebuild=False,
+                    whether_with_symbol=False
+                    ):
         """
         com = Combine()
         com.build_pull2(whether_rebuild=False)
@@ -1709,34 +1818,38 @@ class Combine(SplineWithPiecewisePolynomial):
         com.build_pull2().get_start_pvaj()
         com.build_pull2().get_end_pvaj()
         """
+        if whether_with_symbol:
+            name = "pull_2_with_symbol"
+            pull2_start_p = symbols('pull2_start_p')
+        else:
+            name = "pull_2"
+            pull2_start_p = self.connection['pull2'][0]
         try:
-            return self.pull2[0]
-        except IndexError:
-            self.pull2.append(
-                Pull(
-                    # name="pull_2",
-                    name="pull_2_with_symbol",
-                    start=(degree_to_time(195), (
-                        symbols('pull2_start_p'),
-                        # 0,
-                        self.cons_v_faster,
-                        nan,
-                        nan,
-                        nan,
-                    )),
-                    end=(degree_to_time(264), (
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                    )),
-                    whether_rebuild=whether_rebuild,
-                )
+            return self.stages[name]
+        except KeyError:
+            self.stages[name] = Pull(
+                name=name,
+                start=(degree_to_time(195), (
+                    pull2_start_p,
+                    self.cons_v_faster,
+                    nan,
+                    nan,
+                    nan,
+                )),
+                end=(degree_to_time(264), (
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                )),
+                whether_rebuild=whether_rebuild,
             )
-            return self.pull2[0]
+            return self.stages[name]
 
-    def build_pull3(self, whether_rebuild=False):
+    def build_pull3(self,
+                    whether_rebuild=False,
+                    whether_with_symbol=False):
         """
         com = Combine()
         com.build_pull3(whether_rebuild=False)
@@ -1745,77 +1858,88 @@ class Combine(SplineWithPiecewisePolynomial):
         com.build_pull3().get_start_pvaj()
         com.build_pull3().get_end_pvaj()
         """
+        if whether_with_symbol:
+            name = "pull_3_with_symbol"
+            pull3_start_p = symbols('pull3_start_p')
+        else:
+            name = "pull_3"
+            pull3_start_p = self.connection['pull3'][0]
         try:
-            return self.pull3[0]
-        except IndexError:
-            self.pull3.append(
-                Pull(
-                    # name="pull_3",
-                    name="pull_3_with_symbol",
-                    start=(degree_to_time(318), (
-                        symbols('pull3_start_p'),
-                        # 0,
-                        self.cons_v_faster,
-                        nan,
-                        nan,
-                        nan,
-                    )),
-                    end=(degree_to_time(325), (
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                    )),
-                    whether_rebuild=whether_rebuild,
-                )
+            return self.stages[name]
+        except KeyError:
+            self.stages[name] = Pull(
+                name=name,
+                start=(degree_to_time(318), (
+                    pull3_start_p,
+                    self.cons_v_faster,
+                    nan,
+                    nan,
+                    nan,
+                )),
+                end=(degree_to_time(325), (
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                    nan,
+                )),
+                whether_rebuild=whether_rebuild,
             )
-            return self.pull3[0]
+            return self.stages[name]
 
-    def build_throw(self, whether_rebuild=False):
+    def build_throw(self,
+                    whether_rebuild=False,
+                    whether_with_symbol=False):
         """
         com = Combine()
-        com.build_throw(whether_rebuild=False)
         com.build_throw(whether_rebuild=True)
         com.build_throw().plot_svaj()
         com.build_throw().get_start_pvaj()
+        com.build_throw().get_end_pvaj()
         """
+        if whether_with_symbol:
+            name = "throw_to_bottom_with_symbol"
+            throw_start_p = symbols('throw_start_p')
+        else:
+            name = "throw_to_bottom"
+            throw_start_p = self.connection['throw'][0]
         try:
-            return self.throw[0]
-        except IndexError:
-            self.throw.append(
-                Throw(
-                    # name="throw_to_bottom",
-                    name="throw_to_bottom_with_symbol",
-                    start=(degree_to_time(325), (
-                        symbols('throw_start_p'),
-                        # 50,
-                        self.cons_v_faster,
-                        0,
-                        nan,
-                        nan,
-                    )),
-                    release=(degree_to_time(330), (
-                        symbols('throw_start_p') - 5.5,
-                        # symbols('throw_release_p'),
-                        # 44.5,
-                        nan,
-                        nan,
-                        nan,
-                        nan,
-                    )),
-                    end=(degree_to_time(360), (
-                        0,
-                        0,
-                        symbols('throw_end_a'),
-                        # 38000,
-                        nan,
-                        nan,
-                    )),
-                    whether_rebuild=whether_rebuild,
-                )
+            return self.stages[name]
+        except KeyError:
+            self.stages[name] = Throw(
+                name=name,
+                start=(degree_to_time(325), (
+                    37,
+                    self.cons_v_faster,
+                    0,
+                    nan,
+                    nan,
+                )),
+                knot1=(degree_to_time(335), (
+                    # 44.5,
+                    nan,
+                    nan,
+                    nan,
+                    0,
+                    nan,
+                )),
+                knot2=(degree_to_time(342), (
+                    nan,
+                    nan,
+                    0,
+                    nan,
+                    nan,
+                )),
+                end=(degree_to_time(360), (
+                    0,
+                    0,
+                    22000,
+                    nan,
+                    nan,
+                )),
+                whether_rebuild=whether_rebuild,
             )
-            return self.throw[0]
+            return self.stages[name]
 
     def collect_key_knots(self):
         """

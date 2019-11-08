@@ -207,7 +207,10 @@ class O4DriveA(JawOnYork):
         R_AO2_y = j2.get_y_R_AO2_of_r_O4O2_expr()
         print(j2.get_y_R_AO2_of_r_O4O2_expr().subs([(j2.r_O4O2, 93.1457274726962)]).evalf())
         # 171.354752195555
-
+        print(j2.get_y_R_AO2_of_r_O4O2_expr().subs([(j2.r_O4O2, 183)]).evalf())
+        # 169.165720344467
+        print(j2.get_y_R_AO2_of_r_O4O2_expr().subs([(j2.r_O4O2, 52)]).evalf())
+        # 164.432656720374
         """
         y_R_AO2_of_r_O4O2_expr = self.get_y_R_AO2_of_theta_expr().subs(
             [(self.theta, self.get_theta_of_r_O4O2_expr())])
