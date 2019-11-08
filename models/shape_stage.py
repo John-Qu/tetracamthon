@@ -2031,7 +2031,7 @@ class Combine(SplineWithPiecewisePolynomial):
         )
         return self.pieces
 
-    def plot_pvaj(self, name='General Curves'):
+    def plot_pvaj(self, name='General_Curves.png'):
         """
         com = Combine()
         actual_pieces = com.collect_stage_pieces()
