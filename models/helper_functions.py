@@ -66,3 +66,56 @@ def print_list_items_in_row(li):
     for i in range(len(li)):
         print(str(i) + 'th: ' + str(li[i]))
 
+
+def plot_pvaj(pvaj,
+              knots,
+              name='',
+              whether_save_png=False,
+              whether_show_figure=False,
+              whether_knots_ticks=True,
+              ):
+    """
+    s1 = SplineWithPiecewisePolynomial()
+    s1.update_with_solution()
+    s1.plot_svaj()
+    """
+    fig, axs = plt.subplots(nrows=4,
+                            figsize=(16, 10),
+                            )
+    fig.suptitle('PVAJ Curves \n {}'.format(name),
+                 fontsize=14, fontweight='bold')
+    y_labels = [
+        "Position\n(mm)",
+        "Velocity \n(mm/sec)",
+        "Acceleration \n(mm/sec^2)",
+        "Jerk \n(mm/sec^3)"
+    ]
+    for i in range(len(axs)):
+        move_sympyplot_to_axes(pvaj[i], axs[i])
+        axs[i].set_ylabel(y_labels[i])
+        axs[i].tick_params(labelcolor='tab:gray')
+        axs[i].set_xlabel('machine degree')
+        if whether_knots_ticks:
+            axs[i].set_xticks([knots[i] for i in range(len(knots))])
+            axs[i].set_xticklabels([(i % 2) * '\n' +
+                                    str(round(time_to_degree(knots[i]), 1))
+                                    for i in range(len(knots))])
+        else:
+            axs[i].set_xticks(degree_to_time(
+                np.linspace(0, 360, 37, endpoint=True)))
+            axs[i].set_xticklabels([(i % 2) * '\n' + str(
+                int(np.linspace(0, 360, 37, endpoint=True)[i]))
+                                    for i in range(37)])
+        axs[i].grid(True)
+    fig.align_ylabels(axs)
+    if whether_save_png:
+        plt.savefig('plot_of_{}.png'.format(name), dpi=720)
+    if whether_show_figure:
+        plt.show()
+    return fig, axs
+
+
+def find_index_in_ordered_list(value, li):
+    for i in range(len(li) - 1):
+        if li[i] <= value < li[i + 1]:
+            return i

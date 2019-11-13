@@ -5,7 +5,7 @@ import numpy as np
 import pickle
 import matplotlib.pyplot as plt
 from helper_functions import degree_to_time, time_to_degree, \
-    move_sympyplot_to_axes
+    move_sympyplot_to_axes, plot_pvaj
 
 
 class Polynomial(object):
@@ -137,6 +137,11 @@ class Polynomial(object):
         self.expr.clear()
         self.expr.append(new_expr)
         self.build_diffs()
+        return self.expr
+
+    def update_with_new_expressions(self, new_expressions):
+        self.expr.clear()
+        self.expr.extend(new_expressions)
         return self.expr
 
 
@@ -457,78 +462,53 @@ class SplineWithPiecewisePolynomial(object):
         except:
             return 0
 
-    def plot_svaj(self, whether_save_png=False):
+    def combine_pieces_for_plot(self,
+                  whether_save_png=False,
+                  line_color='blue',
+                  whether_show_figure=False,
+                  whether_knots_ticks=True,
+                  ):
         """
         s1 = SplineWithPiecewisePolynomial()
         s1.update_with_solution()
         s1.plot_svaj()
         """
         p0 = plot(0, (x, self.knots[0], self.knots[-1]),
-                  title="Position",
-                  ylabel="(mm)",
                   show=False)
         for i in range(self.num_of_pieces):
             expr_p_i = self.get_kth_expr_of_ith_piece(0, i)
             pi = plot(expr_p_i, (x, self.knots[i], self.knots[i + 1]),
-                      show=False)
+                      show=False, line_color=line_color)
             p0.extend(pi)
         v0 = plot(0, (x, self.knots[0], self.knots[-1]),
-                  title="Velocity",
-                  ylabel="(mm/sec)",
                   show=False)
         for i in range(self.num_of_pieces):
             expr_v_i = self.get_kth_expr_of_ith_piece(1, i)
             vi = plot(expr_v_i, (x, self.knots[i], self.knots[i + 1]),
-                      show=False)
+                      show=False, line_color=line_color)
             v0.extend(vi)
         a0 = plot(0, (x, self.knots[0], self.knots[-1]),
-                  title="Acceleration",
-                  ylabel="(mm/sec^2)",
                   show=False)
         for i in range(self.num_of_pieces):
             expr_a_i = self.get_kth_expr_of_ith_piece(2, i)
             ai = plot(expr_a_i, (x, self.knots[i], self.knots[i + 1]),
-                      show=False)
+                      show=False, line_color=line_color)
             a0.extend(ai)
         j0 = plot(0, (x, self.knots[0], self.knots[-1]),
-                  title="Jerk",
-                  ylabel="(mm/sec^3)",
                   show=False)
         for i in range(self.num_of_pieces):
             expr_j_i = self.get_kth_expr_of_ith_piece(3, i)
             ji = plot(expr_j_i, (x, self.knots[i], self.knots[i + 1]),
-                      show=False)
+                      show=False, line_color=line_color)
             j0.extend(ji)
-        fig, (ax1, ax2, ax3, ax4) = plt.subplots(nrows=4)
-        move_sympyplot_to_axes(p0, ax1)
-        ax1.set_xticks([self.knots[i] for i in range(len(self.knots))])
-        ax1.set_xticklabels([(i % 2) * '\n' +
-                             str(round(time_to_degree(self.knots[i]), 1))
-                             for i in range(len(self.knots))])
-        ax1.grid(True)
-        move_sympyplot_to_axes(v0, ax2)
-        ax2.set_xticks([self.knots[i] for i in range(len(self.knots))])
-        ax2.set_xticklabels([(i % 2) * '\n' +
-                             str(round(time_to_degree(self.knots[i]), 1))
-                             for i in range(len(self.knots))])
-        ax2.grid(True)
-        move_sympyplot_to_axes(a0, ax3)
-        ax3.set_xticks([self.knots[i] for i in range(len(self.knots))])
-        ax3.set_xticklabels([(i % 2) * '\n' +
-                             str(round(time_to_degree(self.knots[i]), 1))
-                             for i in range(len(self.knots))])
-        ax3.grid(True)
-        move_sympyplot_to_axes(j0, ax4)
-        ax4.set_xticks([self.knots[i] for i in range(len(self.knots))])
-        ax4.set_xticklabels([(i % 2) * '\n' +
-                             str(round(time_to_degree(self.knots[i]), 1))
-                             for i in range(len(self.knots))])
-        ax4.grid(True)
-        ax4.set_xlabel('machine degree')
-        if whether_save_png:
-            plt.savefig('plot_of_{}.png'.format(self.name), dpi=720)
-        plt.show()
-        return fig
+        if whether_show_figure:
+            plot_pvaj([p0, v0, a0, j0], self.knots,
+                      name=self.name,
+                      whether_save_png=whether_save_png,
+                      whether_show_figure=whether_show_figure,
+                      whether_knots_ticks=whether_knots_ticks,
+                      )
+        return p0, v0, a0, j0
 
     def get_start_pvaj(self):
         """
@@ -581,3 +561,8 @@ class SplineWithPiecewisePolynomial(object):
     def update_piece_with_new_expr(self, index, new_expr):
         self.pieces[index].update_with_new_expr(new_expr)
 
+    def update_piece_with_new_expressions(self, index, new_expressions):
+        self.pieces[index].update_with_new_expressions(new_expressions)
+
+    def get_knots(self):
+        return self.knots

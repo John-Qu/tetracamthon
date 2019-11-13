@@ -3,7 +3,8 @@ from sympy import nan, Eq, Piecewise, solve, lambdify, diff, symbols, \
 from sympy.abc import x
 import numpy as np
 from helper_functions import degree_to_time, time_to_degree, \
-    move_sympyplot_to_axes
+    move_sympyplot_to_axes, plot_pvaj, print_list_items_in_row, \
+    find_index_in_ordered_list
 from polynomial_spline import SplineWithPiecewisePolynomial, Polynomial
 from analysis import O4DriveA, ANeedO4
 from packages import Package
@@ -114,11 +115,17 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
 
     def build_equations(self):
         """
-        j1 = JawOnYorkCurve(whether_rebuild_pieces=True)
+        j1 = JawOnYorkCurve(whether_rebuild=True)
         j1.update_with_solution()
         j1.plot_svaj()
-        j2 = JawOnYorkCurve(whether_rebuild_pieces=False)
-        j2.plot_svaj()
+        j2 = JawOnYorkCurve(whether_rebuild=False)
+        p, v, a, j = j2.combine_pieces_for_plot(
+                  whether_save_png=False,
+                  line_color='blue',
+                  whether_show_figure=True,
+                  whether_knots_ticks=False,
+                  # whether_knots_ticks=True,
+        )
         """
         if self.count_of_interpolation == 0:
             self.build_interpolating_condition()
@@ -148,6 +155,37 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
                 (self.get_kth_expr_of_ith_piece(k, 7), x <= self.knots[8]),
                 (0, True)))
         return self.piecewise
+
+    def plot_curves(self,
+                    name='Jaw_on_York',
+                    whether_rebuild_for_plot=False,
+                    ):
+        """
+        j2 = JawOnYorkCurve(whether_rebuild=False)
+        j2.plot_curves(whether_rebuild_for_plot=True)
+        j2.plot_curves(whether_rebuild_for_plot=False)
+        """
+        if whether_rebuild_for_plot:
+            p0, v0, a0, j0 = self.combine_pieces_for_plot(
+                whether_save_png=False,
+                line_color='blue',
+                whether_show_figure=False,
+                whether_knots_ticks=True,
+            )
+            output = open('{}_plots.pkl'.format(self.name), 'wb')
+            pickle.dump((p0, v0, a0, j0), output)
+            output.close()
+        else:
+            pkl_file = open('{}_plots.pkl'.format(self.name), 'rb')
+            (p0, v0, a0, j0) = pickle.load(pkl_file)
+            pkl_file.close()
+        plot_pvaj((p0, v0, a0, j0),
+                  self.knots,
+                  name=name,
+                  whether_save_png=False,
+                  whether_show_figure=True,
+                  whether_knots_ticks=True,
+                  )
 
 
 class TraceOfA(object):
@@ -1356,10 +1394,10 @@ class Throw(SplineWithPiecewisePolynomial):
             self.load_solved_pieces()
 
 
-class Combine(SplineWithPiecewisePolynomial):
+class York(SplineWithPiecewisePolynomial):
     def __init__(self, whether_rebuild_with_symbol=False):
         """
-        com = Combine(whether_rebuild_with_symbol=True)
+        com = York(whether_rebuild_with_symbol=True)
         """
         self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
         self.cons_v = self.package.get_pulling_velocity()
@@ -1388,6 +1426,7 @@ class Combine(SplineWithPiecewisePolynomial):
         self.accumulate_distances(
             whether_with_symbol=True,
             whether_rebuild=whether_rebuild_with_symbol)
+        self.pieces = self.collect_stage_pieces()
 
     def accumulate_distances(self,
                              whether_with_symbol=True,
@@ -1471,7 +1510,7 @@ class Combine(SplineWithPiecewisePolynomial):
                      whether_rebuild=False,
                      whether_with_symbol=False):
         """
-        com = Combine()
+        com = York()
         com.build_shake2(whether_rebuild=False)
         com.build_shake2(whether_rebuild=True)
         com.build_shake2().plot_svaj()
@@ -1560,7 +1599,7 @@ class Combine(SplineWithPiecewisePolynomial):
                     whether_with_symbol=False
                     ):
         """
-        com = Combine()
+        com = York()
         com.build_touch(whether_rebuild=False)
         com.build_touch(whether_rebuild=True)
         com.build_touch().plot_svaj()
@@ -1634,7 +1673,7 @@ class Combine(SplineWithPiecewisePolynomial):
                     whether_with_symbol=False
                     ):
         """
-        com = Combine()
+        com = York()
         com.build_climb(whether_rebuild=True)
         com.build_climb().plot_svaj()
         com.build_climb().get_end_pvaj()
@@ -1689,7 +1728,7 @@ class Combine(SplineWithPiecewisePolynomial):
                     whether_with_symbol=False
                     ):
         """
-        com = Combine()
+        com = York()
         com.build_pull1(whether_rebuild=False)
         com.build_pull1(whether_rebuild=True)
         com.build_pull1().plot_svaj()
@@ -1730,7 +1769,7 @@ class Combine(SplineWithPiecewisePolynomial):
                      whether_with_symbol=False
                      ):
         """
-        com = Combine()
+        com = York()
         com.build_shake1(whether_rebuild=False)
         com.build_shake1(whether_rebuild=True)
         com.build_shake1().plot_svaj()
@@ -1811,7 +1850,7 @@ class Combine(SplineWithPiecewisePolynomial):
                     whether_with_symbol=False
                     ):
         """
-        com = Combine()
+        com = York()
         com.build_pull2(whether_rebuild=False)
         com.build_pull2(whether_rebuild=True)
         com.build_pull2().plot_svaj()
@@ -1851,7 +1890,7 @@ class Combine(SplineWithPiecewisePolynomial):
                     whether_rebuild=False,
                     whether_with_symbol=False):
         """
-        com = Combine()
+        com = York()
         com.build_pull3(whether_rebuild=False)
         com.build_pull3(whether_rebuild=True)
         com.build_pull3().plot_svaj()
@@ -1891,7 +1930,7 @@ class Combine(SplineWithPiecewisePolynomial):
                     whether_rebuild=False,
                     whether_with_symbol=False):
         """
-        com = Combine()
+        com = York()
         com.build_throw(whether_rebuild=True)
         com.build_throw().plot_svaj()
         com.build_throw().get_start_pvaj()
@@ -1943,7 +1982,7 @@ class Combine(SplineWithPiecewisePolynomial):
 
     def collect_key_knots(self):
         """
-        com = Combine()
+        com = York()
         key_knots = com.collect_key_knots()
         for i in range(len(key_knots)):
             print(time_to_degree(key_knots[i][0]))
@@ -1979,7 +2018,7 @@ class Combine(SplineWithPiecewisePolynomial):
 
     def construct_spline_of_empty_pieces(self):
         """
-        com = Combine()
+        com = York()
         num_of_pieces = com.construct_spline_of_empty_pieces()
         print('num_of_pieces: ', num_of_pieces)
         """
@@ -1995,7 +2034,7 @@ class Combine(SplineWithPiecewisePolynomial):
 
     def collect_stage_pieces(self):
         """
-        com = Combine()
+        com = York()
         actual_pieces = com.collect_stage_pieces()
         print('actual num of pieces: ', len(actual_pieces))
         print('First one of these pieces: ', actual_pieces[0])
@@ -2031,115 +2070,302 @@ class Combine(SplineWithPiecewisePolynomial):
         )
         return self.pieces
 
-    def plot_pvaj(self, name='General_Curves.png'):
+    def plot_curves(self, name='General_Curves', whether_save_png=False):
         """
-        com = Combine()
+        com = York()
         actual_pieces = com.collect_stage_pieces()
         print('actual num of pieces: ', len(actual_pieces))
-        com.plot_pvaj()
+        com.plot_curves(whether_save_png=True)
         """
-        fig = self.plot_svaj()
-        fig.savefig(name, dpi=720)
+        p0, v0, a0, j0 = self.combine_pieces_for_plot(
+            line_color='blue',
+            whether_show_figure=False,
+        )
+        p0_joy, v0_joy, a0_joy, j0_joy = self.joy.combine_pieces_for_plot(
+            line_color='red',
+            whether_show_figure=False,
+        )
+        p0.extend(p0_joy)
+        v0.extend(v0_joy)
+        a0.extend(a0_joy)
+        j0.extend(j0_joy)
+        plot_pvaj(p0, v0, a0, j0,
+                  self.knots,
+                  name=name,
+                  whether_save_png=whether_save_png,
+                  whether_show_figure=True,
+                  whether_knots_ticks=True,
+                  )
 
-    def identify_variables(self):
+    #
+    # def identify_variables(self):
+    #     """
+    #     com = York()
+    #     pva_symbols = com.identify_variables()
+    #     num_of_variables = len(pva_symbols)
+    #     print(num_of_variables)
+    #     for i in range(num_of_variables):
+    #         print(pva_symbols[i])
+    #     """
+    #     pva_symbols = [
+    #         symbols('shake2_start_p'),
+    #         symbols('climb_start_a'),
+    #         symbols('climb_start_j'),
+    #         symbols('climb_high_p'),
+    #         symbols('climb_touch_v'),
+    #         symbols('climb_touch_a'),
+    #         symbols('climb_touch_j'),
+    #         symbols('pull1_start_p'),
+    #         symbols('shake1_start_p'),
+    #         symbols('pull2_start_p'),
+    #         symbols('pull3_start_p'),
+    #         symbols('throw_start_p'),
+    #         symbols('throw_end_a'),
+    #     ]
+    #     self.pva_symbols.extend(pva_symbols)
+    #     return self.pva_symbols
+    #
+    # def build_equations(self):
+    #     """
+    #     com = York()
+    #     equations = com.build_equations()
+    #     solution = solve(equations, pva_symbols)
+    #     print(solution)
+    #     num_of_variables = len(pva_symbols)
+    #     print(num_of_variables)
+    #     for i in range(num_of_variables):
+    #         print(pva_symbols[i])
+    #     """
+    #     equations = [
+    #         Eq(self.build_climb().get_start_pvaj()[2],
+    #            self.build_throw().get_end_pvaj()[2]),
+    #         Eq(self.build_climb().get_start_pvaj()[3],
+    #            self.build_throw().get_end_pvaj()[3]),
+    #         Eq(self.build_climb().get_end_pvaj()[0],
+    #            self.build_touch().get_start_pvaj()[0]),
+    #         Eq(self.build_climb().get_end_pvaj()[1],
+    #            self.build_touch().get_start_pvaj()[1]),
+    #         Eq(self.build_climb().get_end_pvaj()[2],
+    #            self.build_touch().get_start_pvaj()[2]),
+    #         Eq(self.build_climb().get_end_pvaj()[3],
+    #            self.build_touch().get_start_pvaj()[3]),
+    #         Eq(self.build_touch().get_end_pvaj()[0],
+    #            self.build_pull1().get_start_pvaj()[0]),
+    #         Eq(self.build_pull1().get_end_pvaj()[0],
+    #            self.build_shake1().get_start_pvaj()[0]),
+    #         Eq(self.build_shake1().get_end_pvaj()[0],
+    #            self.build_pull2().get_start_pvaj()[0]),
+    #         Eq(self.build_pull2().get_end_pvaj()[0],
+    #            self.build_shake2().get_start_pvaj()[0]),
+    #         Eq(self.build_shake2().get_end_pvaj()[0],
+    #            self.build_pull3().get_start_pvaj()[0]),
+    #         Eq(self.build_pull3().get_end_pvaj()[0],
+    #            self.build_throw().get_start_pvaj()[0]),
+    #         # Eq(self.build_climb().get_kth_expr_of_ith_piece(4, 2).subs(
+    #         #     x, self.touching_time),
+    #         #    self.build_touch().get_kth_expr_of_ith_piece(4, 0).subs(
+    #         #        x, self.touching_time)),
+    #         Eq(self.build_climb().get_kth_expr_of_ith_piece(4, 0).subs(
+    #             x, 0),
+    #             self.build_throw().get_kth_expr_of_ith_piece(4, 2).subs(
+    #                 x, degree_to_time(360))),
+    #     ]
+    #     self.equations.extend(equations)
+    #     return self.equations
+    #
+    # def solve_equations(self):
+    #     """
+    #     com = York()
+    #     com.solve_equations()
+    #     """
+    #     pva_symbols = self.identify_variables()
+    #     num_of_variables = len(pva_symbols)
+    #     for i in range(num_of_variables):
+    #         print(pva_symbols[i])
+    #     equations = self.build_equations()
+    #     for i in range(len(equations)):
+    #         print(equations[i])
+    #     solution = solve(equations, pva_symbols)
+    #     for key in solution.keys():
+    #         print(str(key), ':', solution[key])
+    #     self.solution = solution
+    #     return self.solution
+    #
+    # def update_pieces_with_solution(self):
+    #     """
+    #     com = York()
+    #     com.update_pieces_with_solution()
+    #     """
+    #     actual_pieces = self.collect_stage_pieces()
+    #     solution = self.solve_equations()
+    #     self.involve_solutions(solution)
+    #     self.plot_pvaj(name='General Curve of Wired Solution.png')
+    #
+
+
+class Jaw(SplineWithPiecewisePolynomial):
+    def __init__(self,
+                 name="jaw_driver",
+                 whether_rebuild=False):
         """
-        com = Combine()
-        pva_symbols = com.identify_variables()
-        num_of_variables = len(pva_symbols)
-        print(num_of_variables)
-        for i in range(num_of_variables):
-            print(pva_symbols[i])
+        jaw = Jaw(whether_rebuild=True)
+        p, v, a, j = jaw.combine_pieces_for_plot()
+
         """
-        pva_symbols = [
-            symbols('shake2_start_p'),
-            symbols('climb_start_a'),
-            symbols('climb_start_j'),
-            symbols('climb_high_p'),
-            symbols('climb_touch_v'),
-            symbols('climb_touch_a'),
-            symbols('climb_touch_j'),
-            symbols('pull1_start_p'),
-            symbols('shake1_start_p'),
-            symbols('pull2_start_p'),
-            symbols('pull3_start_p'),
-            symbols('throw_start_p'),
-            symbols('throw_end_a'),
+        self.name = name
+        self.york = York(whether_rebuild_with_symbol=False)
+        self.joy = JawOnYorkCurve(whether_rebuild=False)
+        york_pieces = self.york.collect_stage_pieces()
+        self.temp_knots = []
+        self.combine_knots()
+        key_knots = [
+            (self.temp_knots[i], (nan, nan, nan, nan, nan))
+            for i in range(len(self.temp_knots))
         ]
-        self.pva_symbols.extend(pva_symbols)
-        return self.pva_symbols
+        SplineWithPiecewisePolynomial.__init__(self, key_knots=key_knots)
+        if whether_rebuild:
+            self.refresh_pieces()
+            self.save_solved_pieces()
+        else:
+            self.load_solved_pieces()
 
-    def build_equations(self):
+    def combine_knots(self):
+        """
+        jaw = Jaw()
+        temp_knots = time_to_degree(jaw.combine_knots())
+        print_list_items_in_row(temp_knots)
+        """
+        york_knots = self.york.get_knots().copy()
+        joy_knots = self.joy.get_knots().copy()
+        try:
+            while True:
+                if york_knots[0] < joy_knots[0]:
+                    self.temp_knots.append(york_knots.pop(0))
+                elif york_knots[0] == joy_knots[0]:
+                    self.temp_knots.append(york_knots.pop(0))
+                    joy_knots.pop(0)
+                else:
+                    self.temp_knots.append(joy_knots.pop(0))
+        except IndexError:
+            if len(york_knots) < len(joy_knots):
+                self.temp_knots.extend(joy_knots)
+            else:
+                self.temp_knots.extend(york_knots)
+        return self.temp_knots
+
+    def refresh_pieces(self):
+        """
+        jaw = Jaw()
+        york_knots = jaw.york.get_knots()
+        joy_knots = jaw.joy.get_knots()
+        for i in range(len(jaw.pieces)):
+            start_knot = jaw.pieces[3].get_piece()[0]
+            york_index = find_index_in_ordered_list(start_knot, york_knots)
+            joy_index = find_index_in_ordered_list(start_knot, joy_knots)
+            new_expressions = []
+                new_expressions.append(
+                    jaw.york.get_kth_expr_of_ith_piece(0, york_index)
+                    + jaw.joy.get_kth_expr_of_ith_piece(0, joy_index)
+                )
+            jaw.update_piece_with_new_expressions(i, new_expressions)
+            jaw.update_piece_with_new_expressions(0, new_expressions)
+        return self.pieces
+        jaw = Jaw()
+        jaw.refresh_pieces()
+        temp_knots = time_to_degree(jaw.combine_knots())
+        print_list_items_in_row(temp_knots)
+        """
+        york_knots = self.york.get_knots()
+        joy_knots = self.joy.get_knots()
+        for i in range(len(self.get_pieces())):
+            start_knot = self.pieces[i].get_piece()[0]
+            york_index = find_index_in_ordered_list(start_knot, york_knots)
+            joy_index = find_index_in_ordered_list(start_knot, joy_knots)
+            new_expressions = []
+            for j in range(4):
+                new_expressions.append(
+                    self.york.get_kth_expr_of_ith_piece(j, york_index)
+                    + self.joy.get_kth_expr_of_ith_piece(j, joy_index)
+                )
+            self.update_piece_with_new_expressions(i, new_expressions)
+        return self.pieces
+
+    def plot_curves(self, name='Jaw absolutely', whether_save_png=False):
+        """
+        jaw = Jaw()
+        jaw.plot_curves()
+        """
+        p0, v0, a0, j0 = self.combine_pieces_for_plot(
+            line_color='blue',
+            whether_show_figure=False,
+        )
+        plot_pvaj(p0, v0, a0, j0,
+                  self.knots,
+                  name=name,
+                  whether_save_png=whether_save_png,
+                  whether_show_figure=True,
+                  whether_knots_ticks=False,
+                  )
+
+
+class Combine(SplineWithPiecewisePolynomial):
+    def __init__(self,
+                 name="york_and_jaw",
+                 whether_rebuild=False,
+                 ):
+        """
+        com = Combine(whether_rebuild=True)
+        """
+        self.name = name
+        self.york = York(whether_rebuild_with_symbol=False)
+        self.joy = JawOnYorkCurve(whether_rebuild=False)
+        self.jaw = Jaw(whether_rebuild=False)
+        # if whether_rebuild:
+        #     self.jaw.refresh_pieces()
+        # else:
+        #     self.load_solved_pieces()
+
+    def plot_curves(self,
+                    name='General_Curves',
+                    whether_rebuild_for_plot=False,
+                    ):
         """
         com = Combine()
-        equations = com.build_equations()
-        solution = solve(equations, pva_symbols)
-        print(solution)
-        num_of_variables = len(pva_symbols)
-        print(num_of_variables)
-        for i in range(num_of_variables):
-            print(pva_symbols[i])
+        com.plot_curves(whether_rebuild_for_plot=False)
         """
-        equations = [
-            Eq(self.build_climb().get_start_pvaj()[2],
-               self.build_throw().get_end_pvaj()[2]),
-            Eq(self.build_climb().get_start_pvaj()[3],
-               self.build_throw().get_end_pvaj()[3]),
-            Eq(self.build_climb().get_end_pvaj()[0],
-               self.build_touch().get_start_pvaj()[0]),
-            Eq(self.build_climb().get_end_pvaj()[1],
-               self.build_touch().get_start_pvaj()[1]),
-            Eq(self.build_climb().get_end_pvaj()[2],
-               self.build_touch().get_start_pvaj()[2]),
-            Eq(self.build_climb().get_end_pvaj()[3],
-               self.build_touch().get_start_pvaj()[3]),
-            Eq(self.build_touch().get_end_pvaj()[0],
-               self.build_pull1().get_start_pvaj()[0]),
-            Eq(self.build_pull1().get_end_pvaj()[0],
-               self.build_shake1().get_start_pvaj()[0]),
-            Eq(self.build_shake1().get_end_pvaj()[0],
-               self.build_pull2().get_start_pvaj()[0]),
-            Eq(self.build_pull2().get_end_pvaj()[0],
-               self.build_shake2().get_start_pvaj()[0]),
-            Eq(self.build_shake2().get_end_pvaj()[0],
-               self.build_pull3().get_start_pvaj()[0]),
-            Eq(self.build_pull3().get_end_pvaj()[0],
-               self.build_throw().get_start_pvaj()[0]),
-            # Eq(self.build_climb().get_kth_expr_of_ith_piece(4, 2).subs(
-            #     x, self.touching_time),
-            #    self.build_touch().get_kth_expr_of_ith_piece(4, 0).subs(
-            #        x, self.touching_time)),
-            Eq(self.build_climb().get_kth_expr_of_ith_piece(4, 0).subs(
-                x, 0),
-                self.build_throw().get_kth_expr_of_ith_piece(4, 2).subs(
-                    x, degree_to_time(360))),
-        ]
-        self.equations.extend(equations)
-        return self.equations
+        if whether_rebuild_for_plot:
+            p0_york, v0_york, a0_york, j0_york = self.york.combine_pieces_for_plot(
+                line_color='blue',
+                whether_show_figure=False,
+            )
+            p0_joy, v0_joy, a0_joy, j0_joy = self.joy.combine_pieces_for_plot(
+                line_color='red',
+                whether_show_figure=False,
+            )
+            p0_jaw, v0_jaw, a0_jaw, j0_jaw = self.jaw.combine_pieces_for_plot(
+                line_color='green',
+                whether_show_figure=False,
+            )
+            p0_york.extend(p0_joy)
+            v0_york.extend(v0_joy)
+            a0_york.extend(a0_joy)
+            j0_york.extend(j0_joy)
+            p0_york.extend(p0_jaw)
+            v0_york.extend(v0_jaw)
+            a0_york.extend(a0_jaw)
+            j0_york.extend(j0_jaw)
+            output = open('{}_plots.pkl'.format(self.name), 'wb')
+            pickle.dump((p0_york, v0_york, a0_york, j0_york), output)
+            output.close()
+        else:
+            pkl_file = open('{}_plots.pkl'.format(self.name), 'rb')
+            (p0_york, v0_york, a0_york, j0_york) = pickle.load(pkl_file)
+            pkl_file.close()
+        plot_pvaj((p0_york, v0_york, a0_york, j0_york),
+                  self.jaw.knots,
+                  name=name,
+                  whether_save_png=False,
+                  whether_show_figure=True,
+                  whether_knots_ticks=False,
+                  )
 
-    def solve_equations(self):
-        """
-        com = Combine()
-        com.solve_equations()
-        """
-        pva_symbols = self.identify_variables()
-        num_of_variables = len(pva_symbols)
-        for i in range(num_of_variables):
-            print(pva_symbols[i])
-        equations = self.build_equations()
-        for i in range(len(equations)):
-            print(equations[i])
-        solution = solve(equations, pva_symbols)
-        for key in solution.keys():
-            print(str(key), ':', solution[key])
-        self.solution = solution
-        return self.solution
-
-    def update_pieces_with_solution(self):
-        """
-        com = Combine()
-        com.update_pieces_with_solution()
-        """
-        actual_pieces = self.collect_stage_pieces()
-        solution = self.solve_equations()
-        self.involve_solutions(solution)
-        self.plot_pvaj(name='General Curve of Wired Solution.png')
