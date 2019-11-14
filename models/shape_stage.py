@@ -850,14 +850,14 @@ class ShakeHand(SplineWithPiecewisePolynomial):
         """
         s1 = ShakeHand(name='shake_hand_curve_264_318', whether_rebuild=True)
         s1 = ShakeHand(name='shake_hand_curve_264_318', whether_rebuild=False)
-        s1.plot_svaj(whether_save_png=True)
+        s1.combine_pieces_for_plot(whether_show_figure=True)
         """
         if start is None:
             start = (degree_to_time(264), (
                 0,
                 -422,
                 0,
-                nan,
+                0,
                 nan,
             ))
         if knot1 is None:
@@ -905,16 +905,16 @@ class ShakeHand(SplineWithPiecewisePolynomial):
                 degree_to_time(318 - 264) * (-422) + 24.25 * 1.3,
                 -422,
                 0,
-                nan,
+                0,
                 nan,
             ))
         key_knots = [start, knot1, knot2, knot3, knot4, knot5, end]
         smooth_depth = {
-            knot1: 5,
+            knot1: 4,
             knot2: 5,
             knot3: 5,
             knot4: 4,
-            knot5: 5,
+            knot5: 4,
         }
         SplineWithPiecewisePolynomial.__init__(self,
                                                key_knots=key_knots,
@@ -2326,7 +2326,7 @@ class Combine(SplineWithPiecewisePolynomial):
         #     self.load_solved_pieces()
 
     def plot_curves(self,
-                    name='General_Curves',
+                    name='Cam Curves for TPA 330sq',
                     whether_rebuild_for_plot=False,
                     ):
         """
