@@ -1426,7 +1426,7 @@ class York(SplineWithPiecewisePolynomial):
         self.accumulate_distances(
             whether_with_symbol=True,
             whether_rebuild=whether_rebuild_with_symbol)
-        self.pieces = self.collect_stage_pieces()
+        # self.pieces = self.collect_stage_pieces()
 
     def accumulate_distances(self,
                              whether_with_symbol=True,
@@ -1513,7 +1513,7 @@ class York(SplineWithPiecewisePolynomial):
         com = York()
         com.build_shake2(whether_rebuild=False)
         com.build_shake2(whether_rebuild=True)
-        com.build_shake2().plot_svaj()
+        com.build_shake2().combine_pieces_for_plot(whether_show_figure=True)
         com.build_shake2().get_start_pvaj()
         com.build_shake2().get_end_pvaj()
         37 + 7.67180555555552 + 25.959999999999994 + 75.6220833333334 + 30.548611111111114 + 7.671805555556006 + 31.873260131671003
@@ -1537,6 +1537,7 @@ class York(SplineWithPiecewisePolynomial):
             shake2_start_p = self.connection['shake2'][0]
             shake2_end_p = self.connection['shake2'][1]
         try:
+            print('enter here')
             return self.stages[name]
         except KeyError:
             self.stages[name] = ShakeHand(
@@ -1545,7 +1546,7 @@ class York(SplineWithPiecewisePolynomial):
                     shake2_start_p,
                     self.cons_v_faster,
                     0,
-                    nan,
+                    0,
                     nan,
                 )),
                 knot1=(degree_to_time(274.8), (
@@ -1587,7 +1588,7 @@ class York(SplineWithPiecewisePolynomial):
                     shake2_end_p,
                     self.cons_v_faster,
                     0,
-                    nan,
+                    0,
                     nan,
                 )),
                 whether_rebuild=whether_rebuild,
@@ -1796,7 +1797,7 @@ class York(SplineWithPiecewisePolynomial):
                     shake1_start_p,
                     self.cons_v_faster,
                     0,
-                    nan,
+                    0,
                     nan,
                 )),
                 knot1=(degree_to_time(155), (
@@ -1838,7 +1839,7 @@ class York(SplineWithPiecewisePolynomial):
                     shake1_end_p,
                     self.cons_v_faster,
                     0,
-                    nan,
+                    0,
                     nan,
                 )),
                 whether_rebuild=whether_rebuild,
@@ -2081,17 +2082,17 @@ class York(SplineWithPiecewisePolynomial):
             line_color='blue',
             whether_show_figure=False,
         )
-        p0_joy, v0_joy, a0_joy, j0_joy = self.joy.combine_pieces_for_plot(
-            line_color='red',
-            whether_show_figure=False,
-        )
-        p0.extend(p0_joy)
-        v0.extend(v0_joy)
-        a0.extend(a0_joy)
-        j0.extend(j0_joy)
-        plot_pvaj(p0, v0, a0, j0,
+        # p0_joy, v0_joy, a0_joy, j0_joy = self.joy.combine_pieces_for_plot(
+        #     line_color='red',
+        #     whether_show_figure=False,
+        # )
+        # p0.extend(p0_joy)
+        # v0.extend(v0_joy)
+        # a0.extend(a0_joy)
+        # j0.extend(j0_joy)
+        plot_pvaj((p0, v0, a0, j0),
                   self.knots,
-                  name=name,
+                  name="for TPA330sq",
                   whether_save_png=whether_save_png,
                   whether_show_figure=True,
                   whether_knots_ticks=True,
