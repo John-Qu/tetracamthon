@@ -1342,14 +1342,14 @@ class Throw(SplineWithPiecewisePolynomial):
                  ):
         """
         t3 = Throw(whether_rebuild=True)
-        t3.plot_svaj()
+        t3.combine_pieces_for_plot(whether_show_figure=True)
         """
         if start is None:
             start = (degree_to_time(325), (
                 37,
                 -438,
                 0,
-                nan,
+                0,
                 nan,
             ))
         if knot1 is None:
@@ -1373,14 +1373,13 @@ class Throw(SplineWithPiecewisePolynomial):
                 0,
                 0,
                 22000,
-                # 500000,
                 nan,
                 nan,
             ))
         # key_knots = [start, release, knot1, end]
         key_knots = [start, knot1, knot2, end]
         smooth_depth = {
-            knot1: 5,
+            knot1: 4,
             knot2: 5,
         }
         SplineWithPiecewisePolynomial.__init__(self,
@@ -1493,6 +1492,9 @@ class York(SplineWithPiecewisePolynomial):
             whether_rebuild=whether_rebuild
         )
         touch_d = touch.get_start_pvaj()[0] - touch.get_end_pvaj()[0]
+        print('touch.get_start_pvaj()[0]', touch.get_start_pvaj()[0])
+        print('touch.get_end_pvaj()[0]', touch.get_end_pvaj()[0])
+        print('touch_d:', touch_d)
         touch_end_p = pull1_start_p
         touch_start_p = touch_end_p + touch_d
         self.connection['touch'] = (touch_start_p, touch_end_p)
@@ -1537,7 +1539,6 @@ class York(SplineWithPiecewisePolynomial):
             shake2_start_p = self.connection['shake2'][0]
             shake2_end_p = self.connection['shake2'][1]
         try:
-            print('enter here')
             return self.stages[name]
         except KeyError:
             self.stages[name] = ShakeHand(
@@ -1676,7 +1677,7 @@ class York(SplineWithPiecewisePolynomial):
         """
         com = York()
         com.build_climb(whether_rebuild=True)
-        com.build_climb().plot_svaj()
+        com.build_climb().combine_pieces_for_plot(whether_show_figure=True)
         com.build_climb().get_end_pvaj()
         37 + 7.3888888888 + 25.475 + 72.83 + 28.5277777777 + 7.38 + 31.873260131671003
         210.47492679817103
@@ -1696,7 +1697,7 @@ class York(SplineWithPiecewisePolynomial):
                     0,
                     0,
                     22000,
-                    140024.445242645,
+                    147784.235076798,
                     nan,
                 )),
                 cross=(degree_to_time(43), (
@@ -1715,9 +1716,9 @@ class York(SplineWithPiecewisePolynomial):
                 )),
                 touch=(self.touching_time, (
                     climb_end_p,
-                    -40.8883663109778,
-                    -4088.93068846931,
-                    93189.8259805306,
+                    -47.3660285709406,
+                    -1397.17942075927,
+                    41711.4233211609,
                     nan,
                 )),
                 whether_rebuild=whether_rebuild,
@@ -1933,7 +1934,7 @@ class York(SplineWithPiecewisePolynomial):
         """
         com = York()
         com.build_throw(whether_rebuild=True)
-        com.build_throw().plot_svaj()
+        com.build_throw().combine_pieces_for_plot(whether_show_figure=True)
         com.build_throw().get_start_pvaj()
         com.build_throw().get_end_pvaj()
         """
@@ -1952,7 +1953,7 @@ class York(SplineWithPiecewisePolynomial):
                     37,
                     self.cons_v_faster,
                     0,
-                    nan,
+                    0,
                     nan,
                 )),
                 knot1=(degree_to_time(335), (
@@ -2335,15 +2336,18 @@ class Combine(SplineWithPiecewisePolynomial):
         com.plot_curves(whether_rebuild_for_plot=False)
         """
         if whether_rebuild_for_plot:
-            p0_york, v0_york, a0_york, j0_york = self.york.combine_pieces_for_plot(
+            p0_york, v0_york, a0_york, j0_york = \
+                self.york.combine_pieces_for_plot(
                 line_color='blue',
                 whether_show_figure=False,
             )
-            p0_joy, v0_joy, a0_joy, j0_joy = self.joy.combine_pieces_for_plot(
+            p0_joy, v0_joy, a0_joy, j0_joy = \
+                self.joy.combine_pieces_for_plot(
                 line_color='red',
                 whether_show_figure=False,
             )
-            p0_jaw, v0_jaw, a0_jaw, j0_jaw = self.jaw.combine_pieces_for_plot(
+            p0_jaw, v0_jaw, a0_jaw, j0_jaw = \
+                self.jaw.combine_pieces_for_plot(
                 line_color='green',
                 whether_show_figure=False,
             )

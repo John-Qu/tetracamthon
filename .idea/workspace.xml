@@ -2,16 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/models/climb_to_touch_with_symbol_pieces.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/pull_1_with_symbol_pieces.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/pull_2_with_symbol_pieces.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/pull_3_with_symbol_pieces.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/shake1_for_ear_with_symbols_pieces.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/shake2_for_accepting_with_symbol_pieces.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/throw_to_bottom_with_symbol_pieces.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/touch_to_fold_with_symbol_pieces.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/climb_to_touch_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/models/climb_to_touch_pieces.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/packages.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/packages.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/plot_of_for TPA330sq.png" beforeDir="false" afterPath="$PROJECT_DIR$/models/plot_of_for TPA330sq.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/shape_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/shape_stage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/throw_325_0_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/models/throw_325_0_pieces.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/throw_to_bottom_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/models/throw_to_bottom_pieces.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/touch_to_fold_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/models/touch_to_fold_pieces.pkl" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -151,6 +149,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="packages" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Tetracamthon" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/packages.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="polynomial_spline" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -177,6 +197,9 @@
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -192,35 +215,13 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="splines_building" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Tetracamthon" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/splines_building.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.shape_stage" />
-        <item itemvalue="Python.analysis" />
         <item itemvalue="Python.polynomial_spline" />
+        <item itemvalue="Python.analysis" />
+        <item itemvalue="Python.packages" />
         <item itemvalue="Python.curves_building" />
-        <item itemvalue="Python.splines_building" />
       </list>
     </recent_temporary>
   </component>
@@ -284,15 +285,6 @@
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$USER_HOME$/.conda/envs/Tetracamthon/lib/python3.7/site-packages/sympy/functions/special/bsplines.py</url>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/models/ex5-3.py</url>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/models/curves_building.py</url>
-          <line>343</line>
-          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

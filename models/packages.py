@@ -4,24 +4,25 @@ import math
 class Package(object):
     """Define various package types.
     p250sq = Package(250, 'Square', 43, 41.5, 126.8, 5, 185)
+    p100b = Package(100, 'Base', 47, 32, 69.3, 4, 113.33)
     print(p250sq)
     print(p250sq.get_pulling_velocity(cycle_time=0.9))
-    # 411.1111111111111
+        # 411.1111111111111
     p330sq = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
     print(p330sq)
     print(p330sq.get_pulling_velocity(cycle_time=0.9))
-    # 422.22222222222223
+        # 422.22222222222223
     print(p330sq.get_x_when_touching_tube())
-    # 24.25
+        # 24.25
     p200m = Package(200, "Mini", 53, 38, 106, 6, 160)
     print(p200m)
     print(p200sq.get_pulling_velocity(cycle_time=0.9))
-    Package of 250 of shape Square
-    Width: 43
-    Depth: 41.5
-    Height: 126.8
-    Tube diameter: 53.79
-    Horizental Sealing: 16
+        # Package of 250 of shape Square
+        # Width: 43
+        # Depth: 41.5
+        # Height: 126.8
+        # Tube diameter: 53.79
+        # Horizental Sealing: 16
     """
 
     def __init__(self, volumn, shape, width, depth, height,
