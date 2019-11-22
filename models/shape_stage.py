@@ -189,7 +189,7 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
 
 
 class TraceOfA(object):
-    def __init__(self, whether_load_memo=True):
+    def __init__(self, whether_load_memo=True, package=None):
         """
         t1 = TraceOfA(whether_load_memo=False)
         """
@@ -199,7 +199,10 @@ class TraceOfA(object):
         self.joy_mechanism_forward = O4DriveA()
         # Jaw on York mechanism analysis driving backward
         self.joy_mechanism_backward = ANeedO4()
-        self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
+        if package is None:
+            self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
+        else:
+            self.package = package
         if whether_load_memo:
             self.load_memo_from_file()
         else:
