@@ -235,7 +235,7 @@ class TraceOfA(object):
             return self.memo['r_O4O2_close']
         expr = self.joy_mechanism_backward.get_r_O4O2_of_x_R_AO2_expr()
         x_R_AO2 = self.joy_mechanism_backward.x_R_AO2
-        r_O4O2_close = expr.subs(x_R_AO2, 0)
+        r_O4O2_close = expr.subs(x_R_AO2, -1)
         self.memo['r_O4O2_close'] = r_O4O2_close
         return r_O4O2_close
 
@@ -334,9 +334,11 @@ class TraceOfA(object):
     def get_x_R_AO2_when_touching_expr(self):
         """
         t1 = TraceOfA()
+        t2 = TraceOfA(whether_load_memo=False)
         print(t1.get_x_R_AO2_when_touching_expr())
         print(t1.get_x_R_AO2_when_touching_expr().subs(x, t1.get_touch_time()))
             -24.2500000000004
+        print(t2.get_x_R_AO2_when_touching_expr().subs(x, t2.get_touch_time()))
         print(t1.get_x_R_AO2_when_touching_expr().subs(x, degree_to_time(138)))
             -7.81597009336110e-14
         print(t1.get_x_R_AO2_when_touching_expr().subs(x, degree_to_time(84)))
@@ -357,8 +359,11 @@ class TraceOfA(object):
     def get_x_R_AO2_when_closing_expr(self):
         """
         t1 = TraceOfA()
+        t2 = TraceOfA(whether_load_memo=False)
         print(t1.get_x_R_AO2_when_closing_expr().subs(x, degree_to_time(138)))
-            -7.81597009336110e-14
+            ## -7.81597009336110e-14
+            # -0.999999999999915
+        print(t2.get_x_R_AO2_when_closing_expr().subs(x, degree_to_time(138)))
         """
         if 'x_R_AO2_when_closing_expr' in self.memo:
             return self.memo['x_R_AO2_when_closing_expr']
@@ -375,22 +380,21 @@ class TraceOfA(object):
     def get_y_R_AO5_when_touching_expr(self):
         """
         t1 = TraceOfA()
+        t2 = TraceOfA(whether_load_memo=False)
         print(t1.get_y_R_AO5_when_touching_expr())
         print(t1.get_y_R_AO5_when_touching_expr().subs(x, t1.get_touch_time()))
-            24.2500000000000
-        print(t1.get_y_R_AO5_when_touching_expr().subs(x, degree_to_time(138)))
-            1.93692169299983e-6
-        print(t1.get_y_R_AO5_when_touching_expr().subs(x, degree_to_time(84)))
-            18.8688890724969
+            # 24.2500000000000
+            # 25.1500000000000
         """
         if 'y_R_AO5_when_touching_expr' in self.memo:
             return self.memo['y_R_AO5_when_touching_expr']
         x_R_AO2_when_touching_expr = \
             self.get_x_R_AO2_when_touching_expr()
         x_R_AO5_when_touching_expr = x_R_AO2_when_touching_expr
-        r_AG = self.package.depth / 2
+        r_GO5 = self.package.depth / 2
+        r_AG = r_GO5 + self.package.adjust_value
         y_R_AO5_when_touching_expr = \
-            (r_AG ** 2 - (r_AG + x_R_AO5_when_touching_expr) ** 2) ** 0.5
+            (r_AG ** 2 - (r_GO5 + x_R_AO5_when_touching_expr) ** 2) ** 0.5
         self.memo['y_R_AO5_when_touching_expr'] = y_R_AO5_when_touching_expr
         return y_R_AO5_when_touching_expr
 
@@ -406,9 +410,10 @@ class TraceOfA(object):
         x_R_AO2_when_closing_expr = \
             self.get_x_R_AO2_when_closing_expr()
         x_R_AO5_when_closing_expr = x_R_AO2_when_closing_expr
-        r_AG = self.package.depth / 2
+        r_GO5 = self.package.depth / 2
+        r_AG = r_GO5 + self.package.adjust_value
         y_R_AO5_when_closing_expr = \
-            (r_AG ** 2 - (r_AG + x_R_AO5_when_closing_expr) ** 2) ** 0.5
+            (r_AG ** 2 - (r_GO5 + x_R_AO5_when_closing_expr) ** 2) ** 0.5
         self.memo['y_R_AO5_when_closing_expr'] = y_R_AO5_when_closing_expr
         return self.memo['y_R_AO5_when_closing_expr']
 
@@ -1083,7 +1088,6 @@ class Touch(SplineWithPiecewisePolynomial):
         self.build_pieces()
         r_O5O2 = (self.package.height +
                   self.package.hs_sealing_length +
-                  self.package.adjust_value +
                   self.trace.joy_mechanism_forward.r_DC_value)
         print('self.package.adjust_value', self.package.adjust_value)
         expr_y_R_AO2_touching = self.trace.get_y_R_AO2_when_touching_expr()
