@@ -1083,7 +1083,9 @@ class Touch(SplineWithPiecewisePolynomial):
         self.build_pieces()
         r_O5O2 = (self.package.height +
                   self.package.hs_sealing_length +
+                  self.package.adjust_value +
                   self.trace.joy_mechanism_forward.r_DC_value)
+        print('self.package.adjust_value', self.package.adjust_value)
         expr_y_R_AO2_touching = self.trace.get_y_R_AO2_when_touching_expr()
         expr_y_R_AO2_closing = self.trace.get_y_R_AO2_when_closing_expr()
         expr_y_R_AO2 = [expr_y_R_AO2_touching, expr_y_R_AO2_closing]
@@ -1425,7 +1427,7 @@ class York(SplineWithPiecewisePolynomial):
         self.accumulate_distances(
             whether_with_symbol=True,
             whether_rebuild=whether_rebuild_with_symbol)
-        # self.pieces = self.collect_stage_pieces()
+        self.pieces = self.collect_stage_pieces()
 
     def accumulate_distances(self,
                              whether_with_symbol=True,
@@ -1604,6 +1606,7 @@ class York(SplineWithPiecewisePolynomial):
         com = York()
         com.build_touch(whether_rebuild=False)
         com.build_touch(whether_rebuild=True)
+        com.build_touch(whether_rebuild=True, whether_with_symbol=True)
         com.build_touch().plot_svaj()
         com.build_touch().get_start_pvaj()
         com.build_touch().get_end_pvaj()
@@ -2083,7 +2086,7 @@ class York(SplineWithPiecewisePolynomial):
             line_color='blue',
             whether_show_figure=False,
         )
-        # p0_joy, v0_joy, a0_joy, j0_joy = self.joy.combine_pieces_for_plot(
+        # p0_joy, v0_joy, a0_joy, j0_ = self.joy.combine_pieces_for_plot(
         #     line_color='red',
         #     whether_show_figure=False,
         # )
