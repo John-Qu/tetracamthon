@@ -1731,10 +1731,11 @@ class York(SplineWithPiecewisePolynomial):
                     nan,
                 )),
                 touch=(self.touching_time, (
-                    climb_end_p,
-                    -47.3660285709406,
-                    -1397.17942075927,
-                    41711.4233211609,
+                    # climb_end_p,
+                    219.419594153918,
+                    -44.0031089879033,
+                    -1508.50518522546,
+                    10950.5981182494,
                     nan,
                 )),
                 whether_rebuild=whether_rebuild,
@@ -2317,7 +2318,7 @@ class Jaw(SplineWithPiecewisePolynomial):
             line_color='blue',
             whether_show_figure=False,
         )
-        plot_pvaj(p0, v0, a0, j0,
+        plot_pvaj((p0, v0, a0, j0),
                   self.knots,
                   name=name,
                   whether_save_png=whether_save_png,
@@ -2350,6 +2351,7 @@ class Combine(SplineWithPiecewisePolynomial):
         """
         com = Combine()
         com.plot_curves(whether_rebuild_for_plot=False)
+        com.plot_curves(whether_rebuild_for_plot=True)
         """
         if whether_rebuild_for_plot:
             p0_york, v0_york, a0_york, j0_york = \
@@ -2385,8 +2387,8 @@ class Combine(SplineWithPiecewisePolynomial):
         plot_pvaj((p0_york, v0_york, a0_york, j0_york),
                   self.jaw.knots,
                   name=name,
-                  whether_save_png=False,
+                  whether_save_png=True,
                   whether_show_figure=True,
-                  whether_knots_ticks=False,
+                  whether_knots_ticks=True,
                   )
 
