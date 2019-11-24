@@ -35,15 +35,11 @@ class Package(object):
         self.ls_overlap = ls_overlap
         self.web_repeated_length = web_repeated_length
         self.web_width = 2 * (self.width + self.depth) + self.ls_overlap
-        self.hs_sealing_length = math.floor(self.web_repeated_length -
-                                            (self.height + self.depth))
+        self.hs_sealing_length = self.web_repeated_length - \
+                                 (self.height + self.depth)
         self.hs_sealing_width = (self.web_width - self.ls_overlap) / 2
         self.tube_diameter = round(
             (self.web_width - self.ls_overlap) / math.pi, 2)
-        self.adjust_value = (self.web_repeated_length
-                             - self.height - self.depth
-                             - self.hs_sealing_length)
-
 
     def __str__(self):
         return ("Package of " + str(self.volumn) +

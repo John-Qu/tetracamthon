@@ -395,7 +395,7 @@ class TraceOfA(object):
             self.get_x_R_AO2_when_touching_expr()
         x_R_AO5_when_touching_expr = x_R_AO2_when_touching_expr
         r_GO5 = self.package.depth / 2
-        r_AG = r_GO5 + self.package.adjust_value
+        r_AG = r_GO5
         y_R_AO5_when_touching_expr = \
             (r_AG ** 2 - (r_GO5 + x_R_AO5_when_touching_expr) ** 2) ** 0.5
         self.memo['y_R_AO5_when_touching_expr'] = y_R_AO5_when_touching_expr
@@ -404,9 +404,11 @@ class TraceOfA(object):
     def get_y_R_AO5_when_closing_expr(self):
         """
         t1 = TraceOfA()
+        t1 = TraceOfA(whether_load_memo=False)
         print(t1.get_y_R_AO5_when_closing_expr())
         print(t1.get_y_R_AO5_when_closing_expr().subs(x, degree_to_time(138)))
             1.93692169299983e-6
+            # 6.89202437604482
         """
         if 'y_R_AO5_when_closing_expr' in self.memo:
             return self.memo['y_R_AO5_when_closing_expr']
@@ -414,7 +416,8 @@ class TraceOfA(object):
             self.get_x_R_AO2_when_closing_expr()
         x_R_AO5_when_closing_expr = x_R_AO2_when_closing_expr
         r_GO5 = self.package.depth / 2
-        r_AG = r_GO5 + self.package.adjust_value
+        r_AG = r_GO5
+        print('r_GO5:', r_GO5, "r_AG:", r_AG)
         y_R_AO5_when_closing_expr = \
             (r_AG ** 2 - (r_GO5 + x_R_AO5_when_closing_expr) ** 2) ** 0.5
         self.memo['y_R_AO5_when_closing_expr'] = y_R_AO5_when_closing_expr
@@ -1092,7 +1095,6 @@ class Touch(SplineWithPiecewisePolynomial):
         r_O5O2 = (self.package.height +
                   self.package.hs_sealing_length +
                   self.trace.joy_mechanism_forward.r_DC_value)
-        print('self.package.adjust_value', self.package.adjust_value)
         expr_y_R_AO2_touching = self.trace.get_y_R_AO2_when_touching_expr()
         expr_y_R_AO2_closing = self.trace.get_y_R_AO2_when_closing_expr()
         expr_y_R_AO2 = [expr_y_R_AO2_touching, expr_y_R_AO2_closing]
@@ -1408,14 +1410,18 @@ class York(SplineWithPiecewisePolynomial):
         com = York(whether_rebuild_with_symbol=True)
         """
         self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
-        self.cons_v = self.package.get_pulling_velocity()
-        self.shake2_less_p = 0.4 * (self.package.depth / 2)
-        self.cons_v_faster = (
-                - (self.package.web_repeated_length + self.shake2_less_p) /
-                degree_to_time(180)
-        )
         self.joy = JawOnYorkCurve(whether_rebuild=False)
         self.trace = TraceOfA(whether_load_memo=True)
+        self.cons_v = self.package.get_pulling_velocity()
+        self.shake2_less_p = 0.4 * (self.package.depth / 2)
+        self.touch_less_p = self.trace.get_y_R_AO5_when_closing_expr().subs(
+            x, degree_to_time(138))
+        self.cons_v_faster = (
+                - (self.package.web_repeated_length
+                   + self.shake2_less_p
+                   + self.touch_less_p) /
+                degree_to_time(180)
+        )
         self.touching_time = self.trace.get_touch_time()
         self.stages = {}
         self.connection = {}
