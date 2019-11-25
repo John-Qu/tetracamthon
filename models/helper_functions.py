@@ -109,7 +109,7 @@ def plot_pvaj(pvaj,
         axs[i].grid(True)
     fig.align_ylabels(axs)
     if whether_save_png:
-        plt.savefig('plot_of_{}.png'.format(name), dpi=720)
+        plt.savefig('../plot/plot_of_{}.png'.format(name), dpi=720)
     if whether_show_figure:
         plt.show()
     return fig, axs

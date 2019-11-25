@@ -172,11 +172,11 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
                 whether_show_figure=False,
                 whether_knots_ticks=True,
             )
-            output = open('{}_plots.pkl'.format(self.name), 'wb')
+            output = open('../data/{}_plots.pkl'.format(self.name), 'wb')
             pickle.dump((p0, v0, a0, j0), output)
             output.close()
         else:
-            pkl_file = open('{}_plots.pkl'.format(self.name), 'rb')
+            pkl_file = open('../data/{}_plots.pkl'.format(self.name), 'rb')
             (p0, v0, a0, j0) = pickle.load(pkl_file)
             pkl_file.close()
         plot_pvaj((p0, v0, a0, j0),
@@ -215,7 +215,7 @@ class TraceOfA(object):
         t1 = TraceOfA()
         t1.write_memo_to_file()
         """
-        output = open('trace_of_A_memo.pkl', 'wb')
+        output = open('../data/trace_of_A_memo.pkl', 'wb')
         pickle.dump(self.memo, output)
         output.close()
 
@@ -224,7 +224,7 @@ class TraceOfA(object):
         t1 = TraceOfA()
         t1.load_memo_from_file()
         """
-        pkl_file = open('trace_of_A_memo.pkl', 'rb')
+        pkl_file = open('../data/trace_of_A_memo.pkl', 'rb')
         self.memo = pickle.load(pkl_file)
         pkl_file.close()
 
@@ -2377,11 +2377,11 @@ class Combine(SplineWithPiecewisePolynomial):
             v0_york.extend(v0_jaw)
             a0_york.extend(a0_jaw)
             j0_york.extend(j0_jaw)
-            output = open('{}_plots.pkl'.format(self.name), 'wb')
+            output = open('../data/{}_plots.pkl'.format(self.name), 'wb')
             pickle.dump((p0_york, v0_york, a0_york, j0_york), output)
             output.close()
         else:
-            pkl_file = open('{}_plots.pkl'.format(self.name), 'rb')
+            pkl_file = open('../data/{}_plots.pkl'.format(self.name), 'rb')
             (p0_york, v0_york, a0_york, j0_york) = pickle.load(pkl_file)
             pkl_file.close()
         plot_pvaj((p0_york, v0_york, a0_york, j0_york),
