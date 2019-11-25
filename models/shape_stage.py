@@ -867,7 +867,8 @@ class ShakeHand(SplineWithPiecewisePolynomial):
         if start is None:
             start = (degree_to_time(264), (
                 0,
-                -422,
+                # -422,  # for 330sq
+                -288,  # for 125s
                 0,
                 0,
                 nan,
@@ -914,8 +915,10 @@ class ShakeHand(SplineWithPiecewisePolynomial):
             ))
         if end is None:
             end = (degree_to_time(318), (
-                degree_to_time(318 - 264) * (-422) + 24.25 * 1.3,
-                -422,
+                # degree_to_time(318 - 264) * (-422) + 24.25 * 1.3, # for 330sq
+                degree_to_time(318 - 264) * (-288) + 16 * 1.3,  # for 125s
+                # -422,  # for 330sq
+                -288,  # for 125s
                 0,
                 0,
                 nan,
