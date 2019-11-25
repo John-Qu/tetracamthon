@@ -2,18 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/102+400+500.EASM" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/Open_Slider.sci" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/Open_Slider_position.sci" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/mechanism.dxf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/tetra-pak-a3-flex-timing chart.dxf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/tetra-pak-a3-flex-york-jaw-acc-curves.dxf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/yoke_cam.sci" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mechanism/#TP A3 CP Flex.dxf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mechanism/TP A3 CP Flex.dxf" beforeDir="false" afterPath="$PROJECT_DIR$/mechanism/TP A3 CP Flex.dxf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/draw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/draw_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/polynomials_curve_pieces.pkl copy" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/models/shape_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/shape_stage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out_of_date_scripts/read_raw_data.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -64,7 +55,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.shape_stage">
+  <component name="RunManager" selected="Python.draw_data">
     <configuration name="Tetracamthon" type="PythonConfigurationType" factoryName="Python">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -212,8 +203,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.shape_stage" />
         <item itemvalue="Python.draw_data" />
+        <item itemvalue="Python.shape_stage" />
         <item itemvalue="Python.packages" />
         <item itemvalue="Python.polynomial_spline" />
         <item itemvalue="Python.analysis" />

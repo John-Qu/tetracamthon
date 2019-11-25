@@ -180,12 +180,12 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
             (p0, v0, a0, j0) = pickle.load(pkl_file)
             pkl_file.close()
         plot_pvaj((p0, v0, a0, j0),
-                             self.knots,
-                             name=name,
-                             whether_save_png=False,
-                             whether_show_figure=True,
-                             whether_knots_ticks=True,
-                             )
+                  self.knots,
+                  name=name,
+                  whether_save_png=False,
+                  whether_show_figure=True,
+                  whether_knots_ticks=True,
+                  )
 
 
 class TraceOfA(object):
