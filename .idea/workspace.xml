@@ -3,13 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/climb_to_touch_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/models/climb_to_touch_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/packages.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/packages.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/plot_of_for TPA330sq.png" beforeDir="false" afterPath="$PROJECT_DIR$/models/plot_of_for TPA330sq.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/102+400+500.EASM" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/Open_Slider.sci" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/Open_Slider_position.sci" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/mechanism.dxf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/tetra-pak-a3-flex-timing chart.dxf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/tetra-pak-a3-flex-york-jaw-acc-curves.dxf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/yoke_cam.sci" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mechanism/#TP A3 CP Flex.dxf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mechanism/TP A3 CP Flex.dxf" beforeDir="false" afterPath="$PROJECT_DIR$/mechanism/TP A3 CP Flex.dxf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/shape_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/shape_stage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/throw_325_0_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/models/throw_325_0_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/throw_to_bottom_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/models/throw_to_bottom_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/touch_to_fold_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/models/touch_to_fold_pieces.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out_of_date_scripts/read_raw_data.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -127,20 +131,17 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="curves_building" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="draw_data" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/curves_building.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/draw_data.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -153,9 +154,6 @@
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -197,9 +195,6 @@
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -218,10 +213,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.shape_stage" />
+        <item itemvalue="Python.draw_data" />
+        <item itemvalue="Python.packages" />
         <item itemvalue="Python.polynomial_spline" />
         <item itemvalue="Python.analysis" />
-        <item itemvalue="Python.packages" />
-        <item itemvalue="Python.curves_building" />
       </list>
     </recent_temporary>
   </component>
@@ -278,15 +273,5 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/temp" />
     </ignored-roots>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$USER_HOME$/.conda/envs/Tetracamthon/lib/python3.7/site-packages/sympy/functions/special/bsplines.py</url>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

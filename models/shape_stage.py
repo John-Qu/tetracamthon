@@ -180,12 +180,12 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
             (p0, v0, a0, j0) = pickle.load(pkl_file)
             pkl_file.close()
         plot_pvaj((p0, v0, a0, j0),
-                  self.knots,
-                  name=name,
-                  whether_save_png=False,
-                  whether_show_figure=True,
-                  whether_knots_ticks=True,
-                  )
+                             self.knots,
+                             name=name,
+                             whether_save_png=False,
+                             whether_show_figure=True,
+                             whether_knots_ticks=True,
+                             )
 
 
 class TraceOfA(object):
@@ -1612,7 +1612,7 @@ class York(SplineWithPiecewisePolynomial):
                     nan,
                 )),
                 whether_rebuild=whether_rebuild,
-                )
+            )
             return self.stages[name]
 
     def build_touch(self,
@@ -2360,19 +2360,19 @@ class Combine(SplineWithPiecewisePolynomial):
         if whether_rebuild_for_plot:
             p0_york, v0_york, a0_york, j0_york = \
                 self.york.combine_pieces_for_plot(
-                line_color='blue',
-                whether_show_figure=False,
-            )
+                    line_color='blue',
+                    whether_show_figure=False,
+                )
             p0_joy, v0_joy, a0_joy, j0_joy = \
                 self.joy.combine_pieces_for_plot(
-                line_color='red',
-                whether_show_figure=False,
-            )
+                    line_color='red',
+                    whether_show_figure=False,
+                )
             p0_jaw, v0_jaw, a0_jaw, j0_jaw = \
                 self.jaw.combine_pieces_for_plot(
-                line_color='green',
-                whether_show_figure=False,
-            )
+                    line_color='green',
+                    whether_show_figure=False,
+                )
             p0_york.extend(p0_joy)
             v0_york.extend(v0_joy)
             a0_york.extend(a0_joy)
@@ -2395,4 +2395,3 @@ class Combine(SplineWithPiecewisePolynomial):
                   whether_show_figure=True,
                   whether_knots_ticks=True,
                   )
-
