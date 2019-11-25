@@ -200,7 +200,8 @@ class TraceOfA(object):
         # Jaw on York mechanism analysis driving backward
         self.joy_mechanism_backward = ANeedO4()
         if package is None:
-            self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
+            self.package = Package(100, 'Base', 47, 32, 86, 4, 130.00)
+            # self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
         else:
             self.package = package
         if whether_load_memo:

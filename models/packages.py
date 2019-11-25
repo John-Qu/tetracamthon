@@ -5,6 +5,7 @@ class Package(object):
     """Define various package types.
     p250sq = Package(250, 'Square', 43, 41.5, 126.8, 5, 185)
     p100b = Package(100, 'Base', 47, 32, 69.3, 4, 113.33)
+    p125s = Package(100, 'Base', 47, 32, 86, 4, 130.00)
     print(p250sq)
     print(p250sq.get_pulling_velocity(cycle_time=0.9))
         # 411.1111111111111
@@ -49,7 +50,7 @@ class Package(object):
                 "Height: " + str(self.height) + "\n" +
                 "Tube diameter: " + str(self.tube_diameter) + "\n" +
                 "Horizental Sealing length and width: " +
-                str(self.hs_sealing_length) + ' and ' +
+                str(round(self.hs_sealing_length, 2)) + ' and ' +
                 str(self.hs_sealing_width))
 
     def get_pulling_velocity(self, cycle_time=0.9):
