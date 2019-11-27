@@ -1409,11 +1409,15 @@ class Throw(SplineWithPiecewisePolynomial):
 
 
 class York(SplineWithPiecewisePolynomial):
-    def __init__(self, whether_rebuild_with_symbol=False):
+    def __init__(self, package=None, whether_rebuild_with_symbol=False):
         """
         com = York(whether_rebuild_with_symbol=True)
         """
-        self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
+        if package is None:
+            self.package = Package(100, 'Base', 47, 32, 86, 4, 130.00)
+            # self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
+        else:
+            self.package = package
         self.joy = JawOnYorkCurve(whether_rebuild=False)
         self.trace = TraceOfA(whether_load_memo=True)
         self.cons_v = self.package.get_pulling_velocity()
@@ -1444,7 +1448,7 @@ class York(SplineWithPiecewisePolynomial):
         self.accumulate_distances(
             whether_with_symbol=True,
             whether_rebuild=whether_rebuild_with_symbol)
-        self.pieces = self.collect_stage_pieces()
+        # self.pieces = self.collect_stage_pieces()
 
     def accumulate_distances(self,
                              whether_with_symbol=True,
@@ -1716,12 +1720,15 @@ class York(SplineWithPiecewisePolynomial):
                 start=(degree_to_time(0), (
                     0,
                     0,
-                    22000,
-                    147784.235076798,
+                    # 22000,  # for 330sq
+                    14000,  # for 125s
+                    # 147784.235076798,  # for 330sq
+                    372166.82180039,  # for 125s
                     nan,
                 )),
                 cross=(degree_to_time(43), (
-                    122,
+                    # 122,  # for 330sq
+                    70,
                     nan,
                     nan,
                     nan,
@@ -1736,10 +1743,14 @@ class York(SplineWithPiecewisePolynomial):
                 )),
                 touch=(self.touching_time, (
                     # climb_end_p,
-                    219.419594153918,
-                    -44.0031089879033,
-                    -1508.50518522546,
-                    10950.5981182494,
+                    # 219.419594153918,
+                    # -44.0031089879033,
+                    # -1508.50518522546,
+                    # 10950.5981182494,
+                    152.083898260352,
+                    99.935766976934,
+                    -11712.5721657465,
+                    373048.366333169,
                     nan,
                 )),
                 whether_rebuild=whether_rebuild,
@@ -1961,17 +1972,18 @@ class York(SplineWithPiecewisePolynomial):
         """
         if whether_with_symbol:
             name = "throw_to_bottom_with_symbol"
-            throw_start_p = symbols('throw_start_p')
+            # throw_start_p = symbols('throw_start_p')
         else:
             name = "throw_to_bottom"
-            throw_start_p = self.connection['throw'][0]
+            # throw_start_p = self.connection['throw'][0]
         try:
             return self.stages[name]
         except KeyError:
             self.stages[name] = Throw(
                 name=name,
                 start=(degree_to_time(325), (
-                    37,
+                    # 37,  # for 330sq
+                    27,  # for 125s
                     self.cons_v_faster,
                     0,
                     0,
@@ -1995,7 +2007,8 @@ class York(SplineWithPiecewisePolynomial):
                 end=(degree_to_time(360), (
                     0,
                     0,
-                    22000,
+                    # 22000,  # for 330sq
+                    18000,  # for 125s
                     nan,
                     nan,
                 )),

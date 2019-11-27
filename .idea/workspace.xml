@@ -2,8 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/models/draw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/draw_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/polynomials_curve_pieces.pkl copy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/climb_to_touch_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/climb_to_touch_pieces.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/climb_to_touch_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/climb_to_touch_with_symbol_pieces.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pull_1_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/pull_1_with_symbol_pieces.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pull_2_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/pull_2_with_symbol_pieces.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pull_3_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/pull_3_with_symbol_pieces.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/shake2_for_accepting_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/shake2_for_accepting_pieces.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/throw_to_bottom_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/throw_to_bottom_pieces.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/throw_to_bottom_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/throw_to_bottom_with_symbol_pieces.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/touch_to_fold_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/touch_to_fold_pieces.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/touch_to_fold_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/touch_to_fold_with_symbol_pieces.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/shape_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/shape_stage.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -55,7 +64,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.draw_data">
+  <component name="RunManager" selected="Python.shape_stage">
     <configuration name="Tetracamthon" type="PythonConfigurationType" factoryName="Python">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -203,8 +212,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.draw_data" />
         <item itemvalue="Python.shape_stage" />
+        <item itemvalue="Python.draw_data" />
         <item itemvalue="Python.packages" />
         <item itemvalue="Python.polynomial_spline" />
         <item itemvalue="Python.analysis" />
