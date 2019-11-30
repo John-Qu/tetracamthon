@@ -2,22 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/temp_png/1_pvaj_curve_of_330sq.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp_png/2_curves_from_wenpengjun.JPG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp_png/3_curves_from_wangxianlong.JPG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp_png/4_Tetra Pak A3 flex Curves.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/climb_to_touch_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/climb_to_touch_with_symbol_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pull_1_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/pull_1_with_symbol_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pull_2_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/pull_2_with_symbol_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pull_3_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/pull_3_with_symbol_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/shake2_for_accepting_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/shake2_for_accepting_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/throw_to_bottom_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/throw_to_bottom_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/throw_to_bottom_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/throw_to_bottom_with_symbol_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/touch_to_fold_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/touch_to_fold_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/touch_to_fold_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/touch_to_fold_with_symbol_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/analysis.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/packages.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/packages.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/shape_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/shape_stage.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -162,6 +147,9 @@
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />

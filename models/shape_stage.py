@@ -37,7 +37,7 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
         ))
         if widest is None:
             widest = (degree_to_time(43), (
-                -131,
+                -136.33,
                 0,
                 nan,
                 nan,
@@ -58,7 +58,7 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
             nan,
         ))
         if closed is None:
-            closed = (degree_to_time(138), (
+            closed = (degree_to_time(136), (
                 0,
                 0,
                 0,
@@ -119,7 +119,7 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
         j1.update_with_solution()
         j1.plot_svaj()
         j2 = JawOnYorkCurve(whether_rebuild=False)
-        p, v, a, j = j2.combine_pieces_for_plot(
+        p, v, a, j = j1.combine_pieces_for_plot(
                   whether_save_png=False,
                   line_color='blue',
                   whether_show_figure=True,
