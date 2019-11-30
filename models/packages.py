@@ -5,8 +5,10 @@ class Package(object):
     """Define various package types.
     p250sq = Package(250, 'Square', 43, 41.5, 126.8, 5, 185)
     p100b = Package(100, 'Base', 47, 32, 69.3, 4, 113.33)
-    p125s = Package(100, 'Base', 47, 32, 86, 4, 130.00)
-    print(p250sq)
+    p125s = Package(100, 'Slim', 47, 32, 86, 4, 130.00)
+    p1000b = Package(1000, 'Base', 94, 63, 166, 5, 245.00)
+    p1000sq = Package(1000, 'Square', 72, 71, 198, 5, 285.00)
+    print(p1000b)
     print(p125s.get_pulling_velocity(cycle_time=0.9))
         # 411.1111111111111
     p330sq = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)

@@ -200,7 +200,9 @@ class TraceOfA(object):
         # Jaw on York mechanism analysis driving backward
         self.joy_mechanism_backward = ANeedO4()
         if package is None:
-            self.package = Package(100, 'Base', 47, 32, 86, 4, 130.00)
+            self.package = Package(1000, 'Square', 72, 71, 198, 5, 285.00)
+            # self.package = Package(1000, 'Baseline', 94, 63, 166, 5, 245.00)
+            # self.package = Package(100, 'Base', 47, 32, 86, 4, 130.00)
             # self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
         else:
             self.package = package
@@ -216,7 +218,8 @@ class TraceOfA(object):
         t1 = TraceOfA()
         t1.write_memo_to_file()
         """
-        output = open('../data/trace_of_A_memo.pkl', 'wb')
+        output = open('../data/trace_of_A_memo_{}_{}.pkl'.format(
+            self.package.volumn, self.package.shape), 'wb')
         pickle.dump(self.memo, output)
         output.close()
 
@@ -225,7 +228,8 @@ class TraceOfA(object):
         t1 = TraceOfA()
         t1.load_memo_from_file()
         """
-        pkl_file = open('../data/trace_of_A_memo.pkl', 'rb')
+        pkl_file = open('../data/trace_of_A_memo_{}_{}.pkl'.format(
+            self.package.volumn, self.package.shape), 'rb')
         self.memo = pickle.load(pkl_file)
         pkl_file.close()
 
@@ -239,7 +243,7 @@ class TraceOfA(object):
             return self.memo['r_O4O2_close']
         expr = self.joy_mechanism_backward.get_r_O4O2_of_x_R_AO2_expr()
         x_R_AO2 = self.joy_mechanism_backward.x_R_AO2
-        r_O4O2_close = expr.subs(x_R_AO2, -1)
+        r_O4O2_close = expr.subs(x_R_AO2, (-1.5/2))
         self.memo['r_O4O2_close'] = r_O4O2_close
         return r_O4O2_close
 
@@ -396,7 +400,7 @@ class TraceOfA(object):
             self.get_x_R_AO2_when_touching_expr()
         x_R_AO5_when_touching_expr = x_R_AO2_when_touching_expr
         r_GO5 = self.package.depth / 2
-        r_AG = r_GO5
+        r_AG = r_GO5 - 1.5/2
         y_R_AO5_when_touching_expr = \
             (r_AG ** 2 - (r_GO5 + x_R_AO5_when_touching_expr) ** 2) ** 0.5
         self.memo['y_R_AO5_when_touching_expr'] = y_R_AO5_when_touching_expr
@@ -417,8 +421,7 @@ class TraceOfA(object):
             self.get_x_R_AO2_when_closing_expr()
         x_R_AO5_when_closing_expr = x_R_AO2_when_closing_expr
         r_GO5 = self.package.depth / 2
-        r_AG = r_GO5
-        print('r_GO5:', r_GO5, "r_AG:", r_AG)
+        r_AG = r_GO5 - 1.5/2
         y_R_AO5_when_closing_expr = \
             (r_AG ** 2 - (r_GO5 + x_R_AO5_when_closing_expr) ** 2) ** 0.5
         self.memo['y_R_AO5_when_closing_expr'] = y_R_AO5_when_closing_expr
@@ -860,21 +863,22 @@ class ShakeHand(SplineWithPiecewisePolynomial):
                  end=None,
                  whether_rebuild=False):
         """
-        s1 = ShakeHand(name='shake_hand_curve_264_318', whether_rebuild=True)
+        s1 = ShakeHand(name='shake_hand_curve_262_318', whether_rebuild=True)
         s1 = ShakeHand(name='shake_hand_curve_264_318', whether_rebuild=False)
         s1.combine_pieces_for_plot(whether_show_figure=True)
         """
         if start is None:
-            start = (degree_to_time(264), (
+            start = (degree_to_time(262), (
                 0,
                 # -422,  # for 330sq
-                -288,  # for 125s
+                # -288,  # for 125s
+                -633,
                 0,
                 0,
                 nan,
             ))
         if knot1 is None:
-            knot1 = (degree_to_time(274.8), (
+            knot1 = (degree_to_time(277), (
                 nan,
                 nan,
                 nan,
@@ -890,7 +894,7 @@ class ShakeHand(SplineWithPiecewisePolynomial):
                 0,
             ))
         if knot3 is None:
-            knot3 = (degree_to_time(291), (
+            knot3 = (degree_to_time(292), (
                 nan,
                 nan,
                 0,
@@ -906,7 +910,7 @@ class ShakeHand(SplineWithPiecewisePolynomial):
                 0,
             ))
         if knot5 is None:
-            knot5 = (degree_to_time(307.2), (
+            knot5 = (degree_to_time(310), (
                 nan,
                 nan,
                 nan,
@@ -916,9 +920,10 @@ class ShakeHand(SplineWithPiecewisePolynomial):
         if end is None:
             end = (degree_to_time(318), (
                 # degree_to_time(318 - 264) * (-422) + 24.25 * 1.3, # for 330sq
-                degree_to_time(318 - 264) * (-288) + 16 * 1.3,  # for 125s
+                degree_to_time(318 - 262) * (-633) + 30.5 * 1.3,  # for 125s
                 # -422,  # for 330sq
-                -288,  # for 125s
+                # -288,  # for 125s
+                -633,
                 0,
                 0,
                 nan,
@@ -1414,7 +1419,9 @@ class York(SplineWithPiecewisePolynomial):
         com = York(whether_rebuild_with_symbol=True)
         """
         if package is None:
-            self.package = Package(100, 'Base', 47, 32, 86, 4, 130.00)
+            self.package = Package(1000, 'Square', 72, 71, 198, 5, 285.00)
+            # self.package = Package(1000, 'Baseline', 94, 63, 166, 5, 245.00)
+            # self.package = Package(100, 'Base', 47, 32, 86, 4, 130.00)
             # self.package = Package(330, "Square", 49.5, 48.5, 124.6, 6, 190)
         else:
             self.package = package
@@ -1566,42 +1573,42 @@ class York(SplineWithPiecewisePolynomial):
         except KeyError:
             self.stages[name] = ShakeHand(
                 name=name,
-                start=(degree_to_time(264), (
+                start=(degree_to_time(262), (
                     shake2_start_p,
                     self.cons_v_faster,
                     0,
                     0,
                     nan,
                 )),
-                knot1=(degree_to_time(274.8), (
+                knot1=(degree_to_time(277), (
                     nan,
                     nan,
                     nan,
                     0,
                     nan,
                 )),
-                knot2=(degree_to_time(282), (
+                knot2=(degree_to_time(284.5), (
                     nan,
                     nan,
                     nan,
                     nan,
                     0,
                 )),
-                knot3=(degree_to_time(291), (
+                knot3=(degree_to_time(292), (
                     nan,
                     nan,
                     0,
                     nan,
                     0,
                 )),
-                knot4=(degree_to_time(300), (
+                knot4=(degree_to_time(301), (
                     nan,
                     nan,
                     nan,
                     nan,
                     0,
                 )),
-                knot5=(degree_to_time(307.2), (
+                knot5=(degree_to_time(310), (
                     nan,
                     nan,
                     nan,
@@ -1628,11 +1635,16 @@ class York(SplineWithPiecewisePolynomial):
         com.build_touch(whether_rebuild=False)
         com.build_touch(whether_rebuild=True)
         com.build_touch(whether_rebuild=True, whether_with_symbol=True)
-        com.build_touch().plot_svaj()
+        com.build_touch().combine_pieces_for_plot(whether_show_figure=True)
         com.build_touch().get_start_pvaj()
         com.build_touch().get_end_pvaj()
         146.998262068592 - 115.125001936921
         = 31.873260131671003
+        com.build_touch().get_start_pvaj()
+(270.604950513073, 106.531117736901, -7442.01723178674, 147802.196471411)
+com.build_touch().get_end_pvaj()
+(247.802066310273, -584.817254139623, 1.51040812753454e-11, -1.30332113606732e
+-9)
         """
         if whether_with_symbol:
             name = "touch_to_fold_with_symbol"
@@ -1650,28 +1662,28 @@ class York(SplineWithPiecewisePolynomial):
                     nan,
                     nan,
                 )),
-                knot2=(degree_to_time(102), (
+                knot2=(degree_to_time(104.5), (
                     nan,
                     nan,
                     nan,
                     nan,
                     nan,
                 )),
-                knot3=(degree_to_time(111), (
+                knot3=(degree_to_time(112), (
                     nan,
                     nan,
                     nan,
                     nan,
                     nan,
                 )),
-                knot4=(degree_to_time(120), (
+                knot4=(degree_to_time(121), (
                     nan,
                     nan,
                     nan,
                     nan,
                     nan,
                 )),
-                knot5=(degree_to_time(127.2), (
+                knot5=(degree_to_time(130), (
                     nan,
                     nan,
                     nan,
@@ -1983,7 +1995,8 @@ class York(SplineWithPiecewisePolynomial):
                 name=name,
                 start=(degree_to_time(325), (
                     # 37,  # for 330sq
-                    27,  # for 125s
+                    # 27,  # for 125s
+                    50,  # for 1000b
                     self.cons_v_faster,
                     0,
                     0,
@@ -2008,7 +2021,8 @@ class York(SplineWithPiecewisePolynomial):
                     0,
                     0,
                     # 22000,  # for 330sq
-                    18000,  # for 125s
+                    # 18000,  # for 125s
+                    32000,  # for 1000b
                     nan,
                     nan,
                 )),
