@@ -658,7 +658,7 @@ class TraceOfA(object):
         """
         start_time = float(self.get_touch_time())
         knot120 = degree_to_time(120)
-        end_time = float(degree_to_time(138))
+        end_time = float(degree_to_time(136))
         knots = [start_time, knot120, end_time]
         # Plot jaw on york curve on touching and closing stage
         # Position
@@ -918,7 +918,7 @@ class ShakeHand(SplineWithPiecewisePolynomial):
                 nan,
             ))
         if end is None:
-            end = (degree_to_time(318), (
+            end = (degree_to_time(316), (
                 # degree_to_time(318 - 264) * (-422) + 24.25 * 1.3, # for 330sq
                 degree_to_time(318 - 262) * (-633) + 30.5 * 1.3,  # for 125s
                 # -422,  # for 330sq
@@ -1430,7 +1430,7 @@ class York(SplineWithPiecewisePolynomial):
         self.cons_v = self.package.get_pulling_velocity()
         self.shake2_less_p = 0.4 * (self.package.depth / 2)
         self.touch_less_p = self.trace.get_y_R_AO5_when_closing_expr().subs(
-            x, degree_to_time(138))
+            x, degree_to_time(136))
         self.cons_v_faster = (
                 - (self.package.web_repeated_length
                    + self.shake2_less_p
@@ -1455,7 +1455,7 @@ class York(SplineWithPiecewisePolynomial):
         self.accumulate_distances(
             whether_with_symbol=True,
             whether_rebuild=whether_rebuild_with_symbol)
-        # self.pieces = self.collect_stage_pieces()
+        self.pieces = self.collect_stage_pieces()
 
     def accumulate_distances(self,
                              whether_with_symbol=True,
@@ -1483,7 +1483,7 @@ class York(SplineWithPiecewisePolynomial):
         #     whether_rebuild=whether_rebuild
         # )
         shake2_d = -(
-                degree_to_time(318 - 264) * self.cons_v_faster
+                degree_to_time(316 - 262) * self.cons_v_faster
                 + self.package.depth / 2
                 + self.shake2_less_p
         )
@@ -1556,7 +1556,7 @@ class York(SplineWithPiecewisePolynomial):
          + 75.6220833333334 + 30.548611111111114 + 7.671805555556006 + 31.873260131671003
         """
         shake2_d = -(
-                degree_to_time(318 - 264) * self.cons_v_faster
+                degree_to_time(316 - 262) * self.cons_v_faster
                 + self.package.depth / 2
                 + self.shake2_less_p
         )
@@ -1615,7 +1615,7 @@ class York(SplineWithPiecewisePolynomial):
                     0,
                     nan,
                 )),
-                end=(degree_to_time(318), (
+                end=(degree_to_time(316), (
                     shake2_end_p,
                     self.cons_v_faster,
                     0,
@@ -1690,7 +1690,7 @@ com.build_touch().get_end_pvaj()
                     nan,
                     nan,
                 )),
-                end=(degree_to_time(138), (
+                end=(degree_to_time(136), (
                     nan,
                     nan,
                     nan,
@@ -1733,20 +1733,22 @@ com.build_touch().get_end_pvaj()
                     0,
                     0,
                     # 22000,  # for 330sq
-                    14000,  # for 125s
+                    # 14000,  # for 125s
+                    35000,  # for TBA1000sq
                     # 147784.235076798,  # for 330sq
-                    372166.82180039,  # for 125s
+                    # 372166.82180039,  # for 125s
+                    177112.788893618,  # for TBA1000sq
                     nan,
                 )),
-                cross=(degree_to_time(43), (
+                cross=(degree_to_time(40), (
                     # 122,  # for 330sq
-                    70,
+                    170,  # for TBA1000sq
                     nan,
                     nan,
                     nan,
                     nan,
                 )),
-                high=(degree_to_time(84), (
+                high=(degree_to_time(80), (
                     nan,
                     0,
                     nan,
@@ -1759,10 +1761,14 @@ com.build_touch().get_end_pvaj()
                     # -44.0031089879033,
                     # -1508.50518522546,
                     # 10950.5981182494,
-                    152.083898260352,
-                    99.935766976934,
-                    -11712.5721657465,
-                    373048.366333169,
+                    # 152.083898260352,
+                    # 99.935766976934,
+                    # -11712.5721657465,
+                    # 373048.366333169,
+                    338.2887729644,
+                    -382.545496050749,
+                    1096.08981377025,
+                    853439.642075869,
                     nan,
                 )),
                 whether_rebuild=whether_rebuild,
@@ -1792,7 +1798,7 @@ com.build_touch().get_end_pvaj()
         except KeyError:
             self.stages[name] = Pull(
                 name=name,
-                start=(degree_to_time(138), (
+                start=(degree_to_time(136), (
                     pull1_start_p,
                     self.cons_v_faster,
                     nan,
@@ -1921,7 +1927,7 @@ com.build_touch().get_end_pvaj()
                     nan,
                     nan,
                 )),
-                end=(degree_to_time(264), (
+                end=(degree_to_time(262), (
                     nan,
                     nan,
                     nan,
@@ -1954,7 +1960,7 @@ com.build_touch().get_end_pvaj()
         except KeyError:
             self.stages[name] = Pull(
                 name=name,
-                start=(degree_to_time(318), (
+                start=(degree_to_time(316), (
                     pull3_start_p,
                     self.cons_v_faster,
                     nan,
@@ -1996,7 +2002,8 @@ com.build_touch().get_end_pvaj()
                 start=(degree_to_time(325), (
                     # 37,  # for 330sq
                     # 27,  # for 125s
-                    50,  # for 1000b
+                    # 50,  # for 1000b
+                    60,
                     self.cons_v_faster,
                     0,
                     0,
@@ -2022,7 +2029,8 @@ com.build_touch().get_end_pvaj()
                     0,
                     # 22000,  # for 330sq
                     # 18000,  # for 125s
-                    32000,  # for 1000b
+                    # 32000,  # for 1000b
+                    35000,  # for 1000sq
                     nan,
                     nan,
                 )),
