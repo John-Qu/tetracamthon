@@ -1458,7 +1458,7 @@ class York(SplineWithPiecewisePolynomial):
         self.accumulate_distances(
             whether_with_symbol=True,
             whether_rebuild=whether_rebuild_with_symbol)
-        self.pieces = self.collect_stage_pieces()
+        # self.pieces = self.collect_stage_pieces()
 
     def accumulate_distances(self,
                              whether_with_symbol=True,
@@ -1679,7 +1679,7 @@ com.build_touch().get_end_pvaj()
                     nan,
                     nan,
                 )),
-                knot4=(degree_to_time(121), (
+                knot4=(degree_to_time(120), (
                     nan,
                     nan,
                     nan,
