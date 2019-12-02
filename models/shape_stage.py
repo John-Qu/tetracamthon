@@ -400,7 +400,8 @@ class TraceOfA(object):
             self.get_x_R_AO2_when_touching_expr()
         x_R_AO5_when_touching_expr = x_R_AO2_when_touching_expr
         r_GO5 = self.package.depth / 2
-        r_AG = r_GO5 - 1.5/2
+        s = self.package.slim
+        r_AG = ((r_GO5 - 0.75)**2 + s**2)**0.5
         y_R_AO5_when_touching_expr = \
             (r_AG ** 2 - (r_GO5 + x_R_AO5_when_touching_expr) ** 2) ** 0.5
         self.memo['y_R_AO5_when_touching_expr'] = y_R_AO5_when_touching_expr
@@ -421,7 +422,8 @@ class TraceOfA(object):
             self.get_x_R_AO2_when_closing_expr()
         x_R_AO5_when_closing_expr = x_R_AO2_when_closing_expr
         r_GO5 = self.package.depth / 2
-        r_AG = r_GO5 - 1.5/2
+        s = self.package.slim
+        r_AG = ((r_GO5 - 0.75)**2 + s**2)**0.5
         y_R_AO5_when_closing_expr = \
             (r_AG ** 2 - (r_GO5 + x_R_AO5_when_closing_expr) ** 2) ** 0.5
         self.memo['y_R_AO5_when_closing_expr'] = y_R_AO5_when_closing_expr
@@ -1103,7 +1105,8 @@ class Touch(SplineWithPiecewisePolynomial):
         self.build_pieces()
         r_O5O2 = (self.package.height +
                   self.package.hs_sealing_length +
-                  self.trace.joy_mechanism_forward.r_DC_value)
+                  self.trace.joy_mechanism_forward.r_DC_value -
+                  self.package.slim)
         expr_y_R_AO2_touching = self.trace.get_y_R_AO2_when_touching_expr()
         expr_y_R_AO2_closing = self.trace.get_y_R_AO2_when_closing_expr()
         expr_y_R_AO2 = [expr_y_R_AO2_touching, expr_y_R_AO2_closing]

@@ -1,26 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/plot/plot_of_for TPA330sq.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/climb_to_touch_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/climb_to_touch_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/climb_to_touch_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/climb_to_touch_with_symbol_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pull_1_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/pull_1_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pull_1_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/pull_1_with_symbol_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pull_2_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/pull_2_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pull_2_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/pull_2_with_symbol_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pull_3_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/pull_3_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pull_3_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/pull_3_with_symbol_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/shake1_for_ear_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/shake1_for_ear_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/shake2_for_accepting_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/shake2_for_accepting_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/throw_to_bottom_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/throw_to_bottom_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/throw_to_bottom_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/throw_to_bottom_with_symbol_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/touch_to_fold_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/touch_to_fold_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/touch_to_fold_with_symbol_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/touch_to_fold_with_symbol_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/trace_of_A_memo_1000_Square.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/trace_of_A_memo_1000_Square.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/shape_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/shape_stage.py" afterDir="false" />
-    </list>
+    <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

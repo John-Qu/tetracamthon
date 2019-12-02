@@ -29,13 +29,14 @@ class Package(object):
     """
 
     def __init__(self, volumn, shape, width, depth, height,
-                 ls_overlap, web_repeated_length):
+                 ls_overlap, web_repeated_length, top_slim=1):
         self.volumn = volumn
         self.shape = shape
         self.width = width
         self.depth = depth
         self.height = height
         self.ls_overlap = ls_overlap
+        self.slim = top_slim
         self.web_repeated_length = web_repeated_length
         self.web_width = 2 * (self.width + self.depth) + self.ls_overlap
         self.hs_sealing_length = self.web_repeated_length - \
