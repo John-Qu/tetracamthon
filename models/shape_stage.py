@@ -1431,7 +1431,7 @@ class York(SplineWithPiecewisePolynomial):
         self.joy = JawOnYorkCurve(whether_rebuild=False)
         self.trace = TraceOfA(whether_load_memo=True)
         self.cons_v = self.package.get_pulling_velocity()
-        self.shake2_less_p = 0.4 * (self.package.depth / 2)
+        self.shake2_less_p = 0.3 * (self.package.depth / 2)
         self.touch_less_p = self.trace.get_y_R_AO5_when_closing_expr().subs(
             x, degree_to_time(136))
         self.cons_v_faster = (
@@ -1458,7 +1458,7 @@ class York(SplineWithPiecewisePolynomial):
         self.accumulate_distances(
             whether_with_symbol=True,
             whether_rebuild=whether_rebuild_with_symbol)
-        # self.pieces = self.collect_stage_pieces()
+        self.pieces = self.collect_stage_pieces()
 
     def accumulate_distances(self,
                              whether_with_symbol=True,
@@ -1604,7 +1604,7 @@ class York(SplineWithPiecewisePolynomial):
                     nan,
                     0,
                 )),
-                knot4=(degree_to_time(301), (
+                knot4=(degree_to_time(300), (
                     nan,
                     nan,
                     nan,
@@ -1740,7 +1740,7 @@ com.build_touch().get_end_pvaj()
                     35000,  # for TBA1000sq
                     # 147784.235076798,  # for 330sq
                     # 372166.82180039,  # for 125s
-                    177112.788893618,  # for TBA1000sq
+                    179987.038598934,  # for TBA1000sq
                     nan,
                 )),
                 cross=(degree_to_time(40), (
@@ -1768,10 +1768,10 @@ com.build_touch().get_end_pvaj()
                     # 99.935766976934,
                     # -11712.5721657465,
                     # 373048.366333169,
-                    338.2887729644,
-                    -382.545496050749,
-                    1096.08981377025,
-                    853439.642075869,
+                    340.017102068876,
+                    -390.06604118261,
+                    32.1163870922054,
+                    807501.354157047,
                     nan,
                 )),
                 whether_rebuild=whether_rebuild,
@@ -2387,7 +2387,7 @@ class Combine(SplineWithPiecewisePolynomial):
         #     self.load_solved_pieces()
 
     def plot_curves(self,
-                    name='Cam Curves for TPA 330sq',
+                    name='Cam Curves for TBA1000sq',
                     whether_rebuild_for_plot=False,
                     ):
         """
