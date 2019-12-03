@@ -3,12 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/shake2_for_accepting_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/shake2_for_accepting_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/touch_to_fold_pieces.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/touch_to_fold_pieces.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/shape_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/shape_stage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot/plot_of_for TPA330sq.png" beforeDir="false" afterPath="$PROJECT_DIR$/plot/plot_of_for TPA330sq.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -31,6 +27,11 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
@@ -44,18 +45,6 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/docs/reference" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager" selected="Python.shape_stage">
     <configuration name="Tetracamthon" type="PythonConfigurationType" factoryName="Python">
@@ -194,6 +183,9 @@
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -218,6 +210,18 @@
         <item itemvalue="Python.polynomial_spline" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -272,5 +276,11 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/temp" />
     </ignored-roots>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="528" y="271" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1575343799361">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="528" y="271" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.23.1680.1027@0.23.1680.1027" timestamp="1575343799361" />
   </component>
 </project>
