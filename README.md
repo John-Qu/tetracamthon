@@ -17,11 +17,11 @@ The original chart is from a ppt which engineers in Tetra Pak released on 2010
 Curves for different type of packages can be 
 derived with the python scripts in [models](models). 
 
-[Here](temp_png/plot_of_Cam Curves for TPA 330sq with knots.png) is the cam profile for TPA 330 SQ on A3 Compact Flex machine.
+[Here](temp_png/plot_of_Cam_Curves_for_TPA_330sq_with_knots.png) is the cam profile for TPA 330 SQ on A3 Compact Flex machine.
 
 ![](https://tva1.sinaimg.cn/large/006tNbRwly1g9ji1vg98dj31c10u0b16.jpg)
 
-[Here](plot/plot_of_Cam Curves for TBA1000sq.png) is the cam profile for TBA 1000 SQ on A3 Flex machine.
+[Here](plot/plot_of_Cam_Curves_for_TBA1000sq.png) is the cam profile for TBA 1000 SQ on A3 Flex machine.
 
 ![](https://tva1.sinaimg.cn/large/006tNbRwly1g9ji6kzml7j31c00u0qv6.jpg)
 
