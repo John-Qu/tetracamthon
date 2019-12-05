@@ -10,7 +10,7 @@ aseptic filling machine.
 
 The original chart is derived from a conference report 
 [keynote](https://www.mscsoftware.com/sites/default/files/metodi-strumenti-calcolo-prototipaz.pdf) 
-which was released on 2010.
+released on 2010.
 
 ![](https://tva1.sinaimg.cn/large/006tNbRwgy1g9lt1h7fg2j31960u017z.jpg)
 
