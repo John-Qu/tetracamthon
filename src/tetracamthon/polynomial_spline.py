@@ -1,11 +1,10 @@
-from sympy import symbols, diff, lambdify, nan, Eq, solve
+import pickle
+
+from sympy import symbols, diff, nan, Eq, solve
 from sympy.abc import x
 from sympy.plotting import plot
-import numpy as np
-import pickle
-import matplotlib.pyplot as plt
-from helper_functions import degree_to_time, time_to_degree, \
-    move_sympyplot_to_axes, plot_pvaj
+
+from .helper_functions import plot_pvaj
 
 
 class Polynomial(object):

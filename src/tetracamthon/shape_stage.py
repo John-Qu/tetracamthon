@@ -2,12 +2,12 @@ from sympy import nan, Eq, Piecewise, solve, lambdify, diff, symbols, \
     Symbol, plot, linsolve
 from sympy.abc import x
 import numpy as np
-from helper_functions import degree_to_time, time_to_degree, \
+from .helper_functions import degree_to_time, time_to_degree, \
     move_sympyplot_to_axes, plot_pvaj, print_list_items_in_row, \
     find_index_in_ordered_list
-from polynomial_spline import SplineWithPiecewisePolynomial, Polynomial
-from analysis import O4DriveA, ANeedO4
-from packages import Package
+from .polynomial_spline import SplineWithPiecewisePolynomial, Polynomial
+from .analysis import O4DriveA, ANeedO4
+from .packages import Package
 import pickle
 import matplotlib.pyplot as plt
 

@@ -1,4 +1,4 @@
-from read_raw_data import calculate_avp
+from src.tetra_pak_a3_flex_cam.read_raw_data import calculate_avp
 import matplotlib.pyplot as plt
 import numpy as np
 
