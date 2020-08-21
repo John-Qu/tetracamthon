@@ -1,15 +1,17 @@
-
 import csv
 from collections import namedtuple
 import numpy as np
 from scipy.integrate import cumtrapz
 
-def get_csv_data():
+
+def get_csv_data(path_to_cvs_file='./RawData_360.csv'):
+    """Get 360 degree york and jaw acceleration data from a csv file.
+
+    :param path_to_cvs_file: a string
+    :return: a tuple of np arrays, indicating the machine degrees, \
+             and the acceleration of york and jaw.
     """
-    Get 360 degree york and jaw acceleration data from csv file.
-    :return: lists of float of data
-    """
-    with open('../data/RawData_360.csv') as f:
+    with open(path_to_cvs_file) as f:
         f_csv = csv.reader(f)
         headings = next(f_csv)
         Row = namedtuple('Row', headings)
@@ -20,6 +22,7 @@ def get_csv_data():
             york_acc.append(float(row.York_acc))
             jaw_acc.append(float(row.Jaw_acc))
     return np.array(degree), np.array(york_acc), np.array(jaw_acc)
+
 
 def meet_jork_jaw_there(york_acc, jaw_acc):
     for i in range(130, 340):
@@ -56,6 +59,7 @@ def calculate_avp():
     jaw_place = cumtrapz(jaw_velo, degree, initial=0) * (0.9 / 360)
     jaw_place += york_place[230]-jaw_place[230]
     return degree, york_acc, jaw_acc, york_velo, jaw_velo, york_place, jaw_place
+
 
 if __name__ == "__main__":
     degree, york_acc, jaw_acc, york_velo, jaw_velo, york_place, jaw_place = calculate_avp()

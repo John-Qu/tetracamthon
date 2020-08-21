@@ -248,7 +248,7 @@ plt.ylim(-2000.0, 2000.0)
 plt.yticks(np.linspace(-2000, 2000, 9, endpoint=True))
 
 # Save figure using 720 dots per inch
-plt.savefig("../plot/Tetra_Pak_A3_flex_Curves.png", dpi=720)
+plt.savefig("./Tetra_Pak_A3_flex_Curves.png", dpi=720)
 
 # Show result on screen
 

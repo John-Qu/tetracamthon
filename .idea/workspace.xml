@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="BranchesTreeState">
     <expand>
       <path>
@@ -26,12 +29,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/RawData_360.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/Tetra_Pak_A3_flex_Curves.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_read_and_draw_raw_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Tetracamthon.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Tetracamthon.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/draw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/draw_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetracamthon/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetracamthon/polynomial_spline.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/polynomial_spline.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetracamthon/shape_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/shape_stage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_raw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_raw_data.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,14 +72,14 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/docs/reference" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.shape_stage">
+  <component name="RunManager" selected="Python tests.pytest for test_read_and_draw_raw_data.test_get_cvs_data">
     <configuration name="Tetracamthon" type="PythonConfigurationType" factoryName="Python">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -117,20 +124,17 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="analysis" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="draw_data (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/analysis.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/draw_data.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -139,42 +143,17 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="draw_data" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="read_raw_data (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/draw_data.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="packages" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Tetracamthon" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/packages.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_raw_data.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -209,6 +188,9 @@
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -224,13 +206,29 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="pytest for test_read_and_draw_raw_data.test_get_cvs_data" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="Tetracamthon" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_read_and_draw_raw_data.test_get_cvs_data&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.pytest for test_read_and_draw_raw_data.test_get_cvs_data" />
+        <item itemvalue="Python.draw_data (1)" />
+        <item itemvalue="Python.read_raw_data (1)" />
         <item itemvalue="Python.shape_stage" />
         <item itemvalue="Python.read_raw_data" />
-        <item itemvalue="Python.packages" />
-        <item itemvalue="Python.draw_data" />
-        <item itemvalue="Python.analysis" />
       </list>
     </recent_temporary>
   </component>
@@ -301,10 +299,14 @@
     </ignored-roots>
   </component>
   <component name="WindowStateProjectService">
-    <state x="438" y="114" key="#com.intellij.openapi.keymap.impl.ui.EditKeymapsDialog" timestamp="1597983809996">
+    <state x="552" y="360" key="#Notifications" timestamp="1597984122621">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="438" y="114" key="#com.intellij.openapi.keymap.impl.ui.EditKeymapsDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1597983809996" />
+    <state x="552" y="360" key="#Notifications/0.0.1680.1050@0.0.1680.1050" timestamp="1597984122621" />
+    <state x="438" y="114" key="#com.intellij.openapi.keymap.impl.ui.EditKeymapsDialog" timestamp="1597984161060">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="438" y="114" key="#com.intellij.openapi.keymap.impl.ui.EditKeymapsDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1597984161060" />
     <state x="528" y="268" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1597219576039">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
@@ -313,13 +315,29 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1596613625546" />
-    <state x="341" y="164" key="SettingsEditor" timestamp="1597982324498">
+    <state width="1659" height="386" key="GridCell.Tab.0.bottom" timestamp="1597993518351">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="341" y="164" key="SettingsEditor/0.0.1680.1050@0.0.1680.1050" timestamp="1597982324498" />
-    <state x="505" y="233" width="670" height="676" key="search.everywhere.popup" timestamp="1597983619995">
+    <state width="1659" height="386" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1597993518351" />
+    <state width="1659" height="386" key="GridCell.Tab.0.center" timestamp="1597993518350">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="505" y="233" width="670" height="676" key="search.everywhere.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1597983619995" />
+    <state width="1659" height="386" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1597993518350" />
+    <state width="1659" height="386" key="GridCell.Tab.0.left" timestamp="1597993518349">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1659" height="386" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1597993518349" />
+    <state width="1659" height="386" key="GridCell.Tab.0.right" timestamp="1597993518350">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1659" height="386" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1597993518350" />
+    <state x="341" y="164" key="SettingsEditor" timestamp="1597985416732">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="341" y="164" key="SettingsEditor/0.0.1680.1050@0.0.1680.1050" timestamp="1597985416732" />
+    <state x="505" y="233" width="670" height="676" key="search.everywhere.popup" timestamp="1597985348511">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="505" y="233" width="670" height="676" key="search.everywhere.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1597985348511" />
   </component>
 </project>
