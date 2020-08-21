@@ -16,37 +16,18 @@
         <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </expand>
-    <select />
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:master" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/README.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/Tetra_Pak_A3_flex_Curves.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_of_Cam_Curves_for_TBA1000sq.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plots/plot_of_for TPA330sq.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Tetra Pak A3 flex Curves.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/draw_data.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_raw_data.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tetracamthon/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tetracamthon/analysis.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tetracamthon/helper_functions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tetracamthon/packages.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tetracamthon/polynomial_spline.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tetracamthon/shape_stage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/Tetra Pak A3 flex Curves.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/analysis.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/draw_data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/helper_functions.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/packages.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/polynomial_spline.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/read_raw_data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/shape_stage.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot/Tetra_Pak_A3_flex_Curves.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot/plot_of_Cam_Curves_for_TBA1000sq.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot/plot_of_for TPA330sq.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -293,7 +274,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
