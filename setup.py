@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='tetracamthon',
@@ -8,6 +8,6 @@ setup(
     author='John Qu',
     author_email="johnqu1982@gmail.com",
     url="https://github.com/John-Qu/tetracamthon",
-    package=find_package(where='src'),
+    package=find_packages(where='src'),
     package_dir={'': 'src'},
 )
