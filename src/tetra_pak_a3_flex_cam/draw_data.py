@@ -1,32 +1,32 @@
-from src.tetra_pak_a3_flex_cam.read_raw_data import calculate_avp
 import matplotlib.pyplot as plt
 import numpy as np
+from tetra_pak_a3_flex_cam.read_raw_data import RightYork, RightJaw, \
+    LeftYork, LeftJaw
 
 # Get data from raw csv data as right york and jaw pair.
-d, \
-right_york_acc, right_jaw_acc, \
-right_york_velo, right_jaw_velo, \
-right_york_place, right_jaw_place \
-    = calculate_avp()
+ry = RightYork()
+rj = RightJaw()
+ly = LeftYork()
+lj = LeftJaw()
+d = ry.m_deg
+right_york_acc, right_jaw_acc = ry.acc, rj.acc
+right_york_velo, right_jaw_velo = ry.vel, rj.vel
+right_york_place, right_jaw_place = ry.pos, rj.pos
+right_york_jerk, right_jaw_jerk = ry.jer, rj.jer
+left_york_acc, left_jaw_acc = ly.acc, lj.acc
+left_york_velo, left_jaw_velo = ly.vel, lj.vel
+left_york_place, left_jaw_place = ly.pos, lj.pos
+left_york_jerk, left_jaw_jerk = ly.jer, lj.jer
 
-right_york_jerk = np.ones(361)
-right_york_jerk[:360] = np.diff(right_york_acc)
-right_york_jerk[-1] = right_york_jerk[
-    0]  # fill the end point as the same of start
-right_york_jerk = right_york_jerk / (0.9 / 360)
-right_jaw_jerk = np.ones(361)
-right_jaw_jerk[:360] = np.diff(right_jaw_acc)
-right_jaw_jerk[-1] = right_jaw_jerk[0]  # fill end point
-right_jaw_jerk = right_jaw_jerk / (0.9 / 360)
 
 # Slicing data for the left york and jaw pair.
-left_york_acc = np.hstack((right_york_acc[-181:-1], right_york_acc[:181]))
-left_jaw_acc = np.hstack((right_jaw_acc[-181:-1], right_jaw_acc[:181]))
-left_york_velo = np.hstack((right_york_velo[-181:-1], right_york_velo[:181]))
-left_jaw_velo = np.hstack((right_jaw_velo[-181:-1], right_jaw_velo[:181]))
-left_york_place = np.hstack(
-    (right_york_place[-181:-1], right_york_place[:181]))
-left_jaw_place = np.hstack((right_jaw_place[-181:-1], right_jaw_place[:181]))
+# left_york_acc = np.hstack((right_york_acc[-181:-1], right_york_acc[:181]))
+# left_jaw_acc = np.hstack((right_jaw_acc[-181:-1], right_jaw_acc[:181]))
+# left_york_velo = np.hstack((right_york_velo[-181:-1], right_york_velo[:181]))
+# left_jaw_velo = np.hstack((right_jaw_velo[-181:-1], right_jaw_velo[:181]))
+# left_york_place = np.hstack(
+#     (right_york_place[-181:-1], right_york_place[:181]))
+# left_jaw_place = np.hstack((right_jaw_place[-181:-1], right_jaw_place[:181]))
 
 # Calculate the relative velocities and placements between york and jaw.
 right_jaw_to_york_velo = right_jaw_velo - right_york_velo
@@ -113,8 +113,8 @@ plt.plot(d, left_jaw_to_york_place, color="red", linewidth=1.0, linestyle="--",
 index_min_diff_right_york_place_right_jaw_place = np.argmin(
     right_jaw_to_york_place)
 index_max_right_york_place = np.argmax(right_york_place)
-annotate_max_min_part_curve(right_jaw_to_york_place, 20, 80, col="red",
-                            position=(30, 17))
+# annotate_max_min_part_curve(right_jaw_to_york_place, 20, 80, col="red",
+#                             position=(30, 17))
 annotate_max_min_part_curve(right_york_place, 40, 100, col="blue",
                             position=(10, -30))
 plt.plot([138, 138], [left_york_place[138], right_york_place[138]],
@@ -248,7 +248,7 @@ plt.ylim(-2000.0, 2000.0)
 plt.yticks(np.linspace(-2000, 2000, 9, endpoint=True))
 
 # Save figure using 720 dots per inch
-plt.savefig("./Tetra_Pak_A3_flex_Curves.png", dpi=720)
+plt.savefig("./Tetra_Pak_A3_flex_Curves_temp.png", dpi=720)
 
 # Show result on screen
 
