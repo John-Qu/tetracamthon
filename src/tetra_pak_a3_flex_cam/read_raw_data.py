@@ -59,36 +59,59 @@ class TetraPakA3AccModified(TetraPakA3AccMeasured):
                 self.york_acc[i] = self.jaw_acc[i] = 0
 
 
-class TetraPakPVA(TetraPakA3AccModified):
-    def __init__(self):
-        TetraPakA3AccModified.__init__(self)
-        self.york_acc = np.array(self.york_acc)
-        self.jaw_acc = np.array(self.jaw_acc)
-        self.york_vel = self.cum_velocity_in_mm_per_s(self.york_acc)
-        self.jaw_vel = self.cum_velocity_in_mm_per_s(self.jaw_acc)
-        self.jaw_vel += self.york_vel[220] - self.jaw_vel[220]
-        self.york_pos = self.cum_position_in_mm(self.york_vel)
-        self.jaw_pos = self.cum_position_in_mm(self.jaw_vel)
-        self.jaw_pos += self.york_pos[230] - self.jaw_pos[230]
+def diff_jerk_in_m_per_s(data):
+    result = np.ones(len(data))
+    result[:-1] = np.diff(np.array(data)) / (0.9 / 360)
+    result[-1] = result[0]
+    return result
+
+
+class DynamicData(object):
+    def __init__(self, acc=TetraPakA3AccModified()):
+        self.type = type(self)
+        self.acc = acc.york_acc if self.type == York else acc.jaw_acc
+        self.m_deg = list(range(len(self.acc)))
+        self.vel = self.cum_velocity_in_mm_per_s(self.acc)
+        self.pos = self.cum_position_in_mm(self.vel)
+        self.jer = self.diff_jerk_in_m_per_s(self.acc)
 
     def cum_velocity_in_mm_per_s(self, data):
-        return cumtrapz(np.array(data), self.machine_degree, initial=0) * \
+        return cumtrapz(np.array(data), self.m_deg, initial=0) * \
                (0.9 / 360 * 1000)
 
     def cum_position_in_mm(self, data):
-        return cumtrapz(np.array(data), self.machine_degree, initial=0) * \
+        return cumtrapz(np.array(data), self.m_deg, initial=0) * \
                (0.9 / 360)
+
+    def diff_jerk_in_m_per_s(self, data):
+        result = np.ones(len(self.m_deg))
+        result[:-1] = np.diff(np.array(data)) / (0.9 / 360)
+        result[-1] = result[0]
+        return result
+
+
+class York(DynamicData):
+    def __init__(self, a_set_of_acc=TetraPakA3AccModified()):
+        DynamicData.__init__(self, a_set_of_acc)
+
+
+class Jaw(DynamicData):
+    def __init__(self, a_set_of_acc=TetraPakA3AccModified()):
+        DynamicData.__init__(self, a_set_of_acc)
 
 
 if __name__ == "__main__":
-    pva = TetraPakPVA()
-    print('the last three of york_velocity:', pva.york_vel[-3], pva.york_vel[
-        -2], pva.york_vel[-1])
-    print("The length of york pva is ",
-          len(pva.york_pos),
-          len(pva.york_vel),
-          len(pva.york_acc))
-    print("The length of jaw pva is ",
-          len(pva.jaw_pos),
-          len(pva.jaw_vel),
-          len(pva.jaw_acc))
+    a_york = York()
+    a_jaw = Jaw()
+    print('the last three of york_velocity:', a_york.vel[-3],
+          a_york.vel[-2], a_york.vel[-1])
+    print("The length of york p, v, a, and j are ",
+          len(a_york.pos),
+          len(a_york.vel),
+          len(a_york.acc),
+          len(a_york.jer))
+    print("The length of jaw  p, v, a, and j are ",
+          len(a_jaw.pos),
+          len(a_jaw.vel),
+          len(a_jaw.acc),
+          len(a_jaw.jer))
