@@ -59,17 +59,21 @@ class TetraPakA3AccModified(TetraPakA3AccMeasured):
                 self.york_acc[i] = self.jaw_acc[i] = 0
 
 
-def diff_jerk_in_m_per_s(data):
-    result = np.ones(len(data))
-    result[:-1] = np.diff(np.array(data)) / (0.9 / 360)
-    result[-1] = result[0]
-    return result
-
+def move_data_half_circle(data):
+    l = len(data)
+    return np.hstack((data[l//2:], data[:l//2]))
 
 class DynamicData(object):
     def __init__(self, acc=TetraPakA3AccModified()):
         self.type = type(self)
-        self.acc = acc.york_acc if self.type == York else acc.jaw_acc
+        if self.type == RightYork:
+            self.acc = np.array(acc.york_acc)
+        elif self.type == RightJaw:
+            self.acc = np.array(acc.jaw_acc)
+        elif self.type == LeftYork:
+            self.acc = move_data_half_circle(acc.york_acc)
+        elif self.type == LeftJaw:
+            self.acc = move_data_half_circle(acc.jaw_acc)
         self.m_deg = list(range(len(self.acc)))
         self.vel = self.cum_velocity_in_mm_per_s(self.acc)
         self.pos = self.cum_position_in_mm(self.vel)
@@ -90,27 +94,37 @@ class DynamicData(object):
         return result
 
 
-class York(DynamicData):
+class RightYork(DynamicData):
     def __init__(self, a_set_of_acc=TetraPakA3AccModified()):
         DynamicData.__init__(self, a_set_of_acc)
 
 
-class Jaw(DynamicData):
+class RightJaw(DynamicData):
+    def __init__(self, a_set_of_acc=TetraPakA3AccModified()):
+        DynamicData.__init__(self, a_set_of_acc)
+
+
+class LeftYork(DynamicData):
+    def __init__(self, a_set_of_acc=TetraPakA3AccModified()):
+        DynamicData.__init__(self, a_set_of_acc)
+
+
+class LeftJaw(DynamicData):
     def __init__(self, a_set_of_acc=TetraPakA3AccModified()):
         DynamicData.__init__(self, a_set_of_acc)
 
 
 if __name__ == "__main__":
-    a_york = York()
-    a_jaw = Jaw()
+    a_york = RightYork()
+    a_jaw = LeftJaw()
     print('the last three of york_velocity:', a_york.vel[-3],
           a_york.vel[-2], a_york.vel[-1])
-    print("The length of york p, v, a, and j are ",
+    print("The length of right york p, v, a, and j are ",
           len(a_york.pos),
           len(a_york.vel),
           len(a_york.acc),
           len(a_york.jer))
-    print("The length of jaw  p, v, a, and j are ",
+    print("The length of left jaw  p, v, a, and j are ",
           len(a_jaw.pos),
           len(a_jaw.vel),
           len(a_jaw.acc),
