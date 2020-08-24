@@ -4,83 +4,91 @@ import numpy as np
 from scipy.integrate import cumtrapz
 
 
-def get_csv_data(path_to_cvs_file='./RawData_360.csv'):
-    """Get 360 degree york and jaw acceleration data from a csv file.
+class TetraPakA3AccMeasured(object):
+    """Get the acceleration of Tetra Pak A3 Flex curve."""
 
-    :param path_to_cvs_file: a string
-    :return: a tuple of np arrays, indicating the machine degrees, \
-             and the acceleration of york and jaw.
-    """
-    with open(path_to_cvs_file) as f:
-        f_csv = csv.reader(f)
-        headings = next(f_csv)
-        Row = namedtuple('Row', headings)
-        degree, york_acc, jaw_acc = [], [], []
-        for r in f_csv:
-            row = Row(*r)
-            degree.append(int(row.Degree))
-            york_acc.append(float(row.York_acc))
-            jaw_acc.append(float(row.Jaw_acc))
-    return np.array(degree), np.array(york_acc), np.array(jaw_acc)
+    def __init__(self,
+                 path_to_csv='./tetra_pak_a3_flex_cam_acc_raw_data_360.csv'):
+        self.machine_degree = []
+        self.york_acc = []
+        self.jaw_acc = []
+        self.read_in_csv_data(path_to_csv)
 
-
-def meet_jork_jaw_there(york_acc, jaw_acc):
-    for i in range(130, 340):
-        if abs(york_acc[i] - jaw_acc[i]) < 0.3:
-            york_acc[i] = jaw_acc[i] = (york_acc[i] + jaw_acc[i])/2
-    return york_acc, jaw_acc
+    def read_in_csv_data(self, path_to_csv):
+        """Get 360 degree york and jaw acceleration data from a csv file."""
+        with open(path_to_csv) as f:
+            f_csv = csv.reader(f)
+            headings = next(f_csv)
+            Row = namedtuple('Row', headings)
+            for r in f_csv:
+                row = Row(*r)
+                self.machine_degree.append(int(row.machine_degree))
+                self.york_acc.append(float(row.york_acc_raw))
+                self.jaw_acc.append(float(row.jaw_acc_raw))
+        return self
 
 
-def zerolyse_part_of_acc(york_acc, jaw_acc):
-    """In the center part, they should be exact zeros.
+class TetraPakA3AccModified(TetraPakA3AccMeasured):
+    """Modified the measured acceleration data of Tetra Pak A3 Flex curve."""
 
-    :param york_acc:
-    :param jaw_acc:
-    :return: side effect
-    """
-    for i in range(198, 263):
-        if abs(york_acc[i]) < 0.3:
-            york_acc[i] = jaw_acc[i] = 0
-    return york_acc, jaw_acc
+    def __init__(self,
+                 york_by_this=-0.169, jaw_by_that=-0.159,
+                 meet_there=(130, 340), zeroes_there=(198, 263),
+                 error_tolerance=0.3):
+        TetraPakA3AccMeasured.__init__(self)
+        self.adjust_a_little_as_a_whole(york_by_this, jaw_by_that)
+        self.meet_york_jaw_there(meet_there, error_tolerance)
+        self.become_zeroes_there(zeroes_there, error_tolerance)
+
+    def adjust_a_little_as_a_whole(self, york_by_this, jaw_by_that):
+        # TODO: fine tune the adjust value
+        for i in range(len(self.york_acc)):
+            self.york_acc[i] += york_by_this
+            self.jaw_acc[i] += jaw_by_that
+
+    def meet_york_jaw_there(self, there, error_tolerance):
+        for i in range(there[0], there[1]):
+            if abs(self.york_acc[i] - self.jaw_acc[i]) < error_tolerance:
+                self.york_acc[i] = self.jaw_acc[i] = \
+                    (self.york_acc[i] + self.jaw_acc[i]) / 2
+
+    def become_zeroes_there(self, there, error_tolerance):
+        """In the center part, they should be exact zeros."""
+        for i in range(there[0], there[1]):
+            if abs(self.york_acc[i]) < error_tolerance:
+                self.york_acc[i] = self.jaw_acc[i] = 0
 
 
-def calculate_avp():
-    """Calculate the acceleration, velocity and placement from csv data.
-    :return """
-    degree, york_acc, jaw_acc = get_csv_data()
-    york_acc -= 0.169
-    jaw_acc -= 0.159
-    york_acc, jaw_acc = meet_jork_jaw_there(york_acc, jaw_acc)
-    york_acc, jaw_acc = zerolyse_part_of_acc(york_acc,jaw_acc)
-    york_velo = cumtrapz(york_acc, degree, initial=0) * (0.9 / 360 * 1000)
-    jaw_velo = cumtrapz(jaw_acc, degree, initial=0) * (0.9 / 360 * 1000)
-    jaw_velo = jaw_velo - (jaw_velo[220] - york_velo[220])
-    york_place = cumtrapz(york_velo, degree, initial=0) * (0.9 / 360)
-    jaw_place = cumtrapz(jaw_velo, degree, initial=0) * (0.9 / 360)
-    jaw_place += york_place[230]-jaw_place[230]
-    return degree, york_acc, jaw_acc, york_velo, jaw_velo, york_place, jaw_place
+class TetraPakPVA(TetraPakA3AccModified):
+    def __init__(self):
+        TetraPakA3AccModified.__init__(self)
+        self.york_acc = np.array(self.york_acc)
+        self.jaw_acc = np.array(self.jaw_acc)
+        self.york_vel = self.cum_velocity_in_mm_per_s(self.york_acc)
+        self.jaw_vel = self.cum_velocity_in_mm_per_s(self.jaw_acc)
+        self.jaw_vel += self.york_vel[220] - self.jaw_vel[220]
+        self.york_pos = self.cum_position_in_mm(self.york_vel)
+        self.jaw_pos = self.cum_position_in_mm(self.jaw_vel)
+        self.jaw_pos += self.york_pos[230] - self.jaw_pos[230]
+
+    def cum_velocity_in_mm_per_s(self, data):
+        return cumtrapz(np.array(data), self.machine_degree, initial=0) * \
+               (0.9 / 360 * 1000)
+
+    def cum_position_in_mm(self, data):
+        return cumtrapz(np.array(data), self.machine_degree, initial=0) * \
+               (0.9 / 360)
 
 
 if __name__ == "__main__":
-    degree, york_acc, jaw_acc, york_velo, jaw_velo, york_place, jaw_place = calculate_avp()
-    print('the last three of york_velocity:', york_velo[-3], york_velo[-2], york_velo[-1])
-    # print('the last two of jaw_velocity:', jaw_velo[-2], jaw_velo[-1])
-    print('the first three of york_velocity:', york_velo[0], york_velo[1], york_velo[2])
-    print(york_velo[-3] - york_velo[-2])
-    print(york_velo[1] - york_velo[2])
-    print(york_velo[-2] - york_velo[1])
-
-    print('the last three of jaw_velocity:', jaw_velo[-3], jaw_velo[-2], jaw_velo[-1])
-    # print('the last two of jaw_velocity:', jaw_velo[-2], jaw_velo[-1])
-    print('the first three of jaw_velocity:', jaw_velo[0], jaw_velo[1], jaw_velo[2])
-    print(jaw_velo[-3] - jaw_velo[-2])
-    print(jaw_velo[1] - jaw_velo[2])
-    print(jaw_velo[-2] - jaw_velo[1])
-    print("-"*10)
-    print(york_place[133]-york_place[133+180])
-
-
-# def bisection_search(start ,end):
-# TODO: fine tune the adjust value
-#
-
+    pva = TetraPakPVA()
+    print('the last three of york_velocity:', pva.york_vel[-3], pva.york_vel[
+        -2], pva.york_vel[-1])
+    print("The length of york pva is ",
+          len(pva.york_pos),
+          len(pva.york_vel),
+          len(pva.york_acc))
+    print("The length of jaw pva is ",
+          len(pva.jaw_pos),
+          len(pva.jaw_vel),
+          len(pva.jaw_acc))
