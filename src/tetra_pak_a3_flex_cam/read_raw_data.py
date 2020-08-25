@@ -63,21 +63,18 @@ def move_data_half_circle(data):
     l = len(data)
     return np.hstack((data[l//2:], data[:l//2]))
 
+
 class DynamicData(object):
     def __init__(self, acc=TetraPakA3AccModified()):
-        self.type = type(self)
-        if self.type == RightYork:
+        if isinstance(self, RightYork):
             self.acc = np.array(acc.york_acc)
-        elif self.type == RightJaw:
+        elif isinstance(self, RightJaw):
             self.acc = np.array(acc.jaw_acc)
-        elif self.type == LeftYork:
-            self.acc = move_data_half_circle(acc.york_acc)
-        elif self.type == LeftJaw:
-            self.acc = move_data_half_circle(acc.jaw_acc)
         self.m_deg = list(range(len(self.acc)))
         self.vel = self.cum_velocity_in_mm_per_s(self.acc)
         self.pos = self.cum_position_in_mm(self.vel)
         self.jer = self.diff_jerk_in_m_per_s(self.acc)
+        self.data = [self.pos, self.vel, self.acc, self.jer]
 
     def cum_velocity_in_mm_per_s(self, data):
         return cumtrapz(np.array(data), self.m_deg, initial=0) * \
@@ -102,16 +99,75 @@ class RightYork(DynamicData):
 class RightJaw(DynamicData):
     def __init__(self, a_set_of_acc=TetraPakA3AccModified()):
         DynamicData.__init__(self, a_set_of_acc)
+        self.updated_vel = np.ones(len(self.vel))
+        self.updated_pos = np.ones(len(self.pos))
+
+    def offset_vel(self):
+        a_right_york_vel = RightYork().vel
+        a_right_jaw_vel = RightJaw().vel
+        self.updated_vel = self.vel - (
+                a_right_jaw_vel[220] - a_right_york_vel[220])
+
+    def update_pos(self):
+        self.updated_pos = self.cum_position_in_mm(self.updated_vel)
+
+    def offset_pos(self):
+        a_right_york_pos = RightYork().pos
+        a_right_jaw_pos = RightJaw().pos
+        self.pos -= a_right_jaw_pos[230] - a_right_york_pos[230]
+
+    def modify_vel_pos(self):
+        self.offset_vel()
+        self.update_pos()
+        self.offset_pos()
+        self.data = [self.updated_pos, self.updated_vel, self.acc, self.jer]
 
 
-class LeftYork(DynamicData):
+class LeftYork(RightYork):
     def __init__(self, a_set_of_acc=TetraPakA3AccModified()):
-        DynamicData.__init__(self, a_set_of_acc)
+        RightYork.__init__(self, a_set_of_acc)
+        for i in range(4):
+            self.data[i] = move_data_half_circle(self.data[i])
 
 
-class LeftJaw(DynamicData):
+class LeftJaw(RightJaw):
     def __init__(self, a_set_of_acc=TetraPakA3AccModified()):
-        DynamicData.__init__(self, a_set_of_acc)
+        RightJaw.__init__(self, a_set_of_acc)
+        self.modify_vel_pos()
+        for i in range(4):
+            self.data[i] = move_data_half_circle(self.data[i])
+
+
+class RightJawToYork(object):
+    def __init__(self, a_set_of_acc=TetraPakA3AccModified()):
+        ry = RightYork(a_set_of_acc)
+        rj = RightJaw(a_set_of_acc)
+        rj.modify_vel_pos()
+        self.m_deg = ry.m_deg
+        self.data = [None, None, None, None]
+        print("length of ry.data is ", len(ry.data))
+        print("length of rj.data is ", len(rj.data))
+        for i in range(4):
+            self.data[i] = ry.data[i] - rj.data[i]
+
+
+class LeftJawToYork(RightJawToYork):
+    def __init__(self, a_set_of_acc=TetraPakA3AccModified()):
+        RightJawToYork.__init__(self, a_set_of_acc)
+        for i in range(4):
+            self.data[i] = move_data_half_circle(self.data[i])
+
+class AllDynamicData(object):
+    def __init__(self):
+        self.ry = RightYork()
+        self.rj = RightJaw()
+        self.rj.modify_vel_pos()
+        self.ly = LeftYork()
+        self.lj = LeftJaw()
+        self.rjy = RightJawToYork()
+        self.ljy = LeftJawToYork()
+        self.d = self.ry.m_deg
+        self.data = [self.ry, self.rj, self.ly, self.lj, self.rjy, self.ljy]
 
 
 if __name__ == "__main__":

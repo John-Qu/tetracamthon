@@ -1,30 +1,54 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from tetra_pak_a3_flex_cam.read_raw_data import RightYork, RightJaw, \
-    LeftYork, LeftJaw
-
-
-class RightAndLeftYorkAndJawDynamicData(object):
-    def __init__(self):
-        self.ry = RightYork()
-        self.rj = RightJaw()
-        self.ly = LeftYork()
-        self.lj = LeftJaw()
-        self.d = ry.m_deg
-        self.data = (self.ry, self.rj, self.ly, self.lj)
+from tetra_pak_a3_flex_cam.read_raw_data import \
+    AllDynamicData, \
+    RightYork, RightJaw, LeftYork, LeftJaw, RightJawToYork, LeftJawToYork
 
 
 class CurveStyle(object):
-    def __init__(self, a_data):
-        color = ('blue', 'green', 'blue', 'green')
-        line_width = (3.0, 3.0, 1.0, 1.0)
-        line_style = ("-", "-", "--", "--")
-        label = ("Right York", "Right Jaw", "Left York", "Left Jaw")
-        i = [RightYork, RightJaw, LeftYork, LeftJaw].index(type(a_data))
+    def __init__(self, a_dyn_data):
+        color = ('blue', 'green', 'blue', 'green', 'red', 'red')
+        line_width = (3.0, 3.0, 1.0, 1.0, 3.0, 1.0)
+        line_style = ("-", "-", "--", "--", "-", "--")
+        label = ("Right York", "Right Jaw", "Left York", "Left Jaw",
+                 "Right Jaw to York", "Left Jaw to York")
+        i = [RightYork, RightJaw, LeftYork, LeftJaw,
+             RightJawToYork, LeftJawToYork].index(type(a_dyn_data))
         self.color = color[i]
         self.line_width = line_width[i]
         self.line_style = line_style[i]
         self.label = label[i]
+
+
+class Annotation(CurveStyle):
+    def __init__(self, a_dyn_data):
+        CurveStyle.__init__(self, a_dyn_data)
+        self.data = a_dyn_data
+
+    def mark_max_or_min_point(self, index_in_pvaj,
+                              slice=(0, 100),
+                              position=(30, 30),
+                              mark_size=50,
+                              font_size=12):
+        a = self.data.data[index_in_pvaj]
+        if a[slice[0]] <= a[slice[0] + 1] and \
+                a[slice[1] - 1] >= a[slice[1]]:
+            f = np.argmax
+        elif a[slice[0]] >= a[slice[0] + 1] and \
+                a[slice[1] - 1] <= a[slice[1]]:
+            f = np.argmin
+        else:
+            raise IndexError
+        index = f(a[slice[0]:slice[1]]) + slice[0]
+        plt.scatter([index, ], [a[index], ], mark_size,
+                    color=self.color)
+        plt.annotate("(" + str(index) + ', ' +
+                     str(round(a[index], 1)) + ")",
+                     xy=(index, a[index]), xycoords='data',
+                     xytext=position, textcoords='offset points',
+                     fontsize=font_size,
+                     arrowprops=dict(arrowstyle="->",
+                                     connectionstyle="arc3,rad=.2"))
 
 
 class SupPlotStyle(object):
@@ -33,40 +57,6 @@ class SupPlotStyle(object):
         self.num_col = num_col
         self.position = position
         self.grid_on = grid_on
-
-
-# Get data from raw csv data as right york and jaw pair.
-ry = RightYork()
-rj = RightJaw()
-ly = LeftYork()
-lj = LeftJaw()
-d = ry.m_deg
-right_york_acc, right_jaw_acc = ry.acc, rj.acc
-right_york_velo, right_jaw_velo = ry.vel, rj.vel
-right_york_place, right_jaw_place = ry.pos, rj.pos
-right_york_jerk, right_jaw_jerk = ry.jer, rj.jer
-left_york_acc, left_jaw_acc = ly.acc, lj.acc
-left_york_velo, left_jaw_velo = ly.vel, lj.vel
-left_york_place, left_jaw_place = ly.pos, lj.pos
-left_york_jerk, left_jaw_jerk = ly.jer, lj.jer
-
-
-# Slicing data for the left york and jaw pair.
-# left_york_acc = np.hstack((right_york_acc[-181:-1], right_york_acc[:181]))
-# left_jaw_acc = np.hstack((right_jaw_acc[-181:-1], right_jaw_acc[:181]))
-# left_york_velo = np.hstack((right_york_velo[-181:-1], right_york_velo[:181]))
-# left_jaw_velo = np.hstack((right_jaw_velo[-181:-1], right_jaw_velo[:181]))
-# left_york_place = np.hstack(
-#     (right_york_place[-181:-1], right_york_place[:181]))
-# left_jaw_place = np.hstack((right_jaw_place[-181:-1], right_jaw_place[:181]))
-
-# Calculate the relative velocities and placements between york and jaw.
-right_jaw_to_york_velo = right_jaw_velo - right_york_velo
-right_jaw_to_york_place = right_jaw_place - right_york_place
-left_jaw_to_york_velo = left_jaw_velo - left_york_velo
-left_jaw_to_york_place = left_jaw_place - left_york_place
-right_jaw_to_york_acc = right_jaw_acc - right_york_acc
-left_jaw_to_york_acc = left_jaw_acc - left_york_acc
 
 
 def annotate_max_min_part_curve(a, start=0, end=None, col='red', mark_size=50,
@@ -163,13 +153,14 @@ class SubPlot(object):
                                SupPlotStyle(4, 1, 3, True),
                                SupPlotStyle(4, 1, 4, True)
                                )[self.index]
-        self.set_subplots()
+        self.axes = self.set_subplots()
+        print(self.axes)
         self.set_grid_for_subplot()
 
     def set_subplots(self):
-        plt.subplot(self.sub_plot_style.num_row,
-                    self.sub_plot_style.num_col,
-                    self.sub_plot_style.position)
+        return plt.subplot(self.sub_plot_style.num_row,
+                           self.sub_plot_style.num_col,
+                           self.sub_plot_style.position)
 
     def set_grid_for_subplot(self):
         plt.grid(self.sub_plot_style.grid_on)
@@ -182,18 +173,17 @@ class SubPlot(object):
 
 
 class SubDynamicCurves(SubPlot):
-    def __init__(self, index):
-        self.index = index
+    def __init__(self, index_in_pvaj, dyn_data):
+        self.index = index_in_pvaj
         SubPlot.__init__(self, self.index)
-        self.dyn = RightAndLeftYorkAndJawDynamicData()
-        self.position_of_subplots = index + 1
-        self.set_subplots()
+        self.dyn = dyn_data
+        self.position_of_subplots = self.index + 1
 
     def plot_a_dynamic_data(self, index_of_a_data, index_of_pvaj):
         plt_plot(self.dyn.data[index_of_a_data], index_of_pvaj)
 
     def plot_dynamic_curves_on_one_subplot(self, index_of_pvaj):
-        for index_of_a_data in range(4):
+        for index_of_a_data in range(len(self.dyn.data)):
             self.plot_a_dynamic_data(index_of_a_data, index_of_pvaj)
 
     def plot_subplot(self, index_in_pvaj):
@@ -201,13 +191,39 @@ class SubDynamicCurves(SubPlot):
         self.set_grid_for_subplot()
         self.set_y_label()
 
+    def set_x_limits(self):
+        plt.xlim(0, int(max(self.dyn.data[0].m_deg) + 1))
+
+    def set_x_ticks(self):
+        plt.xticks(np.linspace(0, max(self.dyn.data[0].m_deg) + 1, 37,
+                               endpoint=True))
+
+    def set_legend(self):
+        plt.legend(loc='upper right')
+
+
+def plot_one_subplot(index_in_pvaj, a_dynamic_data, whether_legend=False):
+    curves = SubDynamicCurves(index_in_pvaj, a_dynamic_data)
+    curves.plot_subplot(index_in_pvaj)
+    curves.set_x_limits()
+    curves.set_x_ticks()
+    if whether_legend:
+        curves.set_legend()
+    return curves
+
 
 if __name__ == "__main__":
     fig = SuperPlot().get_fig_handle()
-    for index_in_pvaj in range(4):
-        sub_curves = SubDynamicCurves(index_in_pvaj)
-        sub_curves.plot_subplot(index_in_pvaj=index_in_pvaj)
-    sub_curves.set_x_label()
+    dynamic_data = AllDynamicData()
+
+    pos_curves = plot_one_subplot(0, dynamic_data, whether_legend=True)
+    right_york_annotation = Annotation(dynamic_data.data[0])
+    right_york_annotation.mark_max_or_min_point(0, slice=(40, 100),
+                                                position=(30, 30))
+    vel_curves = plot_one_subplot(1, dynamic_data)
+    acc_curves = plot_one_subplot(2, dynamic_data)
+    jer_curves = plot_one_subplot(3, dynamic_data)
+    jer_curves.set_x_label()
 
 # Create a figure of size 8x6 inches, 80 dots per inch
 # fig = plt.figure(figsize=(15, 12), dpi=80)
