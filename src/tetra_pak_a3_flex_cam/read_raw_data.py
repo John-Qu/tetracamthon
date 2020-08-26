@@ -32,7 +32,7 @@ class TetraPakA3AccModified(TetraPakA3AccMeasured):
     """Modified the measured acceleration data of Tetra Pak A3 Flex curve."""
 
     def __init__(self,
-                 york_by_this=-0.169, jaw_by_that=-0.159,
+                 york_by_this=-0.42, jaw_by_that=-0.35,
                  meet_there=(130, 340), zeroes_there=(198, 263),
                  error_tolerance=0.3):
         TetraPakA3AccMeasured.__init__(self)
@@ -112,13 +112,14 @@ class RightJaw(DynamicData):
         self.updated_pos = self.cum_position_in_mm(self.updated_vel)
 
     def offset_pos(self):
-        a_right_york_pos = RightYork().pos
-        a_right_jaw_pos = RightJaw().pos
-        self.pos -= a_right_jaw_pos[230] - a_right_york_pos[230]
-
-    def modify_vel_pos(self):
         self.offset_vel()
         self.update_pos()
+        a_right_york_pos = RightYork().pos
+        self.updated_pos = self.updated_pos - (
+                self.updated_pos[230] - a_right_york_pos[230]
+        )
+
+    def modify_vel_pos(self):
         self.offset_pos()
         self.data = [self.updated_pos, self.updated_vel, self.acc, self.jer]
 
@@ -145,8 +146,6 @@ class RightJawToYork(object):
         rj.modify_vel_pos()
         self.m_deg = ry.m_deg
         self.data = [None, None, None, None]
-        print("length of ry.data is ", len(ry.data))
-        print("length of rj.data is ", len(rj.data))
         for i in range(4):
             self.data[i] = ry.data[i] - rj.data[i]
 
