@@ -147,7 +147,7 @@ class RightJawToYork(object):
         self.m_deg = ry.m_deg
         self.data = [None, None, None, None]
         for i in range(4):
-            self.data[i] = ry.data[i] - rj.data[i]
+            self.data[i] = rj.data[i] - ry.data[i]
 
 
 class LeftJawToYork(RightJawToYork):

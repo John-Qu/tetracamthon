@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from math import sqrt
 from tetra_pak_a3_flex_cam.read_raw_data import \
     AllDynamicData, \
     RightYork, RightJaw, LeftYork, LeftJaw, RightJawToYork, LeftJawToYork
@@ -18,6 +19,7 @@ class CurveStyle(object):
         self.line_width = line_width[i]
         self.line_style = line_style[i]
         self.label = label[i]
+        self.font_size = 12
 
 
 class Annotation(CurveStyle):
@@ -25,27 +27,49 @@ class Annotation(CurveStyle):
         CurveStyle.__init__(self, a_dyn_data)
         self.data = a_dyn_data
 
-    def mark_max_or_min_point(self, index_in_pvaj,
-                              slice=(0, 100),
-                              position=(30, 30),
-                              mark_size=50,
-                              font_size=12):
+    def mark_peak_point(self,
+                        index_in_pvaj,
+                        max_or_min,
+                        scope,
+                        indicator,
+                        place=(30, 30),
+                        mark_size=50,
+                        font_size=12):
         a = self.data.data[index_in_pvaj]
-        if a[slice[0]] <= a[slice[0] + 1] and \
-                a[slice[1] - 1] >= a[slice[1]]:
+        if max_or_min == "max":
             f = np.argmax
-        elif a[slice[0]] >= a[slice[0] + 1] and \
-                a[slice[1] - 1] <= a[slice[1]]:
+        elif max_or_min == "min":
             f = np.argmin
         else:
             raise IndexError
-        index = f(a[slice[0]:slice[1]]) + slice[0]
+        index = f(a[scope[0]:scope[1]]) + scope[0]
         plt.scatter([index, ], [a[index], ], mark_size,
                     color=self.color)
-        plt.annotate("(" + str(index) + ', ' +
-                     str(round(a[index], 1)) + ")",
+        plt.annotate(indicator +
+                     "(" + str(index) + ', ' + str(round(a[index], 1)) + ")",
                      xy=(index, a[index]), xycoords='data',
-                     xytext=position, textcoords='offset points',
+                     xytext=place,
+                     textcoords='offset points',
+                     fontsize=font_size,
+                     arrowprops=dict(arrowstyle="->",
+                                     connectionstyle="arc3,rad=.2"))
+
+    def mark_zero_point(self,
+                        index_in_pvaj,
+                        scope,
+                        indicator,
+                        step=1,
+                        place=(30, 30),
+                        mark_size=50,
+                        font_size=12):
+        a = self.data.data[index_in_pvaj]
+        index = np.argmin(np.abs(a[scope[0]:scope[1]:step])) * step + scope[0]
+        plt.scatter([index, ], [a[index], ], mark_size, color=self.color)
+        plt.annotate(indicator +
+                     "(" + str(index) + ', ' + str(round(a[index], 1)) + ")",
+                     xy=(index, a[index]), xycoords='data',
+                     xytext=place,
+                     textcoords='offset points',
                      fontsize=font_size,
                      arrowprops=dict(arrowstyle="->",
                                      connectionstyle="arc3,rad=.2"))
@@ -59,65 +83,9 @@ class SupPlotStyle(object):
         self.grid_on = grid_on
 
 
-def annotate_max_min_part_curve(a, start=0, end=None, col='red', mark_size=50,
-                                position=(50, 50), font_size=12):
-    """Mark a scatter on the curve of an array at index with position
-    coordinate.
-
-    :param a: array-like object
-    :param start, end: int indicating the place of certain item in the array
-    :param col: string of scatter color, better being the same with the curve
-    of array
-    :param mark_size: int (of points?)
-    :param position: tuple of two ints or floats, relative to
-    the scatter's place
-    :param font_size: int of the messages' size
-    :return: None, effecting the plt object
-    """
-    if a[start] <= a[start + 1] and a[end - 1] >= a[end]:
-        f = np.argmax
-    elif a[start] >= a[start + 1] and a[end - 1] <= a[end]:
-        f = np.argmin
-    else:
-        raise IndexError
-    index = f(a[start:end]) + start
-    plt.scatter([index, ], [a[index], ], mark_size, color=col)
-    plt.annotate("(" + str(index) + ', ' + str(round(a[index], 1)) + ")",
-                 xy=(index, a[index]), xycoords='data',
-                 xytext=position, textcoords='offset points',
-                 fontsize=font_size,
-                 arrowprops=dict(arrowstyle="->",
-                                 connectionstyle="arc3,rad=.2"))
-
-
-def annotate_zero_point_on_curve(a, start=0, end=None, step=1, col='red',
-                                 mark_size=50, position=(50, 50),
-                                 font_size=12):
-    """Mark a scatter on the curve of an array at index with position
-    coordinate.
-
-    :param a: array-like object
-    :param start, end: int indicating the place of certain item in the array
-    :param col: string of scatter color, better being the same with
-    the curve of array
-    :param mark_size: int (of points?)
-    :param position: tuple of two ints or floats, relative to the scatter's place
-    :param font_size: int of the messages' size
-    :return: None, effecting the plt object
-    """
-    index = np.argmin(np.abs(a[start:end:step])) * step + start
-    plt.scatter([index, ], [a[index], ], mark_size, color=col)
-    plt.annotate("(" + str(index) + ', ' + str(round(a[index], 1)) + ")",
-                 xy=(index, a[index]), xycoords='data',
-                 xytext=position, textcoords='offset points',
-                 fontsize=font_size,
-                 arrowprops=dict(arrowstyle="->",
-                                 connectionstyle="arc3,rad=.2"))
-
-
 class SuperPlot(object):
-    def __init__(self, figsize=(15, 12), dpi=80):
-        self.fig = plt.figure(figsize=figsize, dpi=dpi)
+    def __init__(self, fig_size=(15, 12), dpi=80):
+        self.fig = plt.figure(figsize=fig_size, dpi=dpi)
         self.set_super_title()
 
     def set_super_title(self,
@@ -128,15 +96,6 @@ class SuperPlot(object):
 
     def get_fig_handle(self):
         return self.fig
-
-
-def plt_plot(a_data, index_of_pvaj):
-    style = CurveStyle(a_data)
-    plt.plot(a_data.m_deg, a_data.data[index_of_pvaj],
-             color=style.color,
-             linewidth=style.line_width,
-             linestyle=style.line_style,
-             label=style.label)
 
 
 class SubPlot(object):
@@ -154,7 +113,6 @@ class SubPlot(object):
                                SupPlotStyle(4, 1, 4, True)
                                )[self.index]
         self.axes = self.set_subplots()
-        print(self.axes)
         self.set_grid_for_subplot()
 
     def set_subplots(self):
@@ -172,7 +130,16 @@ class SubPlot(object):
         plt.xlabel(self.x_label)
 
 
-class SubDynamicCurves(SubPlot):
+def plt_plot(a_data, index_of_pvaj):
+    style = CurveStyle(a_data)
+    plt.plot(a_data.m_deg, a_data.data[index_of_pvaj],
+             color=style.color,
+             linewidth=style.line_width,
+             linestyle=style.line_style,
+             label=style.label)
+
+
+class SubDynamicPlot(SubPlot):
     def __init__(self, index_in_pvaj, dyn_data):
         self.index = index_in_pvaj
         SubPlot.__init__(self, self.index)
@@ -183,7 +150,7 @@ class SubDynamicCurves(SubPlot):
         plt_plot(self.dyn.data[index_of_a_data], index_of_pvaj)
 
     def plot_dynamic_curves_on_one_subplot(self, index_of_pvaj):
-        for index_of_a_data in range(len(self.dyn.data)):
+        for index_of_a_data in range(len(self.dyn.data)).__reversed__():
             self.plot_a_dynamic_data(index_of_a_data, index_of_pvaj)
 
     def plot_subplot(self, index_in_pvaj):
@@ -198,195 +165,177 @@ class SubDynamicCurves(SubPlot):
         plt.xticks(np.linspace(0, max(self.dyn.data[0].m_deg) + 1, 37,
                                endpoint=True))
 
-    def set_legend(self):
-        plt.legend(loc='upper right')
+
+def set_legend():
+    plt.legend(loc='upper right')
 
 
 def plot_one_subplot(index_in_pvaj, a_dynamic_data, whether_legend=False):
-    curves = SubDynamicCurves(index_in_pvaj, a_dynamic_data)
+    curves = SubDynamicPlot(index_in_pvaj, a_dynamic_data)
     curves.plot_subplot(index_in_pvaj)
     curves.set_x_limits()
     curves.set_x_ticks()
     if whether_legend:
-        curves.set_legend()
+        set_legend()
     return curves
 
 
-if __name__ == "__main__":
-    fig = SuperPlot().get_fig_handle()
+def get_mark_handle_on_curve(dynamic_data):
+    right_york_marks = Annotation(dynamic_data.data[0])
+    right_jaw_marks = Annotation(dynamic_data.data[1])
+    left_york_marks = Annotation(dynamic_data.data[2])
+    left_jaw_marks = Annotation(dynamic_data.data[3])
+    right_jaw_to_york_marks = Annotation(dynamic_data.data[4])
+    left_jaw_to_york_marks = Annotation(dynamic_data.data[5])
+    result = (
+        right_york_marks, right_jaw_marks, right_jaw_to_york_marks,
+        left_york_marks, left_jaw_marks, left_jaw_to_york_marks)
+    return result
+
+
+def mark_on_position_subplot(handles_of_marks_on_curve):
+    rym, rjm, rjym, lym, ljm, lyjm = handles_of_marks_on_curve
+    rym.mark_peak_point(0, "max", (70, 100), "pA", place=(20, -40))
+    rjym.mark_peak_point(0, "min", (20, 60), "rA", place=(10, 30))
+    rjym.mark_zero_point(0, (120, 150), "rB", place=(-50, 30))
+
+
+def mark_on_velocity_subplot(handles_of_marks_on_curve):
+    rym, rjm, rjym, lym, ljm, lyjm = handles_of_marks_on_curve
+    rym.mark_zero_point(1, (80, 90), "yA", place=(-100, 20))
+    rym.mark_peak_point(1, "max", (30, 50), "yB", place=(-30, -40))
+    rym.mark_peak_point(1, "min", (90, 100), "yC", place=(-50, -40))
+    rym.mark_peak_point(1, "max", (100, 110), "yC", place=(-10, -25))
+    rym.mark_peak_point(1, "min", (130, 140), "yE", place=(-15, -30))
+    rym.mark_peak_point(1, "max", (160, 180), "yF", place=(10, 30))
+    rym.mark_peak_point(1, "min", (180, 200), "yG", place=(-10, -30))
+    rym.mark_peak_point(1, "min", (260, 270), "yH", place=(-10, -30))
+    rym.mark_peak_point(1, "max", (280, 310), "yK", place=(-30, 50))
+    rym.mark_peak_point(1, "min", (310, 320), "yL", place=(-50, 50))
+    rym.mark_peak_point(1, "min", (340, 350), "yM", place=(-60, 40))
+    rjm.mark_zero_point(1, (110, 130), "jA", place=(20, 10))
+    rjm.mark_peak_point(1, "max", (40, 60), "jB", place=(35, -20))
+    rjm.mark_peak_point(1, "min", (90, 96), "jC", place=(-10, 40))
+    rjm.mark_peak_point(1, "max", (96, 110), "jD", place=(30, 20))
+    rjm.mark_peak_point(1, "min", (350, 360), "jE", place=(-120, 10))
+    rjym.mark_peak_point(1, "min", (0, 10), "rA", place=(40, -10))
+    rjym.mark_peak_point(1, "max", (90, 100), "rB", place=(-120, -50))
+    rjym.mark_zero_point(1, (130, 140), "rC", place=(30, 50))
+
+
+def mark_on_acceleration_subplot(handles_of_marks_on_curve):
+    rym, rjm, rjym, lym, ljm, lyjm = handles_of_marks_on_curve
+    rym.mark_peak_point(2, "max", (10, 20), "yA", place=(-30, -30))
+    rym.mark_zero_point(2, (30, 50), "yB", place=(-90, 10))
+    rym.mark_peak_point(2, "min", (60, 80), "yC", place=(-90, 10))
+    rym.mark_zero_point(2, (90, 100), "yD", place=(-70, 40))
+    rym.mark_zero_point(2, (100, 110), "yE", place=(0, 40))
+    rym.mark_peak_point(2, "min", (110, 120), "yF", place=(-50, -40))
+    rym.mark_zero_point(2, (130, 140), "yG", place=(-30, 55))
+    rym.mark_zero_point(2, (140, 150), "yH", place=(-10, 40))
+    rym.mark_peak_point(2, "max", (150, 160), "yK", place=(-30, -40))
+    rym.mark_zero_point(2, (160, 180), "yL", place=(-10, 55))
+    rym.mark_peak_point(2, "min", (180, 190), "yM", place=(-40, -40))
+    rym.mark_zero_point(2, (190, 200), "yN", place=(-50, 20))
+    rym.mark_zero_point(2, (260, 270), "yP", place=(-50, 20))
+    rym.mark_peak_point(2, "max", (270, 290), "yQ", place=(-30, 20))
+    rym.mark_zero_point(2, (290, 300), "yR", place=(-50, -30))
+    rym.mark_peak_point(2, "min", (300, 320), "yS", place=(-170, -20))
+    rym.mark_zero_point(2, (310, 320), "yT", place=(-70, 55))
+    rym.mark_zero_point(2, (320, 330), "yU", place=(10, 55))
+    rym.mark_peak_point(2, "min", (330, 340), "yV", place=(-50, -25))
+    rym.mark_zero_point(2, (340, 350), "yW", place=(-80, 35))
+    rym.mark_peak_point(2, "max", (90, 110), "yX", place=(-30, 50))
+    rjm.mark_peak_point(2, "max", (10, 30), "jA", place=(30, 0))
+    rjm.mark_zero_point(2, (40, 60), "jB", place=(-20, 50))
+    rjm.mark_peak_point(2, "min", (60, 80), "jC", place=(-50, 15))
+    rjm.mark_zero_point(2, (90, 97), "jD", place=(-100, -15))
+    rjm.mark_peak_point(2, "max", (90, 110), "jE", place=(-30, -40))
+    rjm.mark_zero_point(2, (97, 110), "jF", place=(-100, 25))
+    rjm.mark_peak_point(2, "min", (110, 130), "jG", place=(20, -10))
+    rjm.mark_zero_point(2, (130, 140), "jH", place=(-10, -50))
+    rjm.mark_peak_point(2, "min", (330, 350), "jK", place=(-150, -25))
+    rjym.mark_zero_point(2, (0, 10), "rA", place=(10, -20))
+    rjym.mark_peak_point(2, "max", (20, 40), "rB", place=(-60, -70))
+    rjym.mark_zero_point(2, (90, 100), "rC", place=(-100, 10))
+    rjym.mark_peak_point(2, "min", (110, 130), "rD", place=(-30, 40))
+    rjym.mark_zero_point(2, (130, 140), "rE", place=(30, 70))
+    rjym.mark_zero_point(2, (330, 335), "rF", place=(-80, 20))
+    rjym.mark_peak_point(2, "min", (340, 350), "rG", place=(-70, -25))
+
+
+def mark_on_jerk_subplot(handles_of_marks_on_curve):
+    rym, rjm, rjym, lym, ljm, lyjm = handles_of_marks_on_curve
+    rym.mark_peak_point(3, "min", (30, 50), "yA", place=(-20, -20))
+    rym.mark_peak_point(3, "max", (80, 100), "yB", place=(-90, -10))
+    rym.mark_peak_point(3, "min", (100, 110), "yC", place=(-30, -40))
+    rym.mark_zero_point(3, (140, 150), "yD", place=(-80, 50))
+    rym.mark_peak_point(3, "max", (140, 150), "yE", place=(-10, 20))
+    rym.mark_zero_point(3, (150, 160), "yF", place=(-90, -30))
+    rym.mark_peak_point(3, "min", (150, 170), "yG", place=(-50, -50))
+    rym.mark_peak_point(3, "max", (160, 180), "yH", place=(-40, -50))
+    rym.mark_peak_point(3, "min", (170, 190), "yJ", place=(30, -40))
+    rym.mark_zero_point(3, (180, 190), "yJ", place=(-80, 20))
+    rym.mark_peak_point(3, "max", (180, 200), "yL", place=(-10, 20))
+    rym.mark_zero_point(3, (190, 200), "yM", place=(20, 20))
+    rym.mark_peak_point(3, "max", (260, 280), "yN", place=(-30, 25))
+    rym.mark_zero_point(3, (261, 270), "yO", place=(-80, 40))
+    rym.mark_zero_point(3, (270, 280), "yP", place=(-80, -20))
+    rym.mark_peak_point(3, "max", (280, 300), "yQ", place=(-50, -40))
+    rym.mark_peak_point(3, "min", (290, 310), "yR", place=(-30, -40))
+    rym.mark_peak_point(3, "min", (280, 290), "yI", place=(-80, -40))
+    rym.mark_zero_point(3, (305, 315), "yS", place=(-80, 20))
+    rym.mark_peak_point(3, "max", (310, 320), "yT", place=(-100, -20))
+    rym.mark_zero_point(3, (315, 320), "yU", place=(-80, -20))
+    rym.mark_peak_point(3, "min", (320, 340), "yV", place=(-30, -40))
+    rym.mark_zero_point(3, (330, 340), "yW", place=(-80, 30))
+    rym.mark_peak_point(3, "max", (340, 350), "yX", place=(-60, 25))
+    rym.mark_zero_point(3, (10, 20), "yY", place=(-20, 50))
+    rym.mark_zero_point(3, (60, 80), "yZ", place=(-80, 30))
+
+
+def annotate_distance_on_one_subplot(tuple_of_two_points,
+                                     a_curve_style,
+                                     annotator_position):
+    p1, p2 = tuple_of_two_points
+    x1, y1 = p1
+    x2, y2 = p2
+    distance = sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+    plt.plot([x1, x2], [y1, y2],
+             color=a_curve_style.color,
+             linewidth=a_curve_style.line_width,
+             linestyle=a_curve_style.line_style)
+    plt.annotate(str(round(distance, 2)),
+                 xy=((x1 + x2) / 2, (y1 + y2) / 2),
+                 xycoords='data',
+                 xytext=annotator_position,
+                 textcoords='offset points',
+                 fontsize=a_curve_style.font_size,
+                 arrowprops=dict(
+                     arrowstyle="->", connectionstyle="arc3,rad=.2"))
+
+
+def plot_dynamic_subplots():
+    # fig = \
+    SuperPlot().get_fig_handle()
     dynamic_data = AllDynamicData()
+    # Handle of Marks on a curve, such as Right York, or Right Jaw to York.
+    handles_of_marks_on_curve = get_mark_handle_on_curve(dynamic_data)
+    # position_subplot = \
+    plot_one_subplot(0, dynamic_data, whether_legend=True)
+    mark_on_position_subplot(handles_of_marks_on_curve)
+    # velocity_subplot = \
+    plot_one_subplot(1, dynamic_data)
+    mark_on_velocity_subplot(handles_of_marks_on_curve)
+    # acceleration_subplot = \
+    plot_one_subplot(2, dynamic_data)
+    mark_on_acceleration_subplot(handles_of_marks_on_curve)
+    jerk_subplot = plot_one_subplot(3, dynamic_data)
+    jerk_subplot.set_x_label()
+    mark_on_jerk_subplot(handles_of_marks_on_curve)
 
-    pos_curves = plot_one_subplot(0, dynamic_data, whether_legend=True)
-    right_york_annotation = Annotation(dynamic_data.data[0])
-    right_york_annotation.mark_max_or_min_point(0, slice=(40, 100),
-                                                position=(30, 30))
-    vel_curves = plot_one_subplot(1, dynamic_data)
-    acc_curves = plot_one_subplot(2, dynamic_data)
-    jer_curves = plot_one_subplot(3, dynamic_data)
-    jer_curves.set_x_label()
 
-# Create a figure of size 8x6 inches, 80 dots per inch
-# fig = plt.figure(figsize=(15, 12), dpi=80)
-# fig.suptitle(
-#     'Tetra Pak A3 Flex @ 8000 p/h \n York and Jaw SVAJ curves @ 0.9s/cycle',
-#     fontsize='xx-large')
-#
-# plt.subplot(4, 1, 1)
-# plt.grid()
-# plt.xlabel("Machine Degree")
-# plt.ylabel("Position and Distance (mm)")
-# plt.plot(d, right_york_place, color="blue", linewidth=3.0, linestyle="-",
-#          label="right york")
-# plt.plot(d, left_york_place, color="blue", linewidth=1.0, linestyle="--",
-#          label="left york")
-# plt.plot(d, right_jaw_place, color="green", linewidth=3.0, linestyle="-",
-#          label="right jaw")
-# plt.plot(d, left_jaw_place, color="green", linewidth=1.0, linestyle="--",
-#          label="left jaw")
-# plt.plot(d, right_jaw_to_york_place, color="red", linewidth=3.0, linestyle="-",
-#          label="right jaw to york")
-# plt.plot(d, left_jaw_to_york_place, color="red", linewidth=1.0, linestyle="--",
-#          label="left jaw to york")
-# index_min_diff_right_york_place_right_jaw_place = np.argmin(
-#     right_jaw_to_york_place)
-# index_max_right_york_place = np.argmax(right_york_place)
-# # annotate_max_min_part_curve(right_jaw_to_york_place, 20, 80, col="red",
-# #                             position=(30, 17))
-# annotate_max_min_part_curve(right_york_place, 40, 100, col="blue",
-#                             position=(10, -30))
-# plt.plot([138, 138], [left_york_place[138], right_york_place[138]],
-#          color='blue', linewidth=2, linestyle=":")
-# plt.annotate(str(round(right_york_place[138] - left_york_place[138])),
-#              xy=(138, (right_york_place[138] + left_york_place[138]) / 2),
-#              xycoords='data',
-#              xytext=(20, -20), textcoords='offset points', fontsize=12,
-#              arrowprops=dict(arrowstyle="->", connectionstyle="arc3,rad=.2"))
-# plt.legend(loc='upper right')
-# plt.xlim(0.0, 360.0)
-# plt.xticks(np.linspace(0, 360, 37, endpoint=True))
-# plt.ylim(-200, 500)
-# plt.yticks(np.linspace(-200, 500, 8, endpoint=True))
-# annotate_zero_point_on_curve(right_jaw_to_york_place, 110, 140, col="red",
-#                              position=(10, -30))
-#
-# # Velocity
-# plt.subplot(4, 1, 2)
-# plt.grid()
-# plt.ylabel("Velocity (mm/s)")
-# plt.plot(d, right_york_velo, color="blue", linewidth=3.0, linestyle="-",
-#          label="right york")
-# plt.plot(d, left_york_velo, color="blue", linewidth=1.0, linestyle="--",
-#          label="left york")
-# plt.plot(d, right_jaw_velo, color="green", linewidth=3.0, linestyle="-",
-#          label="right jaw")
-# plt.plot(d, left_jaw_velo, color="green", linewidth=1.0, linestyle="--",
-#          label="left jaw")
-# plt.plot(d, right_jaw_to_york_velo, color="red", linewidth=3.0, linestyle="-",
-#          label="right jaw to york")
-# plt.plot(d, left_jaw_to_york_velo, color="red", linewidth=1.0, linestyle="--",
-#          label="left jaw to york")
-#
-# annotate_max_min_part_curve(right_york_velo, 130, 150, col="green",
-#                             position=(-70, 70))
-# annotate_max_min_part_curve(right_york_velo, 160, 180, col="green",
-#                             position=(-20, 30))
-# annotate_max_min_part_curve(right_york_velo, 180, 280, col="green",
-#                             position=(-10, -30))
-# annotate_max_min_part_curve(right_york_velo, 280, 310, col="green",
-#                             position=(10, 15))
-# annotate_max_min_part_curve(right_york_velo, 310, 320, col="green",
-#                             position=(-50, -30))
-# annotate_zero_point_on_curve(right_jaw_to_york_velo, 120, 140, col="red")
-# # plt.legend(loc='upper right')
-# plt.xlim(0.0, 360.0)
-# plt.xticks(np.linspace(0, 360, 37, endpoint=True))
-# plt.ylim(-2000, 4000)
-# plt.yticks(np.linspace(-2000, 4000, 7, endpoint=True))
-#
-# # Acceleration
-# plt.subplot(4, 1, 3)
-# plt.grid()
-# plt.ylabel("Acceleration (m/s^2)")
-# plt.plot(d, right_york_acc, color="blue", linewidth=3.0, linestyle="-",
-#          label="right york")
-# plt.plot(d, left_york_acc, color="blue", linewidth=1.0, linestyle="--",
-#          label="left york")
-# # Plot jaw acceleration with a green continuous line of width 1 (pixels)
-# plt.plot(d, right_jaw_acc, color="green", linewidth=3.0, linestyle="-",
-#          label="right jaw")
-# plt.plot(d, left_jaw_acc, color="green", linewidth=1.0, linestyle="--",
-#          label="left jaw")
-# plt.plot(d, right_jaw_to_york_acc, color="red", linewidth=3.0, linestyle="-",
-#          label="right jaw to york")
-# plt.plot(d, left_jaw_to_york_acc, color="red", linewidth=1.0, linestyle="--",
-#          label="left jaw")
-# annotate_max_min_part_curve(right_york_acc, 0, 20, col="blue",
-#                             position=(-20, -40))
-# annotate_max_min_part_curve(right_jaw_acc, 10, 30, col="green",
-#                             position=(40, -30))
-# annotate_max_min_part_curve(right_york_acc, 60, 80, col="blue",
-#                             position=(-70, -20))
-# annotate_max_min_part_curve(right_jaw_acc, 60, 80, col="green",
-#                             position=(20, -20))
-# annotate_max_min_part_curve(right_york_acc, 90, 100, col="blue",
-#                             position=(-50, 50))
-# annotate_max_min_part_curve(right_jaw_acc, 90, 100, col="green",
-#                             position=(-70, 10))
-# annotate_max_min_part_curve(right_york_acc, 110, 130, col="blue",
-#                             position=(20, 30))
-# annotate_max_min_part_curve(right_jaw_acc, 110, 130, col="green",
-#                             position=(10, -40))
-# annotate_max_min_part_curve(right_jaw_acc, 150, 160, col="green",
-#                             position=(10, 20))
-# annotate_max_min_part_curve(right_jaw_acc, 180, 190, col="green",
-#                             position=(-70, -30))
-# annotate_max_min_part_curve(right_jaw_acc, 270, 280, col="green",
-#                             position=(-70, 30))
-# annotate_max_min_part_curve(right_jaw_acc, 300, 315, col="green",
-#                             position=(-70, -30))
-# annotate_max_min_part_curve(right_york_acc, 330, 340, col="blue",
-#                             position=(-50, -40))
-# annotate_max_min_part_curve(right_jaw_acc, 330, 350, col="green",
-#                             position=(-50, -35))
-# annotate_zero_point_on_curve(right_york_acc, 130, 140,
-#                              col="blue", position=(-50, 40))
-# annotate_zero_point_on_curve(right_jaw_acc, 310, 320,
-#                              col="green", position=(0, 20))
-# annotate_zero_point_on_curve(right_jaw_acc, 270, 260,
-#                              step=-1, col="green", position=(-50, 10))
-# annotate_zero_point_on_curve(right_jaw_acc, 290, 300,
-#                              col="green", position=(-10, 20))
-# annotate_zero_point_on_curve(right_jaw_acc, 190, 200,
-#                              col="green", position=(20, 20))
-# annotate_zero_point_on_curve(right_jaw_acc, 150, 140,
-#                              step=-1, col="green", position=(10, -30))
-# annotate_zero_point_on_curve(right_jaw_acc, 160, 180,
-#                              col="green", position=(20, 20))
-# annotate_zero_point_on_curve(right_york_acc, 320, 330,
-#                              col="blue", position=(-20, -30))
-# # plt.legend(loc='upper right')
-# plt.xlim(0.0, 360.0)
-# plt.xticks(np.linspace(0, 360, 37, endpoint=True))
-# plt.ylim(-60.0, 60.0)
-# plt.yticks(np.linspace(-60, 60, 7, endpoint=True))
-#
-# # Jerk
-# plt.subplot(4, 1, 4)
-# plt.grid()
-# plt.ylabel("Jerk (m/s^3)")
-# plt.plot(d, right_york_jerk, color="blue", linewidth=3.0, linestyle="-",
-#          label="right york")
-# plt.plot(d, right_jaw_jerk, color="green", linewidth=3.0, linestyle="-",
-#          label="right jaw")
-# # plt.legend(loc='upper right')
-# plt.xlim(0.0, 360.0)
-# plt.xticks(np.linspace(0, 360, 37, endpoint=True))
-# plt.ylim(-2000.0, 2000.0)
-# plt.yticks(np.linspace(-2000, 2000, 9, endpoint=True))
-#
-# # Save figure using 720 dots per inch
-# plt.savefig("./Tetra_Pak_A3_flex_Curves_temp.png", dpi=720)
-
-# Show result on screen
-
-# plt.show()
+if __name__ == "__main__":
+    plot_dynamic_subplots()
+    # plt.show()
+    plt.savefig("./Tetra_Pak_A3_flex_Curves_20200827.png", dpi=720)
