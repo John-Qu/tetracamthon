@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from math import sqrt
 from tetra_pak_a3_flex_cam.read_raw_data import \
-    AllDynamicData, \
+    AllLinksWithDynData, \
     RightYork, RightJaw, LeftYork, LeftJaw, RightJawToYork, LeftJawToYork
 
 
@@ -35,7 +35,7 @@ class Annotation(CurveStyle):
                         place=(30, 30),
                         mark_size=50,
                         font_size=12):
-        a = self.data.data[index_in_pvaj]
+        a = self.data.pvaj_data[index_in_pvaj]
         if max_or_min == "max":
             f = np.argmax
         elif max_or_min == "min":
@@ -62,7 +62,7 @@ class Annotation(CurveStyle):
                         place=(30, 30),
                         mark_size=50,
                         font_size=12):
-        a = self.data.data[index_in_pvaj]
+        a = self.data.pvaj_data[index_in_pvaj]
         index = np.argmin(np.abs(a[scope[0]:scope[1]:step])) * step + scope[0]
         plt.scatter([index, ], [a[index], ], mark_size, color=self.color)
         plt.annotate(indicator +
@@ -130,28 +130,29 @@ class SubPlot(object):
         plt.xlabel(self.x_label)
 
 
-def plt_plot(a_data, index_of_pvaj):
-    style = CurveStyle(a_data)
-    plt.plot(a_data.m_deg, a_data.data[index_of_pvaj],
+def plt_plot(a_dyn_data, index_of_pvaj):
+    style = CurveStyle(a_dyn_data)
+    plt.plot(a_dyn_data.m_deg, a_dyn_data.pvaj_data[index_of_pvaj],
              color=style.color,
              linewidth=style.line_width,
              linestyle=style.line_style,
              label=style.label)
 
 
-class SubDynamicPlot(SubPlot):
-    def __init__(self, index_in_pvaj, dyn_data):
+class SubPvajPlot(SubPlot):
+    def __init__(self, index_in_pvaj, an_all_links_with_dyn_data):
         self.index = index_in_pvaj
         SubPlot.__init__(self, self.index)
-        self.dyn = dyn_data
+        self.an_all_links = an_all_links_with_dyn_data
         self.position_of_subplots = self.index + 1
 
-    def plot_a_dynamic_data(self, index_of_a_data, index_of_pvaj):
-        plt_plot(self.dyn.data[index_of_a_data], index_of_pvaj)
+    def plot_a_dynamic_data(self, index_of_link, index_of_pvaj):
+        plt_plot(self.an_all_links.links[index_of_link], index_of_pvaj)
 
     def plot_dynamic_curves_on_one_subplot(self, index_of_pvaj):
-        for index_of_a_data in range(len(self.dyn.data)).__reversed__():
-            self.plot_a_dynamic_data(index_of_a_data, index_of_pvaj)
+        for index_of_link in range(
+                len(self.an_all_links.links)).__reversed__():
+            self.plot_a_dynamic_data(index_of_link, index_of_pvaj)
 
     def plot_subplot(self, index_in_pvaj):
         self.plot_dynamic_curves_on_one_subplot(index_of_pvaj=index_in_pvaj)
@@ -159,11 +160,11 @@ class SubDynamicPlot(SubPlot):
         self.set_y_label()
 
     def set_x_limits(self):
-        plt.xlim(0, int(max(self.dyn.data[0].m_deg) + 1))
+        plt.xlim(0, int(max(self.an_all_links.links[0].m_deg) + 1))
 
     def set_x_ticks(self):
-        plt.xticks(np.linspace(0, max(self.dyn.data[0].m_deg) + 1, 37,
-                               endpoint=True))
+        plt.xticks(np.linspace(0, max(self.an_all_links.links[0].m_deg) + 1,
+                               37, endpoint=True))
 
 
 def set_legend():
@@ -171,7 +172,7 @@ def set_legend():
 
 
 def plot_one_subplot(index_in_pvaj, a_dynamic_data, whether_legend=False):
-    curves = SubDynamicPlot(index_in_pvaj, a_dynamic_data)
+    curves = SubPvajPlot(index_in_pvaj, a_dynamic_data)
     curves.plot_subplot(index_in_pvaj)
     curves.set_x_limits()
     curves.set_x_ticks()
@@ -181,12 +182,12 @@ def plot_one_subplot(index_in_pvaj, a_dynamic_data, whether_legend=False):
 
 
 def get_mark_handle_on_curve(dynamic_data):
-    right_york_marks = Annotation(dynamic_data.data[0])
-    right_jaw_marks = Annotation(dynamic_data.data[1])
-    left_york_marks = Annotation(dynamic_data.data[2])
-    left_jaw_marks = Annotation(dynamic_data.data[3])
-    right_jaw_to_york_marks = Annotation(dynamic_data.data[4])
-    left_jaw_to_york_marks = Annotation(dynamic_data.data[5])
+    right_york_marks = Annotation(dynamic_data.links[0])
+    right_jaw_marks = Annotation(dynamic_data.links[1])
+    left_york_marks = Annotation(dynamic_data.links[2])
+    left_jaw_marks = Annotation(dynamic_data.links[3])
+    right_jaw_to_york_marks = Annotation(dynamic_data.links[4])
+    left_jaw_to_york_marks = Annotation(dynamic_data.links[5])
     result = (
         right_york_marks, right_jaw_marks, right_jaw_to_york_marks,
         left_york_marks, left_jaw_marks, left_jaw_to_york_marks)
@@ -315,27 +316,34 @@ def annotate_distance_on_one_subplot(tuple_of_two_points,
                      arrowstyle="->", connectionstyle="arc3,rad=.2"))
 
 
-def plot_dynamic_subplots():
+def plot_dynamic_subplots(if_annotate=True, if_save_fig=False):
     # fig = \
     SuperPlot().get_fig_handle()
-    dynamic_data = AllDynamicData()
+    dynamic_data = AllLinksWithDynData()
     # Handle of Marks on a curve, such as Right York, or Right Jaw to York.
     handles_of_marks_on_curve = get_mark_handle_on_curve(dynamic_data)
     # position_subplot = \
     plot_one_subplot(0, dynamic_data, whether_legend=True)
-    mark_on_position_subplot(handles_of_marks_on_curve)
+    if if_annotate:
+        mark_on_position_subplot(handles_of_marks_on_curve)
     # velocity_subplot = \
     plot_one_subplot(1, dynamic_data)
-    mark_on_velocity_subplot(handles_of_marks_on_curve)
+    if if_annotate:
+        mark_on_velocity_subplot(handles_of_marks_on_curve)
     # acceleration_subplot = \
     plot_one_subplot(2, dynamic_data)
-    mark_on_acceleration_subplot(handles_of_marks_on_curve)
+    if if_annotate:
+        mark_on_acceleration_subplot(handles_of_marks_on_curve)
     jerk_subplot = plot_one_subplot(3, dynamic_data)
     jerk_subplot.set_x_label()
-    mark_on_jerk_subplot(handles_of_marks_on_curve)
+    if if_annotate:
+        mark_on_jerk_subplot(handles_of_marks_on_curve)
+    if if_save_fig:
+        plt.savefig("./Tetra_Pak_A3_flex_Curves_20200827.png", dpi=720)
 
 
 if __name__ == "__main__":
-    plot_dynamic_subplots()
-    # plt.show()
-    plt.savefig("./Tetra_Pak_A3_flex_Curves_20200827.png", dpi=720)
+    plot_dynamic_subplots(
+        # if_annotate=False,
+        # if_save_fig=True
+    )
