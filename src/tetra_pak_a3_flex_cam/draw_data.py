@@ -25,7 +25,21 @@ class CurveStyle(object):
 class Annotation(CurveStyle):
     def __init__(self, a_dyn_data):
         CurveStyle.__init__(self, a_dyn_data)
-        self.data = a_dyn_data
+        self.a_link = a_dyn_data
+
+    def scatter_and_annotate(self, a, font_size, index, indicator, mark_size,
+                             place):
+        degree = index / 2
+        plt.scatter([degree, ], [a[index], ], mark_size,
+                    color=self.color)
+        plt.annotate(indicator +
+                     "(" + str(degree) + ', ' + str(round(a[index], 1)) + ")",
+                     xy=(degree, a[index]), xycoords='data',
+                     xytext=place,
+                     textcoords='offset points',
+                     fontsize=font_size,
+                     arrowprops=dict(arrowstyle="->",
+                                     connectionstyle="arc3,rad=.2"))
 
     def mark_peak_point(self,
                         index_in_pvaj,
@@ -35,24 +49,18 @@ class Annotation(CurveStyle):
                         place=(30, 30),
                         mark_size=50,
                         font_size=12):
-        a = self.data.pvaj_data[index_in_pvaj]
+        a = self.a_link.pvaj_data[index_in_pvaj]
         if max_or_min == "max":
             f = np.argmax
         elif max_or_min == "min":
             f = np.argmin
         else:
             raise IndexError
-        index = f(a[2*scope[0]:2*scope[1]]) + 2*scope[0]
-        plt.scatter([index/2, ], [a[index], ], mark_size,
-                    color=self.color)
-        plt.annotate(indicator +
-                     "(" + str(index/2) + ', ' + str(round(a[index], 1)) + ")",
-                     xy=(index/2, a[index]), xycoords='data',
-                     xytext=place,
-                     textcoords='offset points',
-                     fontsize=font_size,
-                     arrowprops=dict(arrowstyle="->",
-                                     connectionstyle="arc3,rad=.2"))
+        from_i = self.a_link.m_deg.index(scope[0])
+        to_i = self.a_link.m_deg.index(scope[1])
+        index = f(a[from_i:to_i]) + from_i
+        self.scatter_and_annotate(a, font_size, index, indicator,
+                                  mark_size, place)
 
     def mark_zero_point(self,
                         index_in_pvaj,
@@ -62,18 +70,12 @@ class Annotation(CurveStyle):
                         place=(30, 30),
                         mark_size=50,
                         font_size=12):
-        a = self.data.pvaj_data[index_in_pvaj]
-        index = np.argmin(np.abs(a[2*scope[0]:2*scope[1]:step])) * step + \
-                2*scope[0]
-        plt.scatter([index/2, ], [a[index], ], mark_size, color=self.color)
-        plt.annotate(indicator +
-                     "(" + str(index/2) + ', ' + str(round(a[index], 1)) + ")",
-                     xy=(index/2, a[index]), xycoords='data',
-                     xytext=place,
-                     textcoords='offset points',
-                     fontsize=font_size,
-                     arrowprops=dict(arrowstyle="->",
-                                     connectionstyle="arc3,rad=.2"))
+        a = self.a_link.pvaj_data[index_in_pvaj]
+        from_i = self.a_link.m_deg.index(scope[0])
+        to_i = self.a_link.m_deg.index(scope[1])
+        index = np.argmin(np.abs(a[from_i:to_i:step])) * step + from_i
+        self.scatter_and_annotate(a, font_size, index, indicator,
+                                  mark_size, place)
 
 
 class SupPlotStyle(object):

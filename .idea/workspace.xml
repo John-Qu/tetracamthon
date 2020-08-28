@@ -29,24 +29,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/Tetra_Pak_A3_flex_Curves_with_721_points.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/measure_curves_720.dxf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/tetra_pak_a3_flex_cam_acc_data_721.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/tetra_pak_a3_flex_cam_acc_raw_data_360.numbers" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp_png/Tetra_Pak_A3_flex_Curves_201911.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp_png/Tetra_Pak_A3_flex_Curves_20200827.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp_png/Tetra_Pak_A3_flex_Curves_wo_annotation_20200827.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_read_raw_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/RawData_360.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/RawData_361.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/Tetra_Pak_A3_flex_Curves.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/draw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/draw_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_raw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_read_and_draw_raw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_read_and_draw_raw_data.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
