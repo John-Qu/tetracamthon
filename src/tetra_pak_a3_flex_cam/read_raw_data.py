@@ -23,8 +23,8 @@ class TetraPakA3AccMeasured(object):
             for r in f_csv:
                 row = Row(*r)
                 self.machine_degree.append(int(row.machine_degree))
-                self.york_acc.append(float(row.york_acc_raw))
-                self.jaw_acc.append(float(row.jaw_acc_raw))
+                self.york_acc.append(float(row.york_acc_mps2))
+                self.jaw_acc.append(float(row.jaw_acc_mps2))
         return self
 
 
