@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from math import sqrt
-from tetra_pak_a3_flex_cam.read_raw_data import \
+from tetra_pak_a3_flex_cam.read_data import \
     AllLinksWithDynData, \
     RightYork, RightJaw, LeftYork, LeftJaw, RightJawToYork, LeftJawToYork
 
@@ -42,12 +42,12 @@ class Annotation(CurveStyle):
             f = np.argmin
         else:
             raise IndexError
-        index = f(a[scope[0]:scope[1]]) + scope[0]
-        plt.scatter([index, ], [a[index], ], mark_size,
+        index = f(a[2*scope[0]:2*scope[1]]) + 2*scope[0]
+        plt.scatter([index/2, ], [a[index], ], mark_size,
                     color=self.color)
         plt.annotate(indicator +
-                     "(" + str(index) + ', ' + str(round(a[index], 1)) + ")",
-                     xy=(index, a[index]), xycoords='data',
+                     "(" + str(index/2) + ', ' + str(round(a[index], 1)) + ")",
+                     xy=(index/2, a[index]), xycoords='data',
                      xytext=place,
                      textcoords='offset points',
                      fontsize=font_size,
@@ -63,11 +63,12 @@ class Annotation(CurveStyle):
                         mark_size=50,
                         font_size=12):
         a = self.data.pvaj_data[index_in_pvaj]
-        index = np.argmin(np.abs(a[scope[0]:scope[1]:step])) * step + scope[0]
-        plt.scatter([index, ], [a[index], ], mark_size, color=self.color)
+        index = np.argmin(np.abs(a[2*scope[0]:2*scope[1]:step])) * step + \
+                2*scope[0]
+        plt.scatter([index/2, ], [a[index], ], mark_size, color=self.color)
         plt.annotate(indicator +
-                     "(" + str(index) + ', ' + str(round(a[index], 1)) + ")",
-                     xy=(index, a[index]), xycoords='data',
+                     "(" + str(index/2) + ', ' + str(round(a[index], 1)) + ")",
+                     xy=(index/2, a[index]), xycoords='data',
                      xytext=place,
                      textcoords='offset points',
                      fontsize=font_size,
@@ -163,7 +164,7 @@ class SubPvajPlot(SubPlot):
         plt.xlim(0, int(max(self.an_all_links.links[0].m_deg) + 1))
 
     def set_x_ticks(self):
-        plt.xticks(np.linspace(0, max(self.an_all_links.links[0].m_deg) + 1,
+        plt.xticks(np.linspace(0, max(self.an_all_links.links[0].m_deg),
                                37, endpoint=True))
 
 
@@ -197,7 +198,7 @@ def get_mark_handle_on_curve(dynamic_data):
 def mark_on_position_subplot(handles_of_marks_on_curve):
     rym, rjm, rjym, lym, ljm, lyjm = handles_of_marks_on_curve
     rym.mark_peak_point(0, "max", (70, 100), "pA", place=(20, -40))
-    rjym.mark_peak_point(0, "min", (20, 60), "rA", place=(10, 30))
+    rjym.mark_peak_point(0, "min", (20, 60), "rA", place=(10, 20))
     rjym.mark_zero_point(0, (120, 150), "rB", place=(-50, 30))
 
 
@@ -210,15 +211,15 @@ def mark_on_velocity_subplot(handles_of_marks_on_curve):
     rym.mark_peak_point(1, "min", (130, 140), "yE", place=(-15, -30))
     rym.mark_peak_point(1, "max", (160, 180), "yF", place=(10, 30))
     rym.mark_peak_point(1, "min", (180, 200), "yG", place=(-10, -30))
-    rym.mark_peak_point(1, "min", (260, 270), "yH", place=(-10, -30))
-    rym.mark_peak_point(1, "max", (280, 310), "yK", place=(-30, 50))
-    rym.mark_peak_point(1, "min", (310, 320), "yL", place=(-50, 50))
-    rym.mark_peak_point(1, "min", (340, 350), "yM", place=(-60, 40))
+    rym.mark_peak_point(1, "min", (260, 270), "yH", place=(-30, -30))
+    rym.mark_peak_point(1, "max", (280, 310), "yK", place=(-50, 50))
+    rym.mark_peak_point(1, "min", (310, 320), "yL", place=(-60, 50))
+    rym.mark_peak_point(1, "min", (340, 350), "yM", place=(-65, 40))
     rjm.mark_zero_point(1, (110, 130), "jA", place=(20, 10))
     rjm.mark_peak_point(1, "max", (40, 60), "jB", place=(35, -20))
-    rjm.mark_peak_point(1, "min", (90, 96), "jC", place=(-10, 40))
+    rjm.mark_peak_point(1, "min", (90, 96), "jC", place=(-10, 35))
     rjm.mark_peak_point(1, "max", (96, 110), "jD", place=(30, 20))
-    rjm.mark_peak_point(1, "min", (350, 360), "jE", place=(-120, 10))
+    rjm.mark_peak_point(1, "min", (350, 360), "jE", place=(-140, 10))
     rjym.mark_peak_point(1, "min", (0, 10), "rA", place=(40, -10))
     rjym.mark_peak_point(1, "max", (90, 100), "rB", place=(-120, -50))
     rjym.mark_zero_point(1, (130, 140), "rC", place=(30, 50))
@@ -228,36 +229,36 @@ def mark_on_acceleration_subplot(handles_of_marks_on_curve):
     rym, rjm, rjym, lym, ljm, lyjm = handles_of_marks_on_curve
     rym.mark_peak_point(2, "max", (10, 20), "yA", place=(-30, -30))
     rym.mark_zero_point(2, (30, 50), "yB", place=(-90, 10))
-    rym.mark_peak_point(2, "min", (60, 80), "yC", place=(-90, 10))
+    rym.mark_peak_point(2, "min", (60, 80), "yC", place=(-100, 0))
     rym.mark_zero_point(2, (90, 100), "yD", place=(-70, 40))
     rym.mark_zero_point(2, (100, 110), "yE", place=(0, 40))
-    rym.mark_peak_point(2, "min", (110, 120), "yF", place=(-50, -40))
+    rym.mark_peak_point(2, "min", (110, 120), "yF", place=(-50, -45))
     rym.mark_zero_point(2, (130, 140), "yG", place=(-30, 55))
-    rym.mark_zero_point(2, (140, 150), "yH", place=(-10, 40))
+    rym.mark_zero_point(2, (140, 150), "yH", place=(0, 40))
     rym.mark_peak_point(2, "max", (150, 160), "yK", place=(-30, -40))
     rym.mark_zero_point(2, (160, 180), "yL", place=(-10, 55))
-    rym.mark_peak_point(2, "min", (180, 190), "yM", place=(-40, -40))
+    rym.mark_peak_point(2, "min", (180, 190), "yM", place=(-50, -40))
     rym.mark_zero_point(2, (190, 200), "yN", place=(-50, 20))
     rym.mark_zero_point(2, (260, 270), "yP", place=(-50, 20))
     rym.mark_peak_point(2, "max", (270, 290), "yQ", place=(-30, 20))
     rym.mark_zero_point(2, (290, 300), "yR", place=(-50, -30))
     rym.mark_peak_point(2, "min", (300, 320), "yS", place=(-170, -20))
-    rym.mark_zero_point(2, (310, 320), "yT", place=(-70, 55))
-    rym.mark_zero_point(2, (320, 330), "yU", place=(10, 55))
+    rym.mark_zero_point(2, (310, 320), "yT", place=(-80, 55))
+    rym.mark_zero_point(2, (320, 330), "yU", place=(5, 55))
     rym.mark_peak_point(2, "min", (330, 340), "yV", place=(-50, -25))
     rym.mark_zero_point(2, (340, 350), "yW", place=(-80, 35))
     rym.mark_peak_point(2, "max", (90, 110), "yX", place=(-30, 50))
-    rjm.mark_peak_point(2, "max", (10, 30), "jA", place=(30, 0))
+    rjm.mark_peak_point(2, "max", (10, 30), "jA", place=(30, -5))
     rjm.mark_zero_point(2, (40, 60), "jB", place=(-20, 50))
     rjm.mark_peak_point(2, "min", (60, 80), "jC", place=(-50, 15))
     rjm.mark_zero_point(2, (90, 97), "jD", place=(-100, -15))
-    rjm.mark_peak_point(2, "max", (90, 110), "jE", place=(-30, -40))
+    rjm.mark_peak_point(2, "max", (90, 110), "jE", place=(-30, -45))
     rjm.mark_zero_point(2, (97, 110), "jF", place=(-100, 25))
     rjm.mark_peak_point(2, "min", (110, 130), "jG", place=(20, -10))
     rjm.mark_zero_point(2, (130, 140), "jH", place=(-10, -50))
-    rjm.mark_peak_point(2, "min", (330, 350), "jK", place=(-150, -25))
+    rjm.mark_peak_point(2, "min", (330, 350), "jK", place=(-160, -25))
     rjym.mark_zero_point(2, (0, 10), "rA", place=(10, -20))
-    rjym.mark_peak_point(2, "max", (20, 40), "rB", place=(-60, -70))
+    rjym.mark_peak_point(2, "max", (20, 40), "rB", place=(-60, -65))
     rjym.mark_zero_point(2, (90, 100), "rC", place=(-100, 10))
     rjym.mark_peak_point(2, "min", (110, 130), "rD", place=(-30, 40))
     rjym.mark_zero_point(2, (130, 140), "rE", place=(30, 70))
@@ -267,13 +268,13 @@ def mark_on_acceleration_subplot(handles_of_marks_on_curve):
 
 def mark_on_jerk_subplot(handles_of_marks_on_curve):
     rym, rjm, rjym, lym, ljm, lyjm = handles_of_marks_on_curve
-    rym.mark_peak_point(3, "min", (30, 50), "yA", place=(-20, -20))
+    rym.mark_peak_point(3, "min", (30, 50), "yA", place=(-10, -15))
     rym.mark_peak_point(3, "max", (80, 100), "yB", place=(-90, -10))
     rym.mark_peak_point(3, "min", (100, 110), "yC", place=(-30, -40))
     rym.mark_zero_point(3, (140, 150), "yD", place=(-80, 50))
     rym.mark_peak_point(3, "max", (140, 150), "yE", place=(-10, 20))
     rym.mark_zero_point(3, (150, 160), "yF", place=(-90, -30))
-    rym.mark_peak_point(3, "min", (150, 170), "yG", place=(-50, -50))
+    rym.mark_peak_point(3, "min", (150, 170), "yG", place=(-50, -40))
     rym.mark_peak_point(3, "max", (160, 180), "yH", place=(-40, -50))
     rym.mark_peak_point(3, "min", (170, 190), "yJ", place=(30, -40))
     rym.mark_zero_point(3, (180, 190), "yJ", place=(-80, 20))
@@ -281,16 +282,16 @@ def mark_on_jerk_subplot(handles_of_marks_on_curve):
     rym.mark_zero_point(3, (190, 200), "yM", place=(20, 20))
     rym.mark_peak_point(3, "max", (260, 280), "yN", place=(-30, 25))
     rym.mark_zero_point(3, (261, 270), "yO", place=(-80, 40))
-    rym.mark_zero_point(3, (270, 280), "yP", place=(-80, -20))
-    rym.mark_peak_point(3, "max", (280, 300), "yQ", place=(-50, -40))
-    rym.mark_peak_point(3, "min", (290, 310), "yR", place=(-30, -40))
+    rym.mark_zero_point(3, (270, 280), "yP", place=(-100, -30))
+    rym.mark_peak_point(3, "max", (280, 300), "yQ", place=(-50, -45))
+    rym.mark_peak_point(3, "min", (290, 310), "yR", place=(-20, -30))
     rym.mark_peak_point(3, "min", (280, 290), "yI", place=(-80, -40))
     rym.mark_zero_point(3, (305, 315), "yS", place=(-80, 20))
-    rym.mark_peak_point(3, "max", (310, 320), "yT", place=(-100, -20))
-    rym.mark_zero_point(3, (315, 320), "yU", place=(-80, -20))
-    rym.mark_peak_point(3, "min", (320, 340), "yV", place=(-30, -40))
+    rym.mark_peak_point(3, "max", (310, 320), "yT", place=(-105, -20))
+    rym.mark_zero_point(3, (315, 320), "yU", place=(-85, -30))
+    rym.mark_peak_point(3, "min", (320, 340), "yV", place=(-30, -30))
     rym.mark_zero_point(3, (330, 340), "yW", place=(-80, 30))
-    rym.mark_peak_point(3, "max", (340, 350), "yX", place=(-60, 25))
+    rym.mark_peak_point(3, "max", (340, 350), "yX", place=(-70, 25))
     rym.mark_zero_point(3, (10, 20), "yY", place=(-20, 50))
     rym.mark_zero_point(3, (60, 80), "yZ", place=(-80, 30))
 
@@ -316,7 +317,7 @@ def annotate_distance_on_one_subplot(tuple_of_two_points,
                      arrowstyle="->", connectionstyle="arc3,rad=.2"))
 
 
-def plot_dynamic_subplots(if_annotate=True, if_save_fig=False):
+def plot_dynamic_subplots(if_annotate=True, saved_name=None):
     # fig = \
     SuperPlot().get_fig_handle()
     dynamic_data = AllLinksWithDynData()
@@ -338,12 +339,12 @@ def plot_dynamic_subplots(if_annotate=True, if_save_fig=False):
     jerk_subplot.set_x_label()
     if if_annotate:
         mark_on_jerk_subplot(handles_of_marks_on_curve)
-    if if_save_fig:
-        plt.savefig("./Tetra_Pak_A3_flex_Curves_20200827.png", dpi=720)
+    if saved_name:
+        plt.savefig(saved_name, dpi=720)
 
 
 if __name__ == "__main__":
     plot_dynamic_subplots(
         # if_annotate=False,
-        # if_save_fig=True
+        # saved_name="./Tetra_Pak_A3_flex_Curves_with_721_points.png",
     )

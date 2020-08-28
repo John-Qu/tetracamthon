@@ -29,16 +29,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/RawData_360.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/Tetra_Pak_A3_flex_Curves.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_read_and_draw_raw_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Tetracamthon.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Tetracamthon.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/Tetra_Pak_A3_flex_Curves_with_721_points.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/measure_curves_720.dxf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/tetra_pak_a3_flex_cam_acc_data_721.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/tetra_pak_a3_flex_cam_acc_raw_data_360.numbers" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp_png/Tetra_Pak_A3_flex_Curves_201911.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp_png/Tetra_Pak_A3_flex_Curves_20200827.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp_png/Tetra_Pak_A3_flex_Curves_wo_annotation_20200827.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_read_raw_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/RawData_360.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/RawData_361.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/Tetra_Pak_A3_flex_Curves.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/draw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/draw_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_raw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_raw_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_raw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_read_and_draw_raw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_read_and_draw_raw_data.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +87,7 @@
       <recent name="$PROJECT_DIR$/docs/reference" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.pytest for test_read_and_draw_raw_data.test_get_cvs_data">
+  <component name="RunManager" selected="Python.draw_data (1)">
     <configuration name="Tetracamthon" type="PythonConfigurationType" factoryName="Python">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -143,17 +151,20 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="read_raw_data (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="read_data" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_raw_data.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_data.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -162,48 +173,20 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="read_raw_data" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_read_and_draw_raw_data.test_York_data" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/read_raw_data.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="shape_stage" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Tetracamthon" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/shape_stage.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_read_and_draw_raw_data.test_York_data&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <configuration name="pytest for test_read_and_draw_raw_data.test_get_cvs_data" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
@@ -222,13 +205,29 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
+    <configuration name="pytest for test_read_raw_data.test_read_in_csv_data" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="Tetracamthon" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_read_raw_data.test_read_in_csv_data&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.pytest for test_read_and_draw_raw_data.test_get_cvs_data" />
         <item itemvalue="Python.draw_data (1)" />
-        <item itemvalue="Python.read_raw_data (1)" />
-        <item itemvalue="Python.shape_stage" />
-        <item itemvalue="Python.read_raw_data" />
+        <item itemvalue="Python tests.pytest for test_read_raw_data.test_read_in_csv_data" />
+        <item itemvalue="Python tests.pytest for test_read_and_draw_raw_data.test_get_cvs_data" />
+        <item itemvalue="Python tests.pytest for test_read_and_draw_raw_data.test_York_data" />
+        <item itemvalue="Python.read_data" />
       </list>
     </recent_temporary>
   </component>
@@ -260,6 +259,84 @@
       <workItem from="1558349619326" duration="1030000" />
       <workItem from="1558444245223" duration="5000" />
     </task>
+    <task id="LOCAL-00001" summary="Combine york and jaw into one abstract dynamic data.">
+      <created>1598274859671</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1598274859671</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Raw acc data is turned into nd-array.">
+      <created>1598277379906</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1598277379906</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Now can draw data curves with new data classes.">
+      <created>1598277420303</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1598277420303</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Put data and actions into classes and methods.">
+      <created>1598336336040</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1598336336040</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Draw all curves and make one annotation.">
+      <created>1598361090644</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1598361090644</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Try to fine tune the ajust values. They infect each other.">
+      <created>1598417276119</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1598417276119</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Draw curves with annotation completely.">
+      <created>1598487498804</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1598487498804</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Clarify two 'data' attributes with 'links' and 'pvaj_data'.">
+      <created>1598499989223</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1598499989223</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Measured Tetra Pak Acc York and Jaw Curve upside and downside data.">
+      <created>1598582684697</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1598582684698</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Rename csv collumn names">
+      <created>1598584500025</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1598584500025</updated>
+    </task>
+    <task id="LOCAL-00011" summary="rename csv file name shorter">
+      <created>1598585061381</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1598585061381</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -297,12 +374,33 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/temp" />
     </ignored-roots>
+    <MESSAGE value="Combine york and jaw into one abstract dynamic data." />
+    <MESSAGE value="Raw acc data is turned into nd-array." />
+    <MESSAGE value="Now can draw data curves with new data classes." />
+    <MESSAGE value="Put data and actions into classes and methods." />
+    <MESSAGE value="Draw all curves and make one annotation." />
+    <MESSAGE value="Try to fine tune the ajust values. They infect each other." />
+    <MESSAGE value="Draw curves with annotation completely." />
+    <MESSAGE value="Clarify two 'data' attributes with 'links' and 'pvaj_data'." />
+    <MESSAGE value="Measured Tetra Pak Acc York and Jaw Curve upside and downside data." />
+    <MESSAGE value="Rename csv collumn names" />
+    <MESSAGE value="rename csv file name shorter" />
+    <option name="LAST_COMMIT_MESSAGE" value="rename csv file name shorter" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="474" y="210" key="#Inspections" timestamp="1598237920969">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="474" y="210" key="#Inspections/0.0.1680.1050@0.0.1680.1050" timestamp="1598237920969" />
     <state x="552" y="360" key="#Notifications" timestamp="1597984122621">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="552" y="360" key="#Notifications/0.0.1680.1050@0.0.1680.1050" timestamp="1597984122621" />
+    <state x="564" y="325" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1598589428658">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="564" y="325" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1680.1050@0.0.1680.1050" timestamp="1598589428658" />
+    <state x="564" y="341" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1680.1027@0.23.1680.1027" timestamp="1598578779309" />
     <state x="438" y="114" key="#com.intellij.openapi.keymap.impl.ui.EditKeymapsDialog" timestamp="1597984161060">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
@@ -311,33 +409,49 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="528" y="268" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1597219576039" />
+    <state x="0" y="203" key="#xdebugger.XInspectDialog" timestamp="1598276212851">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="0" y="203" key="#xdebugger.XInspectDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1598276212851" />
+    <state x="417" y="14" key="CommitChangelistDialog2" timestamp="1598585061032">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="417" y="14" key="CommitChangelistDialog2/0.0.1680.1050@0.0.1680.1050" timestamp="1598585061032" />
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog" timestamp="1596613625546">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1596613625546" />
-    <state width="1659" height="386" key="GridCell.Tab.0.bottom" timestamp="1597993518351">
+    <state width="1659" height="386" key="GridCell.Tab.0.bottom" timestamp="1598252067054">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="386" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1597993518351" />
-    <state width="1659" height="386" key="GridCell.Tab.0.center" timestamp="1597993518350">
+    <state width="1659" height="386" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1598252067054" />
+    <state width="1659" height="386" key="GridCell.Tab.0.center" timestamp="1598252067052">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="386" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1597993518350" />
-    <state width="1659" height="386" key="GridCell.Tab.0.left" timestamp="1597993518349">
+    <state width="1659" height="386" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1598252067052" />
+    <state width="1659" height="386" key="GridCell.Tab.0.left" timestamp="1598252067051">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="386" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1597993518349" />
-    <state width="1659" height="386" key="GridCell.Tab.0.right" timestamp="1597993518350">
+    <state width="1659" height="386" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1598252067051" />
+    <state width="1659" height="386" key="GridCell.Tab.0.right" timestamp="1598252067052">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="386" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1597993518350" />
+    <state width="1659" height="386" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1598252067052" />
     <state x="341" y="164" key="SettingsEditor" timestamp="1597985416732">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="341" y="164" key="SettingsEditor/0.0.1680.1050@0.0.1680.1050" timestamp="1597985416732" />
-    <state x="505" y="233" width="670" height="676" key="search.everywhere.popup" timestamp="1597985348511">
+    <state x="542" y="235" width="596" height="580" key="find.popup" timestamp="1598340549734">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="505" y="233" width="670" height="676" key="search.everywhere.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1597985348511" />
+    <state x="542" y="235" width="596" height="580" key="find.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1598340549734" />
+    <state x="666" y="317" key="refactoring.ChangeSignatureDialog" timestamp="1598238445978">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="666" y="317" key="refactoring.ChangeSignatureDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1598238445978" />
+    <state x="505" y="233" width="670" height="676" key="search.everywhere.popup" timestamp="1598364132172">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="505" y="233" width="670" height="676" key="search.everywhere.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1598364132172" />
   </component>
 </project>

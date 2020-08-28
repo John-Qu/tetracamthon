@@ -1,6 +1,13 @@
 """Test reading and drawing the cvs raw data."""
-from tetra_pak_a3_flex_cam.read_raw_data import get_csv_data
+from tetra_pak_a3_flex_cam.read_data import get_csv_data, York_data
 import numpy
+
+
+def test_York_data(path_to_a_cvs_file):
+    a_york_data = York_data(path_to_a_cvs_file)
+    assert len(a_york_data.machine_degree) == 360
+    assert isinstance(a_york_data.acceleration[5], numpy.float64)
+
 
 def test_get_cvs_data(path_to_a_cvs_file):
     """Test whether the data is properly got.
