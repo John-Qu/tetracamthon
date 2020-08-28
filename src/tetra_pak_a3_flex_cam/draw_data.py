@@ -27,20 +27,6 @@ class Annotation(CurveStyle):
         CurveStyle.__init__(self, a_dyn_data)
         self.a_link = a_dyn_data
 
-    def scatter_and_annotate(self, a, font_size, index, indicator, mark_size,
-                             place):
-        degree = index / 2
-        plt.scatter([degree, ], [a[index], ], mark_size,
-                    color=self.color)
-        plt.annotate(indicator +
-                     "(" + str(degree) + ', ' + str(round(a[index], 1)) + ")",
-                     xy=(degree, a[index]), xycoords='data',
-                     xytext=place,
-                     textcoords='offset points',
-                     fontsize=font_size,
-                     arrowprops=dict(arrowstyle="->",
-                                     connectionstyle="arc3,rad=.2"))
-
     def mark_peak_point(self,
                         index_in_pvaj,
                         max_or_min,
@@ -76,6 +62,20 @@ class Annotation(CurveStyle):
         index = np.argmin(np.abs(a[from_i:to_i:step])) * step + from_i
         self.scatter_and_annotate(a, font_size, index, indicator,
                                   mark_size, place)
+
+    def scatter_and_annotate(self, a, font_size, index, indicator, mark_size,
+                             place):
+        degree = index / 2
+        plt.scatter([degree, ], [a[index], ], mark_size,
+                    color=self.color)
+        plt.annotate(indicator +
+                     "(" + str(degree) + ', ' + str(round(a[index], 1)) + ")",
+                     xy=(degree, a[index]), xycoords='data',
+                     xytext=place,
+                     textcoords='offset points',
+                     fontsize=font_size,
+                     arrowprops=dict(arrowstyle="->",
+                                     connectionstyle="arc3,rad=.2"))
 
 
 class SupPlotStyle(object):
