@@ -64,16 +64,24 @@ The reference data is derived from MSC Adams 2010 Euro User conference
 In page 56, Tetra Pak released A3/Flex york and jaw acceleration curves,
 as shown below.
 
-.. figure:: ../../static/images/README/006tNbRwgy1gap1ec6d1sj314x0u0h45.jpg
-   :alt:
+.. figure:: ./plots/01_one_slide_of_Tetra_Pak_in_Using_Adams_in_university_courses_&_research_involving_Kinematics_&_Dynamics.png
+   :alt: 01_one_slide_of_Tetra_Pak_in_Using_Adams_in_university_courses_&_research_involving_Kinematics_&_Dynamics
 
-.. figure:: https://tva1.sinaimg.cn/large/006tNbRwgy1g9lt1h7fg2j31960u017z.jpg
-   :alt:
+Here is the position, velocity and acceleration curves.
+
+.. figure:: ./plots/02_about_p_v_a_of_york_and_jaw.png
+   :alt: 02_about_p_v_a_of_york_and_jaw
+
+More closely, here is the acceleration of york and jaw.
+
+.. figure:: ./plots/03_acc_of_york_and_jaw.png
+   :alt: 03_acc_of_york_and_jaw
+
 
 Curves of velocity and position can be integrated from the above
 acceleration chart. Here is the rough diagram of p v a j data.
 
-.. image:: ./src/tetra_pak_a3_flex_cam/Tetra_Pak_A3_flex_Curves_with_721_points.png
+.. image:: ./plots/Tetra_Pak_A3_flex_Curves_with_721_points.png
    :alt: Tetra_Pak_A3_flex_Curves_with_721_points
    :align: center
 
