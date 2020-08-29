@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from math import sqrt
-from a3flex.read_data import \
-    AllLinksWithDynData, \
+from a3flex.read_data import AllLinksWithDynData, \
     RightYork, RightJaw, LeftYork, LeftJaw, RightJawToYork, LeftJawToYork
 
 
@@ -325,12 +324,13 @@ def annotate_distance_on_one_subplot(tuple_of_two_points,
                      arrowstyle="->", connectionstyle="arc3,rad=.2"))
 
 
-def plot_dynamic_subplots(if_annotate=True,
+def plot_dynamic_subplots(path_to_csv,
+                          if_annotate=True,
                           if_left_links=True,
                           saved_name=None):
     # fig = \
     SuperPlot().get_fig_handle()
-    dynamic_data = AllLinksWithDynData()
+    dynamic_data = AllLinksWithDynData(path_to_csv=path_to_csv)
     # Handle of Marks on a curve, such as Right York, or Right Jaw to York.
     handles_of_marks_on_curve = get_mark_handle_on_curve(dynamic_data)
     # position_subplot = \
@@ -355,6 +355,7 @@ def plot_dynamic_subplots(if_annotate=True,
 
 if __name__ == "__main__":
     plot_dynamic_subplots(
+        path_to_csv='./tetra_pak_a3_flex_cam_acc_data_721.csv'
         # if_annotate=False,
         # saved_name="./Tetra_Pak_A3_flex_Curves_with_721_points.png",
     )
