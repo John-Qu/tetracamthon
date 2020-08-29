@@ -327,7 +327,7 @@ def annotate_distance_on_one_subplot(tuple_of_two_points,
 def plot_dynamic_subplots(path_to_csv,
                           if_annotate=True,
                           if_left_links=True,
-                          saved_name=None):
+                          save_to=None):
     # fig = \
     SuperPlot().get_fig_handle()
     dynamic_data = AllLinksWithDynData(path_to_csv=path_to_csv)
@@ -349,13 +349,12 @@ def plot_dynamic_subplots(path_to_csv,
     jerk_subplot.set_x_label()
     if if_annotate:
         mark_on_jerk_subplot(handles_of_marks_on_curve)
-    if saved_name:
-        plt.savefig(saved_name, dpi=720)
+    if save_to:
+        plt.savefig(save_to, dpi=720)
 
 
 if __name__ == "__main__":
     plot_dynamic_subplots(
-        path_to_csv='./tetra_pak_a3_flex_cam_acc_data_721.csv'
+        path_to_csv='./tetra_pak_a3_flex_cam_acc_data_721.csv',
         # if_annotate=False,
-        # saved_name="./Tetra_Pak_A3_flex_Curves_with_721_points.png",
-    )
+        save_to="../../plots/Tetra_Pak_A3_flex_Curves_with_721_points.png")
