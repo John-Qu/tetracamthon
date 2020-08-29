@@ -29,11 +29,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.rst" beforeDir="false" afterPath="$PROJECT_DIR$/README.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/Tetra_Pak_A3_flex_Curves_with_721_points.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/Tetra_Pak_A3_flex_Curves_with_721_points.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/draw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/draw_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_data.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -323,7 +319,14 @@
       <option name="project" value="LOCAL" />
       <updated>1598585061381</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="shut off left links in acc and jerk subplot.">
+      <created>1598686590665</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1598686590665</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -372,7 +375,8 @@
     <MESSAGE value="Measured Tetra Pak Acc York and Jaw Curve upside and downside data." />
     <MESSAGE value="Rename csv collumn names" />
     <MESSAGE value="rename csv file name shorter" />
-    <option name="LAST_COMMIT_MESSAGE" value="rename csv file name shorter" />
+    <MESSAGE value="shut off left links in acc and jerk subplot." />
+    <option name="LAST_COMMIT_MESSAGE" value="shut off left links in acc and jerk subplot." />
   </component>
   <component name="WindowStateProjectService">
     <state x="474" y="210" key="#Inspections" timestamp="1598237920969">
@@ -400,10 +404,10 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="0" y="203" key="#xdebugger.XInspectDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1598276212851" />
-    <state x="417" y="14" key="CommitChangelistDialog2" timestamp="1598585061032">
+    <state x="417" y="14" key="CommitChangelistDialog2" timestamp="1598686589678">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="417" y="14" key="CommitChangelistDialog2/0.0.1680.1050@0.0.1680.1050" timestamp="1598585061032" />
+    <state x="417" y="14" key="CommitChangelistDialog2/0.0.1680.1050@0.0.1680.1050" timestamp="1598686589678" />
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog" timestamp="1596613625546">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

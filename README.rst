@@ -74,8 +74,8 @@ Curves of velocity and position can be integrated from the above
 acceleration chart. Here is the rough diagram of p v a j data.
 
 .. image:: ./src/tetra_pak_a3_flex_cam/Tetra_Pak_A3_flex_Curves_with_721_points.png
-   :width: 600
    :alt: Tetra_Pak_A3_flex_Curves_with_721_points
+   :align: center
 
 Ploted Results
 ~~~~~~~~~~~~~~
