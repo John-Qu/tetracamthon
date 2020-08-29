@@ -357,4 +357,5 @@ if __name__ == "__main__":
     plot_dynamic_subplots(
         path_to_csv='./tetra_pak_a3_flex_cam_acc_data_721.csv',
         # if_annotate=False,
-        save_to="../../plots/Tetra_Pak_A3_flex_Curves_with_721_points.png")
+        save_to="../../plots/Tetra_Pak_A3_flex_Curves_with_721_points.png"
+    )
