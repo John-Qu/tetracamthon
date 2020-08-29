@@ -179,7 +179,7 @@ class AllLinksWithDynData(object):
         self.rjy = RightJawToYork()
         self.ljy = LeftJawToYork()
         self.d = self.ry.m_deg
-        self.links = [self.ry, self.rj, self.ly, self.lj, self.rjy, self.ljy]
+        self.links = [self.ry, self.rj, self.rjy, self.ly, self.lj, self.ljy]
 
 
 if __name__ == "__main__":
