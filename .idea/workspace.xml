@@ -30,7 +30,10 @@
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.rst" beforeDir="false" afterPath="$PROJECT_DIR$/README.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/Tetra_Pak_A3_flex_Curves_with_721_points.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/Tetra_Pak_A3_flex_Curves_with_721_points.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/draw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/draw_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetra_pak_a3_flex_cam/read_data.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

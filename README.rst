@@ -1,8 +1,6 @@
 Tetracamthon
 ============
 
-file updated at 2020-01-08
-
 Project Name
 ------------
 
@@ -67,17 +65,17 @@ In page 56, Tetra Pak released A3/Flex york and jaw acceleration curves,
 as shown below.
 
 .. figure:: ../../static/images/README/006tNbRwgy1gap1ec6d1sj314x0u0h45.jpg
-   :alt: 
+   :alt:
 
 .. figure:: https://tva1.sinaimg.cn/large/006tNbRwgy1g9lt1h7fg2j31960u017z.jpg
-   :alt: 
+   :alt:
 
 Curves of velocity and position can be integrated from the above
-acceleration chart. Here is the rough diagram of p v a j data with
-accumulation error.
+acceleration chart. Here is the rough diagram of p v a j data.
 
-.. figure:: https://tva1.sinaimg.cn/large/006tNbRwly1g9jhmty4rhj311i0u07wj.jpg
-   :alt: 
+.. image:: ./src/tetra_pak_a3_flex_cam/Tetra_Pak_A3_flex_Curves_with_721_points.png
+   :width: 600
+   :alt: Tetra_Pak_A3_flex_Curves_with_721_points
 
 Ploted Results
 ~~~~~~~~~~~~~~
@@ -112,4 +110,11 @@ Roadmap
 -  Refactor the codes aiming at the API for customized parameter script.
 -  Abstract the algorithm as backend of a cam design add-on for FreeCAD.
 -  Gather more applications of various conditions with high-speed cams.
+
+Readme Changelog
+----------------
+
+- 2020-01-08 reformat this readme file.
+- 2020-08-29 refresh the tetra pak a3 curve with 721 points sample.
+
 
