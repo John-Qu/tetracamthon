@@ -1,5 +1,6 @@
 from sympy import *
 from sympy.abc import x
+from sympy.parsing.sympy_parser import parse_expr
 
 init_printing(use_unicode=True)
 

@@ -25,7 +25,7 @@ $EXTMIN
  10
 -918.1371458314759
  20
--3179.620112164484
+-3150.708363693162
  30
 0
   9
@@ -1121,9 +1121,9 @@ AcDbViewportTableRecord
  21
 1
  12
-386.5458887172254
+-215.6259538458372
  22
--1069.540504119842
+-1565.97764311467
  13
 0
  23
@@ -1149,9 +1149,9 @@ AcDbViewportTableRecord
  37
 0
  40
-943.9857492883821
+57.06370145160983
  41
-1.562807881773399
+1.295081967213115
  42
 50
  43
@@ -2285,7 +2285,7 @@ AcDbLayerTableRecord
   2
 Dims
  70
-    1
+    0
  62
     3
   6
@@ -5484,8 +5484,6 @@ AcDbDimension
    33
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -5744,8 +5742,6 @@ AcDbDimension
    33
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -6708,8 +6704,6 @@ AcDbDimension
    33
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -6766,8 +6760,6 @@ AcDbDimension
    32
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -6826,8 +6818,6 @@ AcDbDimension
    32
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -7153,7 +7143,7 @@ ByLayer
 100
 AcDbDimension
  10
-2.963650389371366
+2.963650389371373
  20
 199.0057439585408
  30
@@ -7168,8 +7158,6 @@ AcDbDimension
    33
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -7226,8 +7214,6 @@ AcDbDimension
    33
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -7284,8 +7270,6 @@ AcDbDimension
    33
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -7366,8 +7350,6 @@ AcDbDimension
    34
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -7436,8 +7418,6 @@ AcDbDimension
    34
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -7506,8 +7486,6 @@ AcDbDimension
    34
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -8390,8 +8368,6 @@ AcDbDimension
    33
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -8433,7 +8409,7 @@ ByLayer
 100
 AcDbDimension
  10
-6.430496928922154
+6.430496928922161
  20
 201.6691819970264
  30
@@ -8448,8 +8424,6 @@ AcDbDimension
    33
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -8506,8 +8480,6 @@ AcDbDimension
    34
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -8576,8 +8548,6 @@ AcDbDimension
    34
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -8646,8 +8616,6 @@ AcDbDimension
    34
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -8716,8 +8684,6 @@ AcDbDimension
    33
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -10445,7 +10411,7 @@ AcDbDimension
  10
 30.88566928956093
  20
-12.01320976066782
+12.01320976066783
  30
 0
  11
@@ -10458,8 +10424,6 @@ AcDbDimension
    33
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -10516,8 +10480,6 @@ AcDbDimension
    32
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -10576,8 +10538,6 @@ AcDbDimension
    32
  71
     5
- 72
-    0
   3
 Standard
  53
@@ -10662,8 +10622,6 @@ AcDbDimension
    34
  71
     5
- 72
-    0
   3
 Standard
  53
