@@ -1,6 +1,6 @@
 from tetracamthon.mechanism import Forward, LinkDim, LinksWithDim, \
     SlideRocker, Forward
-from sympy import pi, symbols
+from sympy import pi, symbols, latex
 
 
 def test_read_in_csv_data():
@@ -51,13 +51,15 @@ def test_get_theta_of_r_o4o2_expr():
     assert "theta" in str(result)
 
 
-def test_get_o_bc_of_r_o4o2(a_forward):
-    fw = a_forward
-    result = fw.get_o_BC_of_r_O4O2()
+def test_get_o_bc_of_r_o4o2(a_slide_rocker):
+    sr = a_slide_rocker
+    result = sr.get_o_BC_of_r_O4O2()
     print("Type of result is " + str(type(result)))
     print("Here it is: " + str(result))
     assert "r_O4O2" in str(result)
     assert "theta" not in str(result)
+    theta_min = (result.subs(sr.lO4O2.r.sym, 52.05) + 2 * pi).evalf()
+    assert abs((theta_min / pi * 180).evalf() - 200) < 0.001
 
 
 def test_get_x_a02_of_o_bc(a_forward):
@@ -111,12 +113,64 @@ def test_get_vy_ao2_of_vr_o4o2(a_forward):
     assert "v(t)" in str(result)
 
 
-def test_get_o_bc_of_r_o4o2(a_backward):
+def test_get_r_o4o2_of_o_bc(a_backward):
     bw = a_backward
-    result = bw.get_o_BC_of_r_O4O2()
+    result = bw.get_r_O4O2_of_o_BC()
     print("Type of result is " + str(type(result)))
-    print("Here it is: " + str(result))
-    assert "r_O4O2" in str(result)
-    assert "theta" not in str(result)
+    print("Here is its LaTex form: " + latex(str(result)))
+    bw.lBC.o.val = (200 / 180 * pi).evalf()
+    print("The minimal rad of lBC is ", bw.lBC.o.val)
+    r_O4O2_min = result.subs(bw.lBC.o.sym, bw.lBC.o.val).evalf()
+    print("The minimal distance between O4 and O2 is ", r_O4O2_min)
+    assert abs(r_O4O2_min - 52.047639) < 0.001
+    assert "theta" in str(result)
+    assert "r_O4O2" not in str(result)
 
-    assert False
+
+def test_get_o_bc_of_x_ao2(a_backward):
+    bw = a_backward
+    result = bw.get_o_BC_of_x_AO2()
+    print("Type of result is " + str(type(result)))
+    print("Here is its LaTex form: " + latex(str(result)))
+    x_AO2_close = -0.75
+    o_bc_min = result.subs(bw.lAO2.x.sym, x_AO2_close).evalf()
+    o_bc_min_in_deg = (o_bc_min / pi * 180).evalf()
+    print("The minimal deg of lBC is ", o_bc_min_in_deg)
+    o_bc_min_in_deg_expected = 200
+    assert abs(o_bc_min_in_deg - o_bc_min_in_deg_expected) < 1
+
+
+def test_get_o_bc_of_y_ao2(a_backward):
+    bw = a_backward
+    result = bw.get_o_BC_of_y_AO2()
+    print("Type of result is " + str(type(result)))
+    print("Here is its LaTex form: " + latex(str(result)))
+    o_bc_min = result.subs(bw.lAO2.y.sym, 164.44).evalf()
+    o_bc_min_in_deg = (o_bc_min / pi * 180).evalf()
+    print("The minimal deg of lBC is ", o_bc_min_in_deg)
+    o_bc_min_in_deg_expected = 200
+    assert abs(o_bc_min_in_deg - o_bc_min_in_deg_expected) < 1
+
+
+def test_get_r_o4o2_of_x_ao2(a_backward):
+    bw = a_backward
+    result = bw.get_r_O4O2_of_x_AO2()
+    print("Type of result is " + str(type(result)))
+    print("Here is its LaTex form: " + latex(str(result)))
+    x_AO2_close = -0.75
+    r_O4O2_min = result.subs(bw.lAO2.x.sym, x_AO2_close).evalf()
+    print("The minimal distance between O4 and O2 is ", r_O4O2_min)
+    x_AO2_open = -24.25
+    r_O4O2_max = result.subs(bw.lAO2.x.sym, x_AO2_open).evalf()
+    print("The maximal distance between O4 and O2 is ", r_O4O2_max)
+    r_O4O2_stroke = r_O4O2_max - r_O4O2_min
+    print("The stroke distance between O4 and O2 is ", r_O4O2_stroke)
+    r_O4O2_min_expected = 52
+    assert abs(r_O4O2_min - r_O4O2_min_expected) < 1
+    r_O4O2_max_expected = 93
+    assert abs(r_O4O2_max - r_O4O2_max_expected) < 1
+    r_O4O2_stroke_expected = 42.5
+    assert abs(r_O4O2_stroke - r_O4O2_stroke_expected) < 5
+
+
+

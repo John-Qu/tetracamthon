@@ -1,0 +1,5 @@
+knot_id,knot,position,velocity,acceleration,jerk,ping,smooth_depth
+start,0,0,0,0,nan,nan,6
+knot1,1,0.3,nan,nan,nan,nan,6
+knot2,2,0.6,nan,nan,nan,nan,6
+end,3,1,0,0,nan,nan,6

@@ -1,25 +1,12 @@
 import csv
-import pickle
 from collections import namedtuple
 
 from sympy import symbols, cos, pi, atan2, sqrt, solve, sin, Function, \
     Derivative
-from sympy.abc import x, t
+from sympy.abc import t
 from sympy.parsing.sympy_parser import parse_expr
 
-
-class Variable(object):
-    def __init__(self, name):
-        self.name = name
-        self.sym = symbols(name)
-        self.val = None
-        self.exp = None
-
-    def set_value(self, value):
-        self.val = value
-
-    def set_expression(self, expression):
-        self.exp = expression
+from tetracamthon.helper import Variable, Memory
 
 
 class Link(object):
@@ -106,38 +93,6 @@ class AO2(Link):
             self.o.set_value(o_value)
 
 
-class Memory(object):
-    def __init__(self, name):
-        self.dict = {}
-        self.name = name
-        self.save()  # init a data file
-
-    def save(self):
-        output = open('/Users/johnqu/PycharmProjects/Tetracamthon/data/memo_{}.pkl'.format(
-            self.name), 'wb')
-        pickle.dump(self.dict, output)
-        output.close()
-
-    def load(self):
-        pkl_file = open('/Users/johnqu/PycharmProjects/Tetracamthon/data/memo_{}.pkl'.format(
-            self.name), 'rb')
-        self.dict = pickle.load(pkl_file)
-        pkl_file.close()
-        return self.dict
-
-    def has_object(self, name):
-        return name in self.dict
-
-    def is_same_object(self, obj):
-        return obj is self.dict[obj.name]
-
-    def add_obj(self, key, value):
-        self.dict[key] = value
-
-    def get_obj(self, key):
-        return self.dict[key]
-
-
 class LinkDim(object):
     def __init__(self, path_to_csv):
         self.spec_id = []
@@ -194,28 +149,41 @@ class SlideRocker(LinksWithDim):
         self.name = name
         self.r = Function("r")(t)
         self.v = Function("v")(t)
+        self.memo = Memory(self.name + "_of_dim_set_" + str(self.spec_id))
+        self.memo.load()
 
     def get_equation_of_r_O4O2_and_o_BC(self):
-        x_eq_zero = self.lO4O2.r.sym * cos(self.lO4O2.o.sym) + \
-                    self.lBO4.r.sym * cos(self.lBO4.o.sym) - \
-                    self.lBC.r.sym * cos(self.lBC.o.sym) - \
-                    self.lCO2.r.sym * cos(self.lCO2.o.sym)
-        y_eq_zero = self.lO4O2.r.sym * sin(self.lO4O2.o.sym) + \
-                    self.lBO4.r.sym * sin(self.lBO4.o.sym) - \
-                    self.lBC.r.sym * sin(self.lBC.o.sym) - \
-                    self.lCO2.r.sym * sin(self.lCO2.o.sym)
+        name = "equation_of_r_O4O2_and_o_BC"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        x_eq_zero = (
+                self.lO4O2.r.sym * cos(self.lO4O2.o.sym)
+                + self.lBO4.r.sym * cos(self.lBO4.o.sym)
+                - self.lBC.r.sym * cos(self.lBC.o.sym)
+                - self.lCO2.r.sym * cos(self.lCO2.o.sym)
+        )
+        y_eq_zero = (
+                self.lO4O2.r.sym * sin(self.lO4O2.o.sym)
+                + self.lBO4.r.sym * sin(self.lBO4.o.sym)
+                - self.lBC.r.sym * sin(self.lBC.o.sym)
+                - self.lCO2.r.sym * sin(self.lCO2.o.sym)
+        )
         alpha_expr = solve(x_eq_zero, self.lBO4.o.sym)[1]  # the second counts.
-        expr_y_eq_zero_without_alpha = y_eq_zero.subs(
+        y_eq_zero_without_alpha = y_eq_zero.subs(
             self.lBO4.o.sym, alpha_expr)
-        result = expr_y_eq_zero_without_alpha.subs([
+        result = y_eq_zero_without_alpha.subs([
             (self.lBC.r.sym, self.lBC.r.val),
             (self.lBO4.r.sym, self.lBO4.r.val),
             (self.lCO2.r.sym, self.lCO2.r.val),
             (self.lO4O2.o.sym, self.lO4O2.o.val),
             (self.lCO2.o.sym, self.lCO2.o.val)]).evalf()
+        self.memo.update_memo(name, result)
         return result
 
     def get_equation_of_x_AO2_and_o_BC(self):
+        name = "equation_of_x_AO2_and_o_BC"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
         expr_x_AO2_and_o_BC = \
             self.lAO2.x.sym + \
             self.lCO2.r.sym - \
@@ -225,9 +193,13 @@ class SlideRocker(LinksWithDim):
             (self.lCO2.r.sym, self.lCO2.r.val),
             (self.lAC.r.sym, self.lAC.r.val),
         ]).evalf()
+        self.memo.update_memo(name, result)
         return result
 
     def get_equation_of_y_AO2_and_o_BC(self):
+        name = "equation_of_y_AO2_and_o_BC"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
         expr_y_AO2_and_o_BC = \
             self.lAO2.y.sym - \
             self.lAC.r.sym * sin(
@@ -235,6 +207,7 @@ class SlideRocker(LinksWithDim):
         result = expr_y_AO2_and_o_BC.subs([
             (self.lAC.r.sym, self.lAC.r.val),
         ]).evalf()
+        self.memo.update_memo(name, result)
         return result
 
     def get_o_BC_of_r_O4O2(self):
@@ -243,17 +216,13 @@ class SlideRocker(LinksWithDim):
             return self.memo.dict[name]
         result = solve(self.get_equation_of_r_O4O2_and_o_BC(),
                        self.lBC.o.sym)[1]
-        self.memo.add_obj(name, result)
-        self.memo.save()
+        self.memo.update_memo(name, result)
         return result
 
 
 class Forward(SlideRocker):
     def __init__(self, name, a_spec_id, path_to_csv):
         SlideRocker.__init__(self, name, a_spec_id, path_to_csv)
-        self.memo = Memory(self.name + "_of_dim_set_" + str(self.spec_id))
-        self.memo.load()
-
 
     def get_x_AO2_of_o_BC(self):
         name = "x_AO2_of_o_BC"
@@ -261,8 +230,7 @@ class Forward(SlideRocker):
             return self.memo.dict[name]
         result = solve(self.get_equation_of_x_AO2_and_o_BC(),
                        self.lAO2.x.sym)[0]
-        self.memo.add_obj(name, result)
-        self.memo.save()
+        self.memo.update_memo(name, result)
         return result
 
     def get_x_AO2_of_r_O4O2(self):
@@ -271,8 +239,7 @@ class Forward(SlideRocker):
             return self.memo.dict[name]
         result = self.get_x_AO2_of_o_BC().subs(
             [(self.lBC.o.sym, self.get_o_BC_of_r_O4O2())])
-        self.memo.add_obj(name, result)
-        self.memo.save()
+        self.memo.update_memo(name, result)
         return result
 
     def get_y_AO2_of_o_BC(self):
@@ -281,8 +248,7 @@ class Forward(SlideRocker):
             return self.memo.dict[name]
         result = solve(self.get_equation_of_y_AO2_and_o_BC(),
                        self.lAO2.y.sym)[0]
-        self.memo.add_obj(name, result)
-        self.memo.save()
+        self.memo.update_memo(name, result)
         return result
 
     def get_y_AO2_of_r_O4O2(self):
@@ -291,8 +257,7 @@ class Forward(SlideRocker):
             return self.memo.dict[name]
         result = self.get_y_AO2_of_o_BC().subs(
             [(self.lBC.o.sym, self.get_o_BC_of_r_O4O2())])
-        self.memo.add_obj(name, result)
-        self.memo.save()
+        self.memo.update_memo(name, result)
         return result
 
     def get_vx_AO2_of_vr_O4O2(self):
@@ -302,6 +267,7 @@ class Forward(SlideRocker):
         vx_AO2 = self.get_x_AO2_of_r_O4O2().subs(
             [(self.lO4O2.r.sym, self.r)]).diff(t)
         result = vx_AO2.subs(Derivative(self.r, t), self.v)
+        self.memo.update_memo(name, result)
         return result
 
     def get_vy_AO2_of_vr_O4O2(self):
@@ -311,57 +277,57 @@ class Forward(SlideRocker):
         vy_AO2 = self.get_y_AO2_of_r_O4O2().subs(
             [(self.lO4O2.r.sym, self.r)]).diff(t)
         result = vy_AO2.subs(Derivative(self.r, t), self.v)
+        self.memo.update_memo(name, result)
         return result
 
 
 class Backward(SlideRocker):
     def __init__(self, name, a_spec_id, path_to_csv):
         SlideRocker.__init__(self, name, a_spec_id, path_to_csv)
-        self.memo = Memory(self.name + "_of_dim_set_" + str(self.spec_id))
-        self.memo.load()
+        self.theta = Function("theta")(t)
+        self.omega = Function("omega")(t)
+        self.x_R_AO2 = Function("x_AO2")(t)
+        self.y_R_AO2 = Function("y_AO2")(t)
+        self.x_V_AO2 = Function("vx_AO2")(t)
+        self.y_V_AO2 = Function("vy_AO2")(t)
 
-    def get_o_BC_of_r_O4O2(self):
-        """
-        j2 = O4DriveA()
-        theta_expr = j2.get_theta_of_r_O4O2_expr()
-        print(theta_expr)
-        theta_min = (theta_expr.subs(j2.r_O4O2, 52.05) + 2*pi).evalf()
-        print("theta_min(in degree): ", (theta_min/pi*180).evalf())
-        # theta_min(in degree):  200.000347647433
-        """
-        name = "o_BC_of_r_O4O2"
+    def get_r_O4O2_of_o_BC(self):
+        name = "r_O4O2_of_o_BC"
         if name in self.memo.dict:
             return self.memo.dict[name]
-        result = solve(
-            self.get_equation_of_r_O4O2_and_o_BC(), self.lBC.o.sym)[1]
-        self.memo.add_obj(name, result)
-        self.memo.save()
+        result = solve(self.get_equation_of_r_O4O2_and_o_BC(),
+                       self.lO4O2.r.sym)[1]
+        # TODO: why the working index is 1 above,
+        #  while 0 in ./analysis.ANeedO4.get_r_O4O2_of_theta_expr?
+        self.memo.update_memo(name, result)
         return result
 
-    def get_x_R_AO2_of_theta_expr(self):
-        """
-        j2 = O4DriveA()
-        R_AO2_x = j2.get_x_R_AO2_of_theta_expr()
-        print(R_AO2_x)
-        """
-        x_R_AO2_of_theta_expr = solve(self.get_equation_of_x_R_AO2_and_theta(),
-                                      self.x_R_AO2)[0]
-        return x_R_AO2_of_theta_expr
+    def get_o_BC_of_x_AO2(self):
+        name = "o_BC_of_x_AO2"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        result = solve(self.get_equation_of_x_AO2_and_o_BC(),
+                       self.lBC.o.sym)[1]
+        self.memo.update_memo(name, result)
+        return result
 
-    def get_x_R_AO2_of_r_O4O2_expr(self):
-        """
-        j2 = O4DriveA()
-        R_AO2_x = j2.get_x_R_AO2_of_r_O4O2_expr()
-        print(j2.get_x_R_AO2_of_theta_expr())
-        print(j2.get_theta_of_r_O4O2_expr())
-        print(j2.theta)
-        print(R_AO2_x)
-        print(j2.get_x_R_AO2_of_theta_expr().subs([(j2.theta, j2.get_theta_of_r_O4O2_expr())]))
-        # 175.044318959514*cos(2.0*atan((200.0*r_O4O2 + sqrt(-r_O4O2**4 + 60850.0*r_O4O2**2 + 35319375.0))/(r_O4O2**2 + 1575.0)) + 2.26972648191758) - 60.0
-        print(j2.get_x_R_AO2_of_r_O4O2_expr().subs([(j2.r_O4O2, 52.05)]).evalf())
-        # -0.751106183852862
-        """
-        x_R_AO2_of_r_O4O2_expr = self.get_x_R_AO2_of_theta_expr().subs(
-            [(self.theta, self.get_theta_of_r_O4O2_expr())])
-        return x_R_AO2_of_r_O4O2_expr
+    def get_o_BC_of_y_AO2(self):
+        name = "o_BC_of_y_AO2"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        result = solve(self.get_equation_of_y_AO2_and_o_BC(),
+                       self.lBC.o.sym)[1]
+        self.memo.update_memo(name, result)
+        return result
+
+    def get_r_O4O2_of_x_AO2(self):
+        name = "r_O4O2_of_x_AO2"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        result = self.get_r_O4O2_of_o_BC().subs(
+            self.lBC.o.sym, self.get_o_BC_of_x_AO2()
+        )
+        self.memo.update_memo(name, result)
+        return result
+
 

@@ -89,7 +89,7 @@ class Polynomial(object):
         self.coe.extend(new_coe)
         self.build_diffs()
 
-# These codes are useless.
+    # These codes are useless.
     # def build_functions(self):
     #     if len(self.func) >= self.order:
     #         return len(self.func)
@@ -149,6 +149,7 @@ class SplineWithPiecewisePolynomial(object):
     s1 = SplineWithPiecewisePolynomial()
     print(s1)
     """
+
     def __init__(self,
                  key_knots=None,
                  orders=None,
@@ -185,7 +186,8 @@ class SplineWithPiecewisePolynomial(object):
         if key_knots is None:
             key_knots = [start, knot1, knot2, end]
         if smooth_depth is None:
-            smooth_depth = dict(zip(key_knots[1:-1], [6]*(len(key_knots)-2)))
+            smooth_depth = dict(
+                zip(key_knots[1:-1], [6] * (len(key_knots) - 2)))
         knots = [key_knots[i][0]
                  for i in range(len(key_knots))]
         pvajp = [[key_knots[i][1][j]
@@ -462,11 +464,11 @@ class SplineWithPiecewisePolynomial(object):
             return 0
 
     def combine_pieces_for_plot(self,
-                  whether_save_png=False,
-                  line_color='blue',
-                  whether_show_figure=False,
-                  whether_knots_ticks=True,
-                  ):
+                                whether_save_png=False,
+                                line_color='blue',
+                                whether_show_figure=False,
+                                whether_knots_ticks=True,
+                                ):
         """
         s1 = SplineWithPiecewisePolynomial()
         s1.update_with_solution()
