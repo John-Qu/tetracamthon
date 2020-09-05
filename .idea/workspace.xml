@@ -29,17 +29,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/tetracamthon/helper.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_polynomial.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/memo_Forward_of_dim_set_1.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/memo_Forward_of_dim_set_1.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mechanism/mechanism.dxf" beforeDir="false" afterPath="$PROJECT_DIR$/mechanism/mechanism.dxf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetracamthon/mechanism.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/mechanism.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetracamthon/polynomial_spline.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/polynomial_spline.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetracamthon/tetracamthon_lind_dimensions.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/tetracamthon_lind_dimensions.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_mechanism.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_mechanism.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_polynomial.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +75,7 @@
       <recent name="$PROJECT_DIR$/docs/reference" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.pytest for test_polynomial.test_construct_interpolating_condition_equations">
+  <component name="RunManager" selected="Python tests.pytest for test_polynomial.test_construct_smoothness_condition_equations">
     <configuration name="Tetracamthon" type="PythonConfigurationType" factoryName="Python">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -128,22 +120,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_polynomial.test_build_polynomials" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
-      <module name="Tetracamthon" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_polynomial.test_build_polynomials&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
     <configuration name="pytest for test_polynomial.test_collect_variables" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -173,6 +149,22 @@
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
       <option name="_new_target" value="&quot;test_polynomial.test_construct_interpolating_condition_equations&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest for test_polynomial.test_construct_smoothness_condition_equations" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="Tetracamthon" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_polynomial.test_construct_smoothness_condition_equations&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
@@ -210,11 +202,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.pytest for test_polynomial.test_construct_smoothness_condition_equations" />
         <item itemvalue="Python tests.pytest for test_polynomial.test_construct_interpolating_condition_equations" />
         <item itemvalue="Python tests.pytest for test_polynomial.test_get_variables" />
         <item itemvalue="Python tests.pytest for test_polynomial.test_collect_variables" />
         <item itemvalue="Python tests.pytest for test_polynomial.test_get_pieces_of_polynomial" />
-        <item itemvalue="Python tests.pytest for test_polynomial.test_build_polynomials" />
       </list>
     </recent_temporary>
   </component>
@@ -428,22 +420,22 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1596613625546" />
-    <state width="1657" height="370" key="GridCell.Tab.0.bottom" timestamp="1599307271614">
+    <state width="1659" height="370" key="GridCell.Tab.0.bottom" timestamp="1599309316917">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1657" height="370" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599307271614" />
-    <state width="1657" height="370" key="GridCell.Tab.0.center" timestamp="1599307271612">
+    <state width="1659" height="370" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599309316917" />
+    <state width="1659" height="370" key="GridCell.Tab.0.center" timestamp="1599309316916">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1657" height="370" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599307271612" />
-    <state width="1657" height="370" key="GridCell.Tab.0.left" timestamp="1599307271612">
+    <state width="1659" height="370" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599309316916" />
+    <state width="1659" height="370" key="GridCell.Tab.0.left" timestamp="1599309316915">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1657" height="370" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599307271612" />
-    <state width="1657" height="370" key="GridCell.Tab.0.right" timestamp="1599307271613">
+    <state width="1659" height="370" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599309316915" />
+    <state width="1659" height="370" key="GridCell.Tab.0.right" timestamp="1599309316917">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1657" height="370" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599307271613" />
+    <state width="1659" height="370" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599309316917" />
     <state x="341" y="164" key="SettingsEditor" timestamp="1599294827996">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

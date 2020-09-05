@@ -143,6 +143,8 @@ class Spline(object):
                       for i in range(self.num_of_knots)]
         self.pvajps = [a_set_of_informed_knots.knots_with_info[i].pvajp
                        for i in range(self.num_of_knots)]
+        self.depths = [a_set_of_informed_knots.knots_with_info[i].smooth_depth
+                       for i in range(self.num_of_knots)]
         self.num_of_pieces = len(self.knots) - 1
         self.pieces_of_polynomial = []
         self.equations = []
@@ -178,21 +180,40 @@ class Spline(object):
             return self.collect_variables()
 
     def construct_interpolating_condition_equations(self):
-        for index_in_knots in range(len(self.knots)):
-            knot_i = self.knots[index_in_knots]
-            if index_in_knots == 0:
+        num_of_interpolating_condition_equations = 0
+        for index_of_knot in range(len(self.knots)):
+            knot_i = self.knots[index_of_knot]
+            if index_of_knot == 0:
                 polynomial_i = self.get_pieces_of_polynomial()[0]
             else:
                 polynomial_i = self.get_pieces_of_polynomial(
-                )[index_in_knots - 1]
+                )[index_of_knot - 1]
             expr_i_with_coe = polynomial_i.get_expr_with_co_sym()
             for index_in_depth in range(5):
-                if isnan(self.pvajps[index_in_knots][index_in_depth]):
+                if isnan(self.pvajps[index_of_knot][index_in_depth]):
                     continue
                 else:
                     equation_k_d = Eq(
                         expr_i_with_coe[index_in_depth].subs(t, knot_i),
-                        self.pvajps[index_in_knots][index_in_depth]
+                        self.pvajps[index_of_knot][index_in_depth]
                     )
                     self.equations.append(equation_k_d)
-        return self.equations
+                    num_of_interpolating_condition_equations += 1
+        return self.equations[-num_of_interpolating_condition_equations:]
+
+    def construct_smoothness_condition_equations(self):
+        num_of_smoothness_condition_equations = 0
+        for index_of_knot in range(1, self.num_of_knots - 1):
+            knot_i = self.knots[index_of_knot]
+            piece_before_i = self.get_pieces_of_polynomial()[index_of_knot - 1]
+            piece_after_i = self.get_pieces_of_polynomial()[index_of_knot]
+            for index_of_depth in range(self.depths[index_of_knot]):
+                equation_of_depth_at_knot = Eq(
+                    piece_before_i.get_expr_with_co_sym()[index_of_depth].subs(
+                        t, knot_i),
+                    piece_after_i.get_expr_with_co_sym()[index_of_depth].subs(
+                        t, knot_i)
+                )
+                self.equations.append(equation_of_depth_at_knot)
+                num_of_smoothness_condition_equations += 1
+        return self.equations[-num_of_smoothness_condition_equations:]

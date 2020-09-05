@@ -86,3 +86,12 @@ def test_construct_interpolating_condition_equations(a_spline):
     for eq in interpolating_equations:
         print(eq)
     assert True
+
+
+def test_construct_smoothness_condition_equations(a_spline):
+    a_spline.get_pieces_of_polynomial()
+    smoothness_condition_equations = \
+        a_spline.construct_smoothness_condition_equations()
+    for eq in smoothness_condition_equations:
+        print(eq)
+    assert True
