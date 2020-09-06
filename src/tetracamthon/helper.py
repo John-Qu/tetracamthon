@@ -84,12 +84,12 @@ def move_sympy_plot_to_plt_axes(p, ax):
     plt.close(backend.fig)
 
 
-def degree_to_time(degree, cycle_time=0.9):
+def trans_degree_to_time(degree, cycle_time=0.9):
     degree_to_time_ratio = cycle_time / 360.0
     return np.array(degree) * degree_to_time_ratio
 
 
-def time_to_degree(time, cycle_time=0.9):
+def trans_time_to_degree(time, cycle_time=0.9):
     time_to_degree_ratio = 360.0 / cycle_time
     return np.array(time) * time_to_degree_ratio
 
@@ -101,11 +101,6 @@ def plot_subplots_on_one_figure(sp_curve_lis_of_diff_depth,
                                 whether_show_figure=False,
                                 whether_knots_ticks=True,
                                 ):
-    """
-    s1 = SplineWithPiecewisePolynomial()
-    s1.update_with_solution()
-    s1.plot_svaj()
-    """
     cur_lis = sp_curve_lis_of_diff_depth
     knots = common_knots
     fig, axs = plt.subplots(nrows=len(cur_lis),
@@ -127,10 +122,11 @@ def plot_subplots_on_one_figure(sp_curve_lis_of_diff_depth,
         if whether_knots_ticks:
             axs[i].set_xticks([knots[i] for i in range(len(knots))])
             axs[i].set_xticklabels([(i % 2) * '\n' +
-                                    str(round(time_to_degree(knots[i]), 1))
+                                    str(round(
+                                        trans_time_to_degree(knots[i]), 1))
                                     for i in range(len(knots))])
         else:
-            axs[i].set_xticks(degree_to_time(
+            axs[i].set_xticks(trans_degree_to_time(
                 np.linspace(0, 360, 37, endpoint=True)))
             axs[i].set_xticklabels([(i % 2) * '\n' + str(
                 int(np.linspace(0, 360, 37, endpoint=True)[i]))

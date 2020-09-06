@@ -443,7 +443,8 @@ class SplineWithPiecewisePolynomial(object):
         s1.update_with_solution()
         s1.save_solved_pieces()
         """
-        output = open('../data/{}_pieces.pkl'.format(self.name), 'wb')
+        output = open("/Users/johnqu/PycharmProjects/Tetracamthon/"
+                      "data/{}_pieces.pkl".format(self.name), 'wb')
         pickle.dump(self.get_pieces(), output)
         output.close()
 
@@ -453,7 +454,8 @@ class SplineWithPiecewisePolynomial(object):
         s1.load_solved_pieces()
         print(s1.get_pieces()[2].get_expr()[0])
         """
-        pkl_file = open('../data/{}_pieces.pkl'.format(self.name), 'rb')
+        pkl_file = open("/Users/johnqu/PycharmProjects/Tetracamthon/"
+                        "data/{}_pieces.pkl".format(self.name), 'rb')
         self.pieces = pickle.load(pkl_file)
         pkl_file.close()
 

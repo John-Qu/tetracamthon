@@ -2,12 +2,12 @@ from sympy import nan, Eq, Piecewise, solve, lambdify, diff, symbols, \
     Symbol, plot, linsolve
 from sympy.abc import x
 import numpy as np
-from .helper_functions import degree_to_time, time_to_degree, \
+from tetracamthon.helper_functions import degree_to_time, time_to_degree, \
     move_sympyplot_to_axes, plot_pvaj, print_list_items_in_row, \
     find_index_in_ordered_list
-from .polynomial_spline import SplineWithPiecewisePolynomial, Polynomial
-from .analysis import O4DriveA, ANeedO4
-from .packages import Package
+from tetracamthon.polynomial_spline import SplineWithPiecewisePolynomial, Polynomial
+from tetracamthon.analysis import O4DriveA, ANeedO4
+from tetracamthon.packages import Package
 import pickle
 import matplotlib.pyplot as plt
 
@@ -172,11 +172,13 @@ class JawOnYorkCurve(SplineWithPiecewisePolynomial):
                 whether_show_figure=False,
                 whether_knots_ticks=True,
             )
-            output = open('../data/{}_plots.pkl'.format(self.name), 'wb')
+            output = open("/Users/johnqu/PycharmProjects/Tetracamthon/"
+                          "data/{}_plots.pkl".format(self.name), 'wb')
             pickle.dump((p0, v0, a0, j0), output)
             output.close()
         else:
-            pkl_file = open('../data/{}_plots.pkl'.format(self.name), 'rb')
+            pkl_file = open("/Users/johnqu/PycharmProjects/Tetracamthon/"
+                            "data/{}_plots.pkl".format(self.name), 'rb')
             (p0, v0, a0, j0) = pickle.load(pkl_file)
             pkl_file.close()
         plot_pvaj((p0, v0, a0, j0),

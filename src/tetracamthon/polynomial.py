@@ -5,7 +5,8 @@ from collections import namedtuple
 from sympy import symbols, diff, Eq, solve
 from sympy.abc import t
 from sympy.plotting import plot
-from tetracamthon.helper import save_attribute_to_pkl, load_attribute_from_pkl
+from tetracamthon.helper import save_attribute_to_pkl, \
+ load_attribute_from_pkl, trans_degree_to_time
 
 
 class Coefficient(object):
@@ -140,15 +141,19 @@ class KnotsInSpline(object):
 
 class Spline(object):
     def __init__(self,
-                 max_order=None,
-                 a_set_of_informed_knots=None,
                  name=None,
-                 whether_reload=False):
+                 max_order=6,
+                 a_set_of_informed_knots=None,
+                 whether_reload=False,
+                 whether_trans_knots_degree_to_time=True,
+                 ):
         self.name = name
         self.max_order = max_order
         self.num_of_knots = len(a_set_of_informed_knots.knots_with_info)
         self.knots = [a_set_of_informed_knots.knots_with_info[i].knot
                       for i in range(self.num_of_knots)]
+        if whether_trans_knots_degree_to_time:
+            self.knots = trans_degree_to_time(self.knots)
         self.pvajps = [a_set_of_informed_knots.knots_with_info[i].pvajp
                        for i in range(self.num_of_knots)]
         self.depths = [a_set_of_informed_knots.knots_with_info[i].smooth_depth
@@ -259,7 +264,7 @@ class Spline(object):
                     t, knot_m1)
             )
             self.periodic_equations.append(equation_of_depth_at_knot)
-        return self.smoothness_equations
+        return self.periodic_equations
 
     def get_periodic_condition_equations(self):
         if len(self.periodic_equations):
@@ -371,4 +376,6 @@ class Spline(object):
                          line_color=line_color)
                 )
         return result
+
+    # def take_samples_for_plt(self):
 

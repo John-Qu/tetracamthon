@@ -4,7 +4,7 @@ setup(
     name='tetracamthon',
     description="Re-engineering Tetra Pak A3 Flex filling machine's driving " +
                 "cam profile with Python",
-    version='v1.0',
+    version='v1.1',
     author='John Qu',
     author_email="johnqu1982@gmail.com",
     url="https://github.com/John-Qu/tetracamthon",

@@ -1,0 +1,10 @@
+knot_id,knot,position,velocity,acceleration,jerk,ping,smooth_depth
+start,0,nan,nan,nan,nan,nan,6
+knot1,30,nan,nan,nan,0,nan,4
+widest,42.5,-131.7,0,nan,nan,nan,6
+knot4,94.5,nan,nan,0,nan,nan,4
+knot2,120,nan,nan,nan,0,nan,4
+closed,137.5,0,0,0,nan,nan,4
+release,330,0,0,0,nan,nan,4
+knot3,345,nan,nan,nan,0,nan,4
+end,360,nan,nan,nan,nan,nan,6

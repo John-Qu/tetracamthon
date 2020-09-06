@@ -3,7 +3,7 @@ from sympy import symbols
 from tetracamthon.mechanism import Forward, Backward, SlideRocker
 from tetracamthon.polynomial import Polynomial, KnotPVAJP, KnotsInSpline, \
     Spline
-
+from tetracamthon.stage import O4O2
 
 
 @pytest.fixture(scope='session')
@@ -112,11 +112,27 @@ def a_sample_knots_in_spline():
 def a_sample_spline(a_sample_knots_in_spline):
     return Spline(max_order=6,
                   a_set_of_informed_knots=a_sample_knots_in_spline,
-                  name="a_sample_spline_with_four_knots")
+                  name="a_sample_spline_with_four_knots",
+                  whether_trans_knots_degree_to_time=False)
+
 
 @pytest.fixture(scope='session')
 def a_sample_spline_reloaded(a_sample_knots_in_spline):
     return Spline(max_order=6,
                   a_set_of_informed_knots=a_sample_knots_in_spline,
                   name="a_sample_spline_with_four_knots",
-                  whether_reload=True)
+                  whether_reload=True,
+                  whether_trans_knots_degree_to_time=False)
+
+
+@pytest.fixture(scope='session')
+def an_o4o2_spline():
+    return O4O2(
+        name="O4_to_O2_spline_for_test",
+        max_order=6,
+        a_set_of_informed_knots=KnotsInSpline(
+            path_to_csv="/Users/johnqu/PycharmProjects/Tetracamthon/"
+                        "src/tetracamthon/knots_of_o4o2.csv"
+        ),
+        whether_reload=False,
+    )

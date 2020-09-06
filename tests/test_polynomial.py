@@ -188,7 +188,7 @@ def test_prepare_plots_for_plt(a_sample_spline_reloaded):
         a_sample_spline_reloaded.prepare_plots_for_plt(),
         a_sample_spline_reloaded.knots,
         name="a_sample_spline",
-        whether_save_png = False,
-        whether_show_figure = True,
-        whether_knots_ticks = True,
+        whether_save_png=False,
+        whether_show_figure=True,
+        whether_knots_ticks=True,
     )
