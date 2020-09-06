@@ -183,9 +183,9 @@ def test_get_pvajp_at_point(a_sample_spline_reloaded):
     assert abs(result_d[2]) < 0.001
 
 
-def test_prepare_for_plots(a_sample_spline_reloaded):
+def test_prepare_plots_for_plt(a_sample_spline_reloaded):
     plot_subplots_on_one_figure(
-        a_sample_spline_reloaded.prepare_for_plots(),
+        a_sample_spline_reloaded.prepare_plots_for_plt(),
         a_sample_spline_reloaded.knots,
         name="a_sample_spline",
         whether_save_png = False,

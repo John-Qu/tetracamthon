@@ -30,7 +30,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetracamthon/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/helper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_polynomial.py" afterDir="false" />
     </list>
@@ -125,6 +124,9 @@
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/tetracamthon" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -436,22 +438,22 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1596613625546" />
-    <state width="1659" height="516" key="GridCell.Tab.0.bottom" timestamp="1599367331115">
+    <state width="1659" height="516" key="GridCell.Tab.0.bottom" timestamp="1599367589526">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="516" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599367331115" />
-    <state width="1659" height="516" key="GridCell.Tab.0.center" timestamp="1599367331113">
+    <state width="1659" height="516" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599367589526" />
+    <state width="1659" height="516" key="GridCell.Tab.0.center" timestamp="1599367589525">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="516" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599367331113" />
-    <state width="1659" height="516" key="GridCell.Tab.0.left" timestamp="1599367331112">
+    <state width="1659" height="516" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599367589525" />
+    <state width="1659" height="516" key="GridCell.Tab.0.left" timestamp="1599367589524">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="516" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599367331112" />
-    <state width="1659" height="516" key="GridCell.Tab.0.right" timestamp="1599367331114">
+    <state width="1659" height="516" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599367589524" />
+    <state width="1659" height="516" key="GridCell.Tab.0.right" timestamp="1599367589525">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="516" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599367331114" />
+    <state width="1659" height="516" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599367589525" />
     <state x="341" y="164" key="SettingsEditor" timestamp="1599294827996">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

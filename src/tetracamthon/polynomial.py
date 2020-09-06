@@ -352,7 +352,7 @@ class Spline(object):
             result.append(expressions[index_of_depth].subs(t, t_point))
         return result
 
-    def prepare_for_plots(self, line_color='blue'):
+    def prepare_plots_for_plt(self, line_color='blue'):
         result = []
         for index_of_depth in range(4):
             result.append(
