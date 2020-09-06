@@ -1,8 +1,10 @@
 import csv
+from math import isnan
+from bisect import bisect_left, bisect
 from collections import namedtuple
 from sympy import symbols, diff, Eq, solve
-from math import isnan
 from sympy.abc import t
+from sympy.plotting import plot
 from tetracamthon.helper import save_attribute_to_pkl, load_attribute_from_pkl
 
 
@@ -327,3 +329,46 @@ class Spline(object):
     def load_solution(self):
         name = self.name + "_solution"
         self.solution= load_attribute_from_pkl(name)
+
+    def find_index_of_piece_of_point(self, t_point):
+        index = bisect(self.knots, t_point)
+        if index == 0:
+            result = 0
+        elif index == len(self.knots):
+            result = len(self.knots) - 2
+        else:
+            result = index -1
+        return result
+
+    def get_polynomial_at_point(self, t_point):
+        index_of_piece = self.find_index_of_piece_of_point(t_point)
+        return self.get_pieces_of_polynomial()[index_of_piece]
+
+    def get_pvajp_at_point(self, t_point):
+        polynomial = self.get_polynomial_at_point(t_point)
+        expressions = polynomial.get_expr_with_co_val()
+        result = []
+        for index_of_depth in range(5):
+            result.append(expressions[index_of_depth].subs(t, t_point))
+        return result
+
+    def prepare_for_plots(self, line_color='blue'):
+        result = []
+        for index_of_depth in range(4):
+            result.append(
+                plot(0, (t, self.knots[0], self.knots[-1]), show=False)
+            )
+        for index_of_piece in range(self.num_of_pieces):
+            polynomial = self.get_pieces_of_polynomial()[index_of_piece]
+            for index_of_depth in range(4):
+                expression = polynomial.get_expr_with_co_val()[index_of_depth]
+                result[index_of_depth].extend(
+                    plot(expression,
+                         (t,
+                          self.knots[index_of_piece],
+                          self.knots[index_of_piece + 1]),
+                         show=False,
+                         line_color=line_color)
+                )
+        return result
+

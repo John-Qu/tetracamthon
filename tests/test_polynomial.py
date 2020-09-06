@@ -1,3 +1,6 @@
+from tetracamthon.helper import plot_subplots_on_one_figure
+
+
 def test_init_with_co_sym(a_polynomial):
     print(a_polynomial.init_with_co_sym())
     assert 'C_00' in str(a_polynomial.expr_with_co_sym[0])
@@ -150,3 +153,42 @@ def test_load_solved_pieces_of_polynomial(a_sample_spline_reloaded):
     for piece in a_sample_spline_reloaded.pieces_of_polynomial:
         print(piece)
     assert True
+
+
+def test_find_index_of_piece_of_point(a_sample_spline_reloaded):
+    index_a = a_sample_spline_reloaded.find_index_of_piece_of_point(0)
+    assert index_a == 0
+    index_b = a_sample_spline_reloaded.find_index_of_piece_of_point(1.2)
+    assert index_b == 1
+    index_c = a_sample_spline_reloaded.find_index_of_piece_of_point(1)
+    assert index_c == 1
+    index_d = a_sample_spline_reloaded.find_index_of_piece_of_point(2.2)
+    assert index_d == 2
+    index_e = a_sample_spline_reloaded.find_index_of_piece_of_point(3)
+    assert index_e == 2
+
+
+def test_get_pvajp_at_point(a_sample_spline_reloaded):
+    result_a = a_sample_spline_reloaded.get_pvajp_at_point(1)
+    assert len(result_a) == 5
+    assert abs(result_a[0] - 0.3) < 0.001
+    result_b = a_sample_spline_reloaded.get_pvajp_at_point(1.2)
+    result_c = a_sample_spline_reloaded.get_pvajp_at_point(0)
+    assert abs(result_c[0]) < 0.001
+    assert abs(result_c[1]) < 0.001
+    assert abs(result_c[2]) < 0.001
+    result_d = a_sample_spline_reloaded.get_pvajp_at_point(3)
+    assert abs(result_d[0] - 1) < 0.001
+    assert abs(result_d[1]) < 0.001
+    assert abs(result_d[2]) < 0.001
+
+
+def test_prepare_for_plots(a_sample_spline_reloaded):
+    plot_subplots_on_one_figure(
+        a_sample_spline_reloaded.prepare_for_plots(),
+        a_sample_spline_reloaded.knots,
+        name="a_sample_spline",
+        whether_save_png = False,
+        whether_show_figure = True,
+        whether_knots_ticks = True,
+    )

@@ -30,10 +30,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sample_knots.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/sample_knots.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tetracamthon/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/helper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_polynomial.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -78,7 +76,7 @@
       <recent name="$PROJECT_DIR$/docs/reference" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.pytest for test_polynomial.test_solve_spline_pieces">
+  <component name="RunManager" selected="Python tests.pytest for test_polynomial.test_prepare_for_plots">
     <configuration name="Tetracamthon" type="PythonConfigurationType" factoryName="Python">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -123,7 +121,26 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_polynomial.test_construct_equations" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="polynomial" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Tetracamthon" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/tetracamthon" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/tetracamthon/polynomial.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest for test_polynomial.test_find_index_of_piece_of_point" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -135,11 +152,11 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_polynomial.test_construct_equations&quot;" />
+      <option name="_new_target" value="&quot;test_polynomial.test_find_index_of_piece_of_point&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_polynomial.test_solve_spline" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_polynomial.test_get_pvajp_at_point" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -151,11 +168,11 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_polynomial.test_solve_spline&quot;" />
+      <option name="_new_target" value="&quot;test_polynomial.test_get_pvajp_at_point&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_polynomial.test_solve_spline_pieces" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_polynomial.test_load_solved_pieces_of_polynomial" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -167,11 +184,11 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_polynomial.test_solve_spline_pieces&quot;" />
+      <option name="_new_target" value="&quot;test_polynomial.test_load_solved_pieces_of_polynomial&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_polynomial.test_solve_to_solution" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_polynomial.test_prepare_for_plots" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -183,33 +200,17 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_polynomial.test_solve_to_solution&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="pytest for test_polynomial.test_update_expr_and_diffs_with_co_val" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
-      <module name="Tetracamthon" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_polynomial.test_update_expr_and_diffs_with_co_val&quot;" />
+      <option name="_new_target" value="&quot;test_polynomial.test_prepare_for_plots&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.pytest for test_polynomial.test_solve_spline_pieces" />
-        <item itemvalue="Python tests.pytest for test_polynomial.test_solve_spline" />
-        <item itemvalue="Python tests.pytest for test_polynomial.test_update_expr_and_diffs_with_co_val" />
-        <item itemvalue="Python tests.pytest for test_polynomial.test_solve_to_solution" />
-        <item itemvalue="Python tests.pytest for test_polynomial.test_construct_equations" />
+        <item itemvalue="Python tests.pytest for test_polynomial.test_prepare_for_plots" />
+        <item itemvalue="Python tests.pytest for test_polynomial.test_get_pvajp_at_point" />
+        <item itemvalue="Python.polynomial" />
+        <item itemvalue="Python tests.pytest for test_polynomial.test_find_index_of_piece_of_point" />
+        <item itemvalue="Python tests.pytest for test_polynomial.test_load_solved_pieces_of_polynomial" />
       </list>
     </recent_temporary>
   </component>
@@ -406,6 +407,10 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="440" y="173" key="#Plugins/0.0.1680.1050@0.0.1680.1050" timestamp="1599294880647" />
+    <state x="100" y="100" width="1480" height="850" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog" timestamp="1599365177391">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="100" y="100" width="1480" height="850" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog/0.23.1680.1027@0.23.1680.1027" timestamp="1599365177391" />
     <state x="564" y="325" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1599098552963">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
@@ -431,22 +436,22 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1596613625546" />
-    <state width="1659" height="370" key="GridCell.Tab.0.bottom" timestamp="1599360435756">
+    <state width="1659" height="516" key="GridCell.Tab.0.bottom" timestamp="1599367331115">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="370" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599360435756" />
-    <state width="1659" height="370" key="GridCell.Tab.0.center" timestamp="1599360435755">
+    <state width="1659" height="516" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599367331115" />
+    <state width="1659" height="516" key="GridCell.Tab.0.center" timestamp="1599367331113">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="370" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599360435755" />
-    <state width="1659" height="370" key="GridCell.Tab.0.left" timestamp="1599360435754">
+    <state width="1659" height="516" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599367331113" />
+    <state width="1659" height="516" key="GridCell.Tab.0.left" timestamp="1599367331112">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="370" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599360435754" />
-    <state width="1659" height="370" key="GridCell.Tab.0.right" timestamp="1599360435755">
+    <state width="1659" height="516" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599367331112" />
+    <state width="1659" height="516" key="GridCell.Tab.0.right" timestamp="1599367331114">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="370" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599360435755" />
+    <state width="1659" height="516" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599367331114" />
     <state x="341" y="164" key="SettingsEditor" timestamp="1599294827996">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
