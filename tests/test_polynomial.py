@@ -47,51 +47,106 @@ def test_read_in_csv_data(a_sample_knots_in_spline):
     assert True
 
 
-def test_build_polynomials(a_spline):
-    a_spline.build_polynomials()
-    print(a_spline.pieces_of_polynomial[0])
-    print(a_spline.pieces_of_polynomial[1])
-    print(a_spline.pieces_of_polynomial[2])
+def test_build_polynomials(a_sample_spline):
+    a_sample_spline.build_polynomials()
+    print(a_sample_spline.pieces_of_polynomial[0])
+    print(a_sample_spline.pieces_of_polynomial[1])
+    print(a_sample_spline.pieces_of_polynomial[2])
     assert True
 
 
-def test_get_pieces_of_polynomial(a_spline):
-    a_spline.build_polynomials()
-    print(a_spline.get_pieces_of_polynomial()[0])
-    print(a_spline.get_pieces_of_polynomial()[1])
-    print(a_spline.get_pieces_of_polynomial()[2])
+def test_get_pieces_of_polynomial(a_sample_spline):
+    a_sample_spline.build_polynomials()
+    print(a_sample_spline.get_pieces_of_polynomial()[0])
+    print(a_sample_spline.get_pieces_of_polynomial()[1])
+    print(a_sample_spline.get_pieces_of_polynomial()[2])
     assert True
 
 
-def test_collect_variables(a_spline):
-    a_spline.get_pieces_of_polynomial()
-    variables = a_spline.collect_variables()
+def test_collect_variables(a_sample_spline):
+    a_sample_spline.get_pieces_of_polynomial()
+    variables = a_sample_spline.collect_variables()
     for v in variables:
         print(v)
     assert True
 
 
-def test_get_variables(a_spline):
-    a_spline.get_pieces_of_polynomial()
-    variables = a_spline.get_variables()
+def test_get_variables(a_sample_spline):
+    a_sample_spline.get_pieces_of_polynomial()
+    variables = a_sample_spline.get_variables()
     for v in variables:
         print(v)
     assert True
 
 
-def test_construct_interpolating_condition_equations(a_spline):
-    a_spline.get_pieces_of_polynomial()
+def test_construct_interpolating_condition_equations(a_sample_spline):
+    a_sample_spline.get_pieces_of_polynomial()
     interpolating_equations = \
-        a_spline.construct_interpolating_condition_equations()
+        a_sample_spline.construct_interpolating_condition_equations()
     for eq in interpolating_equations:
         print(eq)
     assert True
 
 
-def test_construct_smoothness_condition_equations(a_spline):
-    a_spline.get_pieces_of_polynomial()
+def test_construct_smoothness_condition_equations(a_sample_spline):
+    a_sample_spline.get_pieces_of_polynomial()
     smoothness_condition_equations = \
-        a_spline.construct_smoothness_condition_equations()
+        a_sample_spline.construct_smoothness_condition_equations()
     for eq in smoothness_condition_equations:
         print(eq)
+    assert True
+
+
+def test_construct_periodic_condition_equations(a_sample_spline):
+    a_sample_spline.get_pieces_of_polynomial()
+    periodic_condition_equations = \
+        a_sample_spline.construct_periodic_condition_equations()
+    for eq in periodic_condition_equations:
+        print(eq)
+    assert True
+
+
+def test_construct_equations(a_sample_spline):
+    a_sample_spline.construct_equations()
+    assert True
+
+
+def test_solve_to_solution(a_sample_spline):
+    a_solution = a_sample_spline.solve_to_solution()
+    print(a_solution)
+    assert True
+
+
+def test_solve_spline_pieces(a_sample_spline):
+    for a_polynomial in a_sample_spline.solve_spline_pieces():
+        print(a_polynomial)
+    assert True
+
+
+def test_load_solution(a_sample_spline_reloaded):
+    print(a_sample_spline_reloaded.solution)
+    assert True
+
+
+def test_load_variables(a_sample_spline_reloaded):
+    print(a_sample_spline_reloaded.variables)
+    assert True
+
+
+def test_load_conditional_equations(a_sample_spline_reloaded):
+    print("Interpolating condition equations: ")
+    for eq in a_sample_spline_reloaded.interpolating_equations:
+        print(eq)
+    print("Smoothness condition equations: ")
+    for eq in a_sample_spline_reloaded.smoothness_equations:
+        print(eq)
+    print("Periodic condition equations: ")
+    for eq in a_sample_spline_reloaded.periodic_equations:
+        print(eq)
+    assert True
+
+
+def test_load_solved_pieces_of_polynomial(a_sample_spline_reloaded):
+    for piece in a_sample_spline_reloaded.pieces_of_polynomial:
+        print(piece)
     assert True

@@ -1,8 +1,9 @@
 import csv
 from collections import namedtuple
-from sympy import symbols, diff, Eq
+from sympy import symbols, diff, Eq, solve
 from math import isnan
 from sympy.abc import t
+from tetracamthon.helper import save_attribute_to_pkl, load_attribute_from_pkl
 
 
 class Coefficient(object):
@@ -36,7 +37,11 @@ class Polynomial(object):
 
     def __str__(self):
         result = ""
-        for expr_i in self.expr_with_co_sym:
+        if len(self.expr_with_co_val):
+            expressions = self.expr_with_co_val
+        else:
+            expressions = self.expr_with_co_sym
+        for expr_i in expressions:
             result += "\n" + str(expr_i)
         return result
 
@@ -135,7 +140,8 @@ class Spline(object):
     def __init__(self,
                  max_order=None,
                  a_set_of_informed_knots=None,
-                 name=None):
+                 name=None,
+                 whether_reload=False):
         self.name = name
         self.max_order = max_order
         self.num_of_knots = len(a_set_of_informed_knots.knots_with_info)
@@ -146,10 +152,23 @@ class Spline(object):
         self.depths = [a_set_of_informed_knots.knots_with_info[i].smooth_depth
                        for i in range(self.num_of_knots)]
         self.num_of_pieces = len(self.knots) - 1
-        self.pieces_of_polynomial = []
-        self.equations = []
-        self.variables = []
-        self.solution = {}
+        if whether_reload:
+            self.load_solved_pieces_of_polynomial()
+            self.load_conditional_equations()
+            self.load_variables()
+            self.load_solution()
+        else:
+            self.pieces_of_polynomial = []
+            self.interpolating_equations = []
+            self.smoothness_equations = []
+            self.periodic_equations = []
+            self.variables = []
+            self.solution = {}
+            self.solve_spline_pieces()
+            self.save_solved_pieces_of_polynomial()
+            self.save_solution()
+            self.save_conditional_equations()
+            self.save_variables()
 
     def build_polynomials(self):
         for piece_id in range(self.num_of_pieces):
@@ -167,10 +186,9 @@ class Spline(object):
             return self.build_polynomials()
 
     def collect_variables(self):
-        for i in range(self.num_of_pieces):
-            polynomial_i = self.get_pieces_of_polynomial()[i]
-            coefficients_i = polynomial_i.co_lis
-            self.variables.extend(coefficients_i)
+        polynomials = self.get_pieces_of_polynomial()
+        for polynomial_i in polynomials:
+            self.variables.extend([co.sym for co in polynomial_i.co_lis])
         return self.variables
 
     def get_variables(self):
@@ -180,7 +198,6 @@ class Spline(object):
             return self.collect_variables()
 
     def construct_interpolating_condition_equations(self):
-        num_of_interpolating_condition_equations = 0
         for index_of_knot in range(len(self.knots)):
             knot_i = self.knots[index_of_knot]
             if index_of_knot == 0:
@@ -197,12 +214,16 @@ class Spline(object):
                         expr_i_with_coe[index_in_depth].subs(t, knot_i),
                         self.pvajps[index_of_knot][index_in_depth]
                     )
-                    self.equations.append(equation_k_d)
-                    num_of_interpolating_condition_equations += 1
-        return self.equations[-num_of_interpolating_condition_equations:]
+                    self.interpolating_equations.append(equation_k_d)
+        return self.interpolating_equations
+
+    def get_interpolating_condition_equations(self):
+        if len(self.interpolating_equations):
+            return self.interpolating_equations
+        else:
+            return self.construct_interpolating_condition_equations()
 
     def construct_smoothness_condition_equations(self):
-        num_of_smoothness_condition_equations = 0
         for index_of_knot in range(1, self.num_of_knots - 1):
             knot_i = self.knots[index_of_knot]
             piece_before_i = self.get_pieces_of_polynomial()[index_of_knot - 1]
@@ -214,6 +235,95 @@ class Spline(object):
                     piece_after_i.get_expr_with_co_sym()[index_of_depth].subs(
                         t, knot_i)
                 )
-                self.equations.append(equation_of_depth_at_knot)
-                num_of_smoothness_condition_equations += 1
-        return self.equations[-num_of_smoothness_condition_equations:]
+                self.smoothness_equations.append(equation_of_depth_at_knot)
+        return self.smoothness_equations
+
+    def get_smoothness_condition_equations(self):
+        if len(self.smoothness_equations):
+            return self.smoothness_equations
+        else:
+            return self.construct_smoothness_condition_equations()
+
+    def construct_periodic_condition_equations(self):
+        knot_0 = self.knots[0]
+        piece_0 = self.get_pieces_of_polynomial()[0]
+        knot_m1 = self.knots[-1]
+        piece_m1 = self.get_pieces_of_polynomial()[-1]
+        for index_of_depth in range(self.depths[0]):
+            equation_of_depth_at_knot = Eq(
+                piece_0.get_expr_with_co_sym()[index_of_depth].subs(
+                    t, knot_0),
+                piece_m1.get_expr_with_co_sym()[index_of_depth].subs(
+                    t, knot_m1)
+            )
+            self.periodic_equations.append(equation_of_depth_at_knot)
+        return self.smoothness_equations
+
+    def get_periodic_condition_equations(self):
+        if len(self.periodic_equations):
+            return self.periodic_equations
+        else:
+            return self.construct_periodic_condition_equations()
+
+    def get_total_equations(self):
+        result = []
+        result.extend(self.get_interpolating_condition_equations())
+        result.extend(self.get_smoothness_condition_equations())
+        result.extend(self.get_periodic_condition_equations())
+        print("Called get_total_equations once.")
+        return result
+
+    def solve_to_solution(self):
+        equations = self.get_total_equations()
+        variables = self.get_variables()
+        self.solution = solve(equations, variables)
+        return self.solution
+
+    def solve_spline_pieces(self):
+        for a_polynomial in self.get_pieces_of_polynomial():
+            a_polynomial.update_expr_and_diffs_with_co_val(
+                self.solve_to_solution()
+            )
+        return self.get_pieces_of_polynomial()
+
+    def save_solved_pieces_of_polynomial(self):
+        name = self.name + "_pieces_of_polynomial"
+        save_attribute_to_pkl(name, self.get_pieces_of_polynomial())
+
+    def load_solved_pieces_of_polynomial(self):
+        name = self.name + "_pieces_of_polynomial"
+        self.pieces_of_polynomial = load_attribute_from_pkl(name)
+        return self.pieces_of_polynomial
+
+    def save_conditional_equations(self):
+        name = self.name + "_conditional_equations"
+        data = (
+            self.interpolating_equations,
+            self.smoothness_equations,
+            self.periodic_equations
+        )
+        save_attribute_to_pkl(name, data)
+
+    def load_conditional_equations(self):
+        name = self.name + "_conditional_equations"
+        (
+            self.interpolating_equations,
+            self.smoothness_equations,
+            self.periodic_equations
+        ) = load_attribute_from_pkl(name)
+
+    def save_variables(self):
+        name = self.name + "_variables"
+        save_attribute_to_pkl(name, self.get_variables())
+
+    def load_variables(self):
+        name = self.name + "_variables"
+        self.variables = load_attribute_from_pkl(name)
+
+    def save_solution(self):
+        name = self.name + "_solution"
+        save_attribute_to_pkl(name, self.solution)
+
+    def load_solution(self):
+        name = self.name + "_solution"
+        self.solution= load_attribute_from_pkl(name)

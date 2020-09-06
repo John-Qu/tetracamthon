@@ -54,3 +54,19 @@ class Memory(object):
         self.add_obj(key, value)
         self.save()
 
+
+def save_attribute_to_pkl(name, data):
+    output = open(
+        '/Users/johnqu/PycharmProjects/'
+        'Tetracamthon/data/memo_{}.pkl'.format(name), 'wb')
+    pickle.dump(data, output)
+    output.close()
+
+
+def load_attribute_from_pkl(name):
+    pkl_file = open(
+        '/Users/johnqu/PycharmProjects/'
+        'Tetracamthon/data/memo_{}.pkl'.format(name), 'rb')
+    result = pickle.load(pkl_file)
+    pkl_file.close()
+    return result

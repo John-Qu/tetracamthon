@@ -109,7 +109,14 @@ def a_sample_knots_in_spline():
 
 
 @pytest.fixture(scope='session')
-def a_spline(a_sample_knots_in_spline):
+def a_sample_spline(a_sample_knots_in_spline):
     return Spline(max_order=6,
                   a_set_of_informed_knots=a_sample_knots_in_spline,
-                  name="TestSpline")
+                  name="a_sample_spline_with_four_knots")
+
+@pytest.fixture(scope='session')
+def a_sample_spline_reloaded(a_sample_knots_in_spline):
+    return Spline(max_order=6,
+                  a_set_of_informed_knots=a_sample_knots_in_spline,
+                  name="a_sample_spline_with_four_knots",
+                  whether_reload=True)
