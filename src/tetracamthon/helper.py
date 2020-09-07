@@ -106,7 +106,7 @@ def plot_subplots_on_one_figure(sp_curve_lis_of_diff_depth,
     fig, axs = plt.subplots(nrows=len(cur_lis),
                             figsize=(16, 10),
                             )
-    fig.suptitle('PVAJ Curves \n {}'.format(name),
+    fig.suptitle('PVAJ Curves of {}'.format(name),
                  fontsize=14, fontweight='bold')
     y_labels = [
         "Position\n(mm)",

@@ -5,7 +5,6 @@ from tetracamthon.polynomial import KnotsInSpline
 def test_o4o2():
     an_o4o2_spline = O4O2(
         name="O4_to_O2_spline_for_test",
-        max_order=6,
         a_set_of_informed_knots=KnotsInSpline(
             path_to_csv="/Users/johnqu/PycharmProjects/Tetracamthon/"
                         "src/tetracamthon/knots_of_o4o2.csv"
@@ -18,6 +17,11 @@ def test_o4o2():
     assert "C_01" in str(an_o4o2_spline.get_total_equations())
 
 
-def test_plot(an_o4o2_spline):
+def test_plot_an_o4o2_spline_with_eight_knots(an_o4o2_spline):
     an_o4o2_spline.plot()
+    assert True
+
+
+def test_plot_an_o4o2_spline_with_six_knots(an_o4o2_spline_with_six_knots):
+    an_o4o2_spline_with_six_knots.plot()
     assert True

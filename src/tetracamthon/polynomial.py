@@ -6,7 +6,7 @@ from sympy import symbols, diff, Eq, solve
 from sympy.abc import t
 from sympy.plotting import plot
 from tetracamthon.helper import save_attribute_to_pkl, \
- load_attribute_from_pkl, trans_degree_to_time
+    load_attribute_from_pkl, trans_degree_to_time
 
 
 class Coefficient(object):
@@ -89,22 +89,25 @@ class Polynomial(object):
 
 
 class KnotPVAJP(object):
-    def __init__(self, knot_id=None, knot=None, pvajp=None, smooth_depth=None):
+    def __init__(self,
+                 knot_id,
+                 knot,
+                 polynomial_order,
+                 pvajp,
+                 smooth_depth):
         self.knot_id = knot_id
         self.knot = knot
+        self.polynomial_order = polynomial_order
         self.pvajp = pvajp
         self.smooth_depth = smooth_depth
 
     def __str__(self):
-        result = "\n"
-        result += 'Knot: "' + str(self.knot_id) + '"'
-        result += " at " + str(self.knot) + "\n"
-        result += "Position:     " + str(self.pvajp[0]) + "\n"
-        result += "Velocity:     " + str(self.pvajp[1]) + "\n"
-        result += "Acceleration: " + str(self.pvajp[2]) + "\n"
-        result += "Jerk:         " + str(self.pvajp[3]) + "\n"
-        result += "Ping:         " + str(self.pvajp[4]) + "\n"
-        result += "With smooth depth of " + str(self.smooth_depth)
+        result = 'Knot: "' + str(self.knot_id) + '"'
+        result += " at " + str(self.knot) + " deg "
+        for data in self.pvajp:
+            result += "{0:8}".format(data)
+        result += " Smooth depth: " + str(self.smooth_depth)
+        result += " with piece order: " + str(self.polynomial_order)
         return result
 
 
@@ -113,6 +116,12 @@ class KnotsInSpline(object):
                                    "Tetracamthon/data/sample_knots.csv"):
         self.knots_with_info = []
         self.read_in_csv_data(path_to_csv=path_to_csv)
+
+    def __str__(self):
+        result = ""
+        for knot_with_info in self.knots_with_info:
+            result += str(knot_with_info) + "\n"
+        return result
 
     def read_in_csv_data(self, path_to_csv):
         """Get 360 degree york and jaw acceleration data from a csv file."""
@@ -126,6 +135,8 @@ class KnotsInSpline(object):
                     KnotPVAJP(
                         knot_id=str(row.knot_id),
                         knot=float(row.knot),
+                        polynomial_order=int(
+                            row.polynomial_order),
                         pvajp=(
                             float(row.position),
                             float(row.velocity),
@@ -142,14 +153,17 @@ class KnotsInSpline(object):
 class Spline(object):
     def __init__(self,
                  name=None,
-                 max_order=6,
                  a_set_of_informed_knots=None,
                  whether_reload=False,
                  whether_trans_knots_degree_to_time=True,
                  ):
         self.name = name
-        self.max_order = max_order
         self.num_of_knots = len(a_set_of_informed_knots.knots_with_info)
+        self.max_orders = [a_set_of_informed_knots.knots_with_info[
+                               i].polynomial_order
+                           for i in range(self.num_of_knots)]
+        self.knots = [a_set_of_informed_knots.knots_with_info[i].knot
+                      for i in range(self.num_of_knots)]
         self.knots = [a_set_of_informed_knots.knots_with_info[i].knot
                       for i in range(self.num_of_knots)]
         if whether_trans_knots_degree_to_time:
@@ -180,7 +194,7 @@ class Spline(object):
     def build_polynomials(self):
         for piece_id in range(self.num_of_pieces):
             start_t = self.knots[piece_id]
-            polynomial_i = Polynomial(max_order=self.max_order,
+            polynomial_i = Polynomial(max_order=self.max_orders[piece_id],
                                       piece_id=piece_id,
                                       start_time=start_t)
             self.pieces_of_polynomial.append(polynomial_i)
@@ -333,7 +347,7 @@ class Spline(object):
 
     def load_solution(self):
         name = self.name + "_solution"
-        self.solution= load_attribute_from_pkl(name)
+        self.solution = load_attribute_from_pkl(name)
 
     def find_index_of_piece_of_point(self, t_point):
         index = bisect(self.knots, t_point)
@@ -342,7 +356,7 @@ class Spline(object):
         elif index == len(self.knots):
             result = len(self.knots) - 2
         else:
-            result = index -1
+            result = index - 1
         return result
 
     def get_polynomial_at_point(self, t_point):
@@ -378,4 +392,3 @@ class Spline(object):
         return result
 
     # def take_samples_for_plt(self):
-
