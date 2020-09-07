@@ -1,6 +1,6 @@
 knot_id,knot,polynomial_order,position,velocity,acceleration,jerk,ping,smooth_depth
 start,0,7,nan,nan,nan,nan,nan,7
-widest,42.5,6,-131.7,0,nan,nan,nan,4
-closed,137.5,5,0,0,nan,nan,nan,4
+widest,42.5,7,-131.7,0,nan,nan,nan,4
+closed,137.5,4,0,0,nan,nan,nan,4
 release,330,7,0,0,nan,nan,nan,4
-end,360,7,nan,nan,nan,nan,nan,0
+end,360,0,nan,nan,nan,nan,nan,0
