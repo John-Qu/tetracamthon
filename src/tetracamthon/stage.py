@@ -20,7 +20,6 @@ class O4O2(Spline):
         self.a_set_of_informed_knots = a_set_of_informed_knots
 
     def plot_symbolically(self, whether_save_png=False):
-        name = self.name + "\n" + str(self.a_set_of_informed_knots)
         self.plot_spline_on_subplots(
             whether_save_png=whether_save_png,
             whether_show_figure=True,

@@ -29,11 +29,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/plots/plot_of_O4_to_O2_with_minimum_five_knots.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tetracamthon/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/helper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tetracamthon/stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/stage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_polynomial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_stage.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -78,7 +79,7 @@
       <recent name="$PROJECT_DIR$/docs/reference" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.pytest for test_polynomial.test_prepare_plots_for_plt">
+  <component name="RunManager" selected="Python tests.pytest for test_stage.test_plot_an_o4o2_spline_with_minimum_five_knots">
     <configuration name="Tetracamthon" type="PythonConfigurationType" factoryName="Python">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -205,8 +206,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.pytest for test_polynomial.test_prepare_plots_for_plt" />
         <item itemvalue="Python tests.pytest for test_stage.test_plot_an_o4o2_spline_with_minimum_five_knots" />
+        <item itemvalue="Python tests.pytest for test_polynomial.test_prepare_plots_for_plt" />
         <item itemvalue="Python tests.pytest for test_stage.test_plot_an_o4o2_spline_with_nine_knots" />
         <item itemvalue="Python tests.pytest for test_stage.test_plot_an_o4o2_spline_with_eight_knots" />
         <item itemvalue="Python tests.pytest for test_stage.test_plot_an_o4o2_spline_with_six_knots" />
@@ -360,7 +361,14 @@
       <option name="project" value="LOCAL" />
       <updated>1599488435881</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Add knot pvaj value and order of curve onto subplots.">
+      <created>1599526418055</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1599526418055</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -415,7 +423,8 @@
     <MESSAGE value="tested plot splines" />
     <MESSAGE value="5 order with just zero pos and vel is not enough." />
     <MESSAGE value="Rename csv knot file names." />
-    <option name="LAST_COMMIT_MESSAGE" value="Rename csv knot file names." />
+    <MESSAGE value="Add knot pvaj value and order of curve onto subplots." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add knot pvaj value and order of curve onto subplots." />
   </component>
   <component name="WindowStateProjectService">
     <state x="474" y="210" key="#Inspections" timestamp="1598237920969">
@@ -451,34 +460,34 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="0" y="203" key="#xdebugger.XInspectDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1598276212851" />
-    <state x="417" y="14" key="CommitChangelistDialog2" timestamp="1599488435612">
+    <state x="417" y="14" key="CommitChangelistDialog2" timestamp="1599526417723">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="417" y="14" key="CommitChangelistDialog2/0.0.1680.1050@0.0.1680.1050" timestamp="1599488435612" />
+    <state x="417" y="14" key="CommitChangelistDialog2/0.0.1680.1050@0.0.1680.1050" timestamp="1599526417723" />
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog" timestamp="1599487719117">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1599487719117" />
-    <state width="1659" height="529" key="GridCell.Tab.0.bottom" timestamp="1599526148257">
+    <state width="1659" height="529" key="GridCell.Tab.0.bottom" timestamp="1599528475560">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="529" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599526148257" />
-    <state width="819" height="516" key="GridCell.Tab.0.bottom/0.23.1680.1027@0.23.1680.1027" timestamp="1599379297598" />
-    <state width="1659" height="529" key="GridCell.Tab.0.center" timestamp="1599526148256">
+    <state width="1659" height="529" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599528475560" />
+    <state width="1659" height="529" key="GridCell.Tab.0.bottom/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322785" />
+    <state width="1659" height="529" key="GridCell.Tab.0.center" timestamp="1599528475559">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="529" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599526148256" />
-    <state width="819" height="516" key="GridCell.Tab.0.center/0.23.1680.1027@0.23.1680.1027" timestamp="1599379297597" />
-    <state width="1659" height="529" key="GridCell.Tab.0.left" timestamp="1599526148255">
+    <state width="1659" height="529" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599528475559" />
+    <state width="1659" height="529" key="GridCell.Tab.0.center/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322784" />
+    <state width="1659" height="529" key="GridCell.Tab.0.left" timestamp="1599528475558">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="529" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599526148255" />
-    <state width="819" height="516" key="GridCell.Tab.0.left/0.23.1680.1027@0.23.1680.1027" timestamp="1599379297596" />
-    <state width="1659" height="529" key="GridCell.Tab.0.right" timestamp="1599526148257">
+    <state width="1659" height="529" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599528475558" />
+    <state width="1659" height="529" key="GridCell.Tab.0.left/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322783" />
+    <state width="1659" height="529" key="GridCell.Tab.0.right" timestamp="1599528475559">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="529" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599526148257" />
-    <state width="819" height="516" key="GridCell.Tab.0.right/0.23.1680.1027@0.23.1680.1027" timestamp="1599379297598" />
+    <state width="1659" height="529" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599528475559" />
+    <state width="1659" height="529" key="GridCell.Tab.0.right/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322785" />
     <state x="603" y="151" key="RollbackChangesDialog" timestamp="1599487720946">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
@@ -487,6 +496,10 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="341" y="164" key="SettingsEditor/0.0.1680.1050@0.0.1680.1050" timestamp="1599294827996" />
+    <state width="588" height="445" key="SwitcherDM" timestamp="1599526780318">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="588" height="445" key="SwitcherDM/0.0.1680.1050@0.0.1680.1050" timestamp="1599526780318" />
     <state x="542" y="235" width="596" height="580" key="find.popup" timestamp="1598340549734">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

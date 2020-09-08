@@ -126,7 +126,7 @@ def a_sample_spline_reloaded(a_sample_knots_in_spline):
 @pytest.fixture(scope='session')
 def an_o4o2_spline_with_nine_knots():
     return O4O2(
-        name="O4_to_O2_spline_with_nine_knots",
+        name="O4_to_O2_Spline",
         a_set_of_informed_knots=KnotsInSpline(
             path_to_csv="/Users/johnqu/PycharmProjects/Tetracamthon/src/"
                         "tetracamthon/"
@@ -139,7 +139,7 @@ def an_o4o2_spline_with_nine_knots():
 @pytest.fixture(scope='session')
 def an_o4o2_spline_with_minimum_five_knots():
     return O4O2(
-        name="O4_to_O2_with_minimum_five_knots",
+        name="O4_to_O2_Spline",
         a_set_of_informed_knots=KnotsInSpline(
             path_to_csv="/Users/johnqu/PycharmProjects/Tetracamthon/src/"
                         "tetracamthon/"

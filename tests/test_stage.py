@@ -23,5 +23,6 @@ def test_plot_an_o4o2_spline_with_nine_knots(an_o4o2_spline_with_nine_knots):
 
 def test_plot_an_o4o2_spline_with_minimum_five_knots(
         an_o4o2_spline_with_minimum_five_knots):
-    an_o4o2_spline_with_minimum_five_knots.plot_symbolically(whether_save_png=False)
+    an_o4o2_spline_with_minimum_five_knots.plot_symbolically(
+        whether_save_png=True)
     assert True

@@ -94,3 +94,7 @@ def trans_time_to_degree(time, cycle_time=0.9):
     return np.array(time) * time_to_degree_ratio
 
 
+def find_file_name_from_a_path(a_path):
+    start_index = a_path.rindex("/") + 1
+    end_index = a_path.rindex(".")
+    return a_path[start_index:end_index]

@@ -7,7 +7,7 @@ from sympy.abc import t
 from sympy.plotting import plot
 from tetracamthon.helper import save_attribute_to_pkl, \
     load_attribute_from_pkl, trans_degree_to_time, move_sympy_plot_to_plt_axes, \
-    trans_time_to_degree
+    trans_time_to_degree, find_file_name_from_a_path
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -118,6 +118,7 @@ class KnotsInSpline(object):
     def __init__(self, path_to_csv="/Users/johnqu/PycharmProjects/"
                                    "Tetracamthon/data/sample_knots.csv"):
         self.knots_with_info = []
+        self.csv_file_name = find_file_name_from_a_path(path_to_csv)
         self.read_in_csv_data(path_to_csv=path_to_csv)
 
     def __str__(self):
@@ -161,19 +162,20 @@ class Spline(object):
                  whether_trans_knots_degree_to_time=True,
                  ):
         self.name = name
-        self.num_of_knots = len(a_set_of_informed_knots.knots_with_info)
-        self.max_orders = [a_set_of_informed_knots.knots_with_info[
+        self.informed_knots = a_set_of_informed_knots
+        self.num_of_knots = len(self.informed_knots.knots_with_info)
+        self.max_orders = [self.informed_knots.knots_with_info[
                                i].polynomial_order
                            for i in range(self.num_of_knots)]
-        self.knots = [a_set_of_informed_knots.knots_with_info[i].knot
+        self.knots = [self.informed_knots.knots_with_info[i].knot
                       for i in range(self.num_of_knots)]
-        self.knots = [a_set_of_informed_knots.knots_with_info[i].knot
+        self.knots = [self.informed_knots.knots_with_info[i].knot
                       for i in range(self.num_of_knots)]
         if whether_trans_knots_degree_to_time:
             self.knots = trans_degree_to_time(self.knots)
-        self.pvajps = [a_set_of_informed_knots.knots_with_info[i].pvajp
+        self.pvajps = [self.informed_knots.knots_with_info[i].pvajp
                        for i in range(self.num_of_knots)]
-        self.depths = [a_set_of_informed_knots.knots_with_info[i].smooth_depth
+        self.depths = [self.informed_knots.knots_with_info[i].smooth_depth
                        for i in range(self.num_of_knots)]
         self.num_of_pieces = len(self.knots) - 1
         if whether_reload:
@@ -404,7 +406,8 @@ class Spline(object):
         fig, axs = plt.subplots(nrows=len(cur_lis),
                                 figsize=(16, 10),
                                 )
-        fig.suptitle('PVAJ Curves of {}'.format(self.name),
+        fig.suptitle('PVAJ Curves of {} \n with {}.csv'.format(
+            self.name, self.informed_knots.csv_file_name),
                      fontsize=14, fontweight='bold')
         y_labels = [
             "Position\n(mm)",
@@ -412,6 +415,7 @@ class Spline(object):
             "Acceleration \n(mm/sec^2)",
             "Jerk \n(mm/sec^3)"
         ]
+        x_tick_labels = ["Pos: ", "Vel: ", "Acc: ", "Jer: "]
         for i in range(len(axs)):
             move_sympy_plot_to_plt_axes(cur_lis[i], axs[i])
             axs[i].set_ylabel(y_labels[i])
@@ -419,12 +423,11 @@ class Spline(object):
             axs[i].set_xlabel('machine degree')
             if whether_knots_ticks:
                 axs[i].set_xticks([knots[j] for j in range(len(knots))])
-                # axs[i].set_xticklabels([(k % 2) * '\n' +
                 axs[i].set_xticklabels([str(
                     round(trans_time_to_degree(knots[k]), 1 )
                 ) +
-                                        " order: " +
-                                        str(self.max_orders[k]) + '\n' +
+                                        " ord: " + str(self.max_orders[k]) +
+                                        '\n' + x_tick_labels[i] +
                                         str(self.pvajps[k][i])
                                         for k in range(len(knots))])
             else:
@@ -436,7 +439,8 @@ class Spline(object):
             axs[i].grid(True)
         fig.align_ylabels(axs)
         if whether_save_png:
-            plt.savefig('../plot/plot_of_{}.png'.format(name), dpi=720)
+            plt.savefig("/Users/johnqu/PycharmProjects/Tetracamthon/"
+                        "plots/plot_of_{}.png".format(self.name), dpi=720)
         if whether_show_figure:
             plt.show()
         return fig, axs
