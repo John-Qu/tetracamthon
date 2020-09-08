@@ -185,5 +185,12 @@ def test_prepare_plots_for_plt(a_sample_spline_reloaded):
         whether_save_png=False,
         whether_show_figure=True,
         whether_knots_ticks=True,
+        whether_annotate=True,
     )
+    assert True
+
+
+def test_calculate_peak_points(a_sample_spline):
+    result = a_sample_spline.calculate_peak_points()
+    print(result)
     assert True

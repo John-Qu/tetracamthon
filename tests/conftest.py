@@ -119,7 +119,7 @@ def a_sample_spline(a_sample_knots_in_spline):
 def a_sample_spline_reloaded(a_sample_knots_in_spline):
     return Spline(a_set_of_informed_knots=a_sample_knots_in_spline,
                   name="a_sample_spline_with_four_knots",
-                  whether_reload=True,
+                  whether_reload=False,
                   whether_trans_knots_degree_to_time=False)
 
 

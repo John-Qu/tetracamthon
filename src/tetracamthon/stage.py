@@ -24,4 +24,5 @@ class O4O2(Spline):
             whether_save_png=whether_save_png,
             whether_show_figure=True,
             whether_knots_ticks=True,
+            whether_annotate=True,
         )

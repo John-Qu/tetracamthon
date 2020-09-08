@@ -2,7 +2,7 @@ import csv
 from math import isnan
 from bisect import bisect_left, bisect
 from collections import namedtuple
-from sympy import symbols, diff, Eq, solve
+from sympy import symbols, diff, Eq, solve, lambdify, S, re, im
 from sympy.abc import t
 from sympy.plotting import plot
 from tetracamthon.helper import save_attribute_to_pkl, \
@@ -40,6 +40,7 @@ class Polynomial(object):
         self.expr_with_co_sym = [self.init_expr_with_co_sym()]
         self.expr_with_co_sym.extend(self.diffs(self.expr_with_co_sym[0]))
         self.expr_with_co_val = []
+        self.lamb_lis = []
 
     def __str__(self):
         result = ""
@@ -89,6 +90,12 @@ class Polynomial(object):
             return self.expr_with_co_val
         else:
             raise ValueError
+
+    def lambdify_polynomial(self):
+        for expr_i in self.get_expr_with_co_val():
+            self.lamb_lis.append(
+                lambdify(t, expr_i, 'numpy')
+            )
 
 
 class KnotPVAJP(object):
@@ -167,8 +174,6 @@ class Spline(object):
         self.max_orders = [self.informed_knots.knots_with_info[
                                i].polynomial_order
                            for i in range(self.num_of_knots)]
-        self.knots = [self.informed_knots.knots_with_info[i].knot
-                      for i in range(self.num_of_knots)]
         self.knots = [self.informed_knots.knots_with_info[i].knot
                       for i in range(self.num_of_knots)]
         if whether_trans_knots_degree_to_time:
@@ -296,7 +301,6 @@ class Spline(object):
         result.extend(self.get_interpolating_condition_equations())
         result.extend(self.get_smoothness_condition_equations())
         result.extend(self.get_periodic_condition_equations())
-        print("Called get_total_equations once.")
         return result
 
     def solve_to_solution(self):
@@ -400,6 +404,7 @@ class Spline(object):
                                 whether_save_png=False,
                                 whether_show_figure=False,
                                 whether_knots_ticks=True,
+                                whether_annotate=False,
                                 ):
         cur_lis = self.prepare_plots_for_plt()
         knots = self.knots
@@ -408,7 +413,7 @@ class Spline(object):
                                 )
         fig.suptitle('PVAJ Curves of {} \n with {}.csv'.format(
             self.name, self.informed_knots.csv_file_name),
-                     fontsize=14, fontweight='bold')
+            fontsize=14, fontweight='bold')
         y_labels = [
             "Position\n(mm)",
             "Velocity \n(mm/sec)",
@@ -418,13 +423,15 @@ class Spline(object):
         x_tick_labels = ["Pos: ", "Vel: ", "Acc: ", "Jer: "]
         for i in range(len(axs)):
             move_sympy_plot_to_plt_axes(cur_lis[i], axs[i])
+            if whether_annotate:
+                self.annotate_peak_points(axs, i)
             axs[i].set_ylabel(y_labels[i])
             axs[i].tick_params(labelcolor='tab:gray')
             axs[i].set_xlabel('machine degree')
             if whether_knots_ticks:
                 axs[i].set_xticks([knots[j] for j in range(len(knots))])
                 axs[i].set_xticklabels([str(
-                    round(trans_time_to_degree(knots[k]), 1 )
+                    round(trans_time_to_degree(knots[k]), 1)
                 ) +
                                         " ord: " + str(self.max_orders[k]) +
                                         '\n' + x_tick_labels[i] +
@@ -445,4 +452,52 @@ class Spline(object):
             plt.show()
         return fig, axs
 
-    # def take_samples_for_plt(self):
+    def annotate_peak_points(self, axs, i_of_depth):
+        zero_points = self.calculate_peak_points()
+        for i_of_piece in range(len(zero_points)):
+            zero_points_in_piece = zero_points[i_of_piece]
+            try:
+                peak_points_in_depth = zero_points_in_piece[i_of_depth + 1]
+            except IndexError:
+                continue
+            for t_point in peak_points_in_depth:
+                val_point = self.get_pvajp_at_point(t_point)[i_of_depth]
+                axs[i_of_depth].scatter([t_point, ],
+                                        [val_point, ],
+                                        12,
+                                        color='blue')
+                axs[i_of_depth].annotate(
+                    "(" + str(round(trans_time_to_degree(t_point), 1)) + ', ' +
+                    str(round(val_point, 1)) + ")",
+                    xy=(t_point, val_point),
+                    xycoords='data',
+                    xytext=(-10, -30),
+                    textcoords='offset points',
+                    fontsize=10,
+                    arrowprops=dict(arrowstyle="->",
+                                    connectionstyle="arc3,rad=.2")
+                )
+
+    def calculate_peak_points(self):
+        result = []
+        for i_of_piece in range(self.num_of_pieces):
+            piece_of_polynomial = self.get_pieces_of_polynomial()[i_of_piece]
+            result_in_piece = []
+            for expr_of_depth in piece_of_polynomial.get_expr_with_co_val():
+                result_in_depth = []
+                solutions = solve(expr_of_depth, t)
+                for a_solution in solutions:
+                    if a_solution in S.Complexes:
+                        imaginary_part = im(a_solution).as_real_imag()[0]
+                        if imaginary_part < 0.0001:
+                            a_solution = re(a_solution)
+                        else:
+                            continue
+                    if (self.knots[i_of_piece] <= a_solution
+                            <= self.knots[i_of_piece + 1]):
+                        result_in_depth.append(a_solution)
+                result_in_piece.append(result_in_depth)
+            result.append(result_in_piece)
+        return result
+
+    # def annotate_peak_value(self):

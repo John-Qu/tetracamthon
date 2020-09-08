@@ -29,13 +29,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/plots/plot_of_O4_to_O2_with_minimum_five_knots.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plots/plot_of_O4_to_O2_Spline.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetracamthon/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/helper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_conditional_equations.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_conditional_equations.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_pieces_of_polynomial.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_pieces_of_polynomial.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_solution.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_solution.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_variables.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_variables.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tetracamthon/stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/stage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_stage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_polynomial.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,6 +127,54 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="pytest for test_polynomial.test_calculate_peak_points" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="Tetracamthon" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_polynomial.test_calculate_peak_points&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest for test_polynomial.test_find_index_of_piece_of_point" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="Tetracamthon" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_polynomial.test_find_index_of_piece_of_point&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest for test_polynomial.test_get_pvajp_at_point" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="Tetracamthon" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_polynomial.test_get_pvajp_at_point&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <configuration name="pytest for test_polynomial.test_prepare_plots_for_plt" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -137,22 +188,6 @@
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
       <option name="_new_target" value="&quot;test_polynomial.test_prepare_plots_for_plt&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="pytest for test_stage.test_plot_an_o4o2_spline_with_eight_knots" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
-      <module name="Tetracamthon" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_stage.test_plot_an_o4o2_spline_with_eight_knots&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
@@ -172,45 +207,13 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_stage.test_plot_an_o4o2_spline_with_nine_knots" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
-      <module name="Tetracamthon" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_stage.test_plot_an_o4o2_spline_with_nine_knots&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="pytest for test_stage.test_plot_an_o4o2_spline_with_six_knots" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
-      <module name="Tetracamthon" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_stage.test_plot_an_o4o2_spline_with_six_knots&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python tests.pytest for test_stage.test_plot_an_o4o2_spline_with_minimum_five_knots" />
         <item itemvalue="Python tests.pytest for test_polynomial.test_prepare_plots_for_plt" />
-        <item itemvalue="Python tests.pytest for test_stage.test_plot_an_o4o2_spline_with_nine_knots" />
-        <item itemvalue="Python tests.pytest for test_stage.test_plot_an_o4o2_spline_with_eight_knots" />
-        <item itemvalue="Python tests.pytest for test_stage.test_plot_an_o4o2_spline_with_six_knots" />
+        <item itemvalue="Python tests.pytest for test_polynomial.test_calculate_peak_points" />
+        <item itemvalue="Python tests.pytest for test_polynomial.test_get_pvajp_at_point" />
+        <item itemvalue="Python tests.pytest for test_polynomial.test_find_index_of_piece_of_point" />
       </list>
     </recent_temporary>
   </component>
@@ -368,7 +371,14 @@
       <option name="project" value="LOCAL" />
       <updated>1599526418055</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Add csv knots file name to plot title.">
+      <created>1599528849532</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1599528849532</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -424,7 +434,8 @@
     <MESSAGE value="5 order with just zero pos and vel is not enough." />
     <MESSAGE value="Rename csv knot file names." />
     <MESSAGE value="Add knot pvaj value and order of curve onto subplots." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add knot pvaj value and order of curve onto subplots." />
+    <MESSAGE value="Add csv knots file name to plot title." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add csv knots file name to plot title." />
   </component>
   <component name="WindowStateProjectService">
     <state x="474" y="210" key="#Inspections" timestamp="1598237920969">
@@ -460,33 +471,33 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="0" y="203" key="#xdebugger.XInspectDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1598276212851" />
-    <state x="417" y="14" key="CommitChangelistDialog2" timestamp="1599526417723">
+    <state x="417" y="14" key="CommitChangelistDialog2" timestamp="1599528849291">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="417" y="14" key="CommitChangelistDialog2/0.0.1680.1050@0.0.1680.1050" timestamp="1599526417723" />
+    <state x="417" y="14" key="CommitChangelistDialog2/0.0.1680.1050@0.0.1680.1050" timestamp="1599528849291" />
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog" timestamp="1599487719117">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1599487719117" />
-    <state width="1659" height="529" key="GridCell.Tab.0.bottom" timestamp="1599528475560">
+    <state width="1659" height="330" key="GridCell.Tab.0.bottom" timestamp="1599561835726">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="529" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599528475560" />
+    <state width="1659" height="330" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599561835726" />
     <state width="1659" height="529" key="GridCell.Tab.0.bottom/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322785" />
-    <state width="1659" height="529" key="GridCell.Tab.0.center" timestamp="1599528475559">
+    <state width="1659" height="330" key="GridCell.Tab.0.center" timestamp="1599561835725">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="529" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599528475559" />
+    <state width="1659" height="330" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599561835725" />
     <state width="1659" height="529" key="GridCell.Tab.0.center/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322784" />
-    <state width="1659" height="529" key="GridCell.Tab.0.left" timestamp="1599528475558">
+    <state width="1659" height="330" key="GridCell.Tab.0.left" timestamp="1599561835724">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="529" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599528475558" />
+    <state width="1659" height="330" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599561835724" />
     <state width="1659" height="529" key="GridCell.Tab.0.left/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322783" />
-    <state width="1659" height="529" key="GridCell.Tab.0.right" timestamp="1599528475559">
+    <state width="1659" height="330" key="GridCell.Tab.0.right" timestamp="1599561835725">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="529" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599528475559" />
+    <state width="1659" height="330" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599561835725" />
     <state width="1659" height="529" key="GridCell.Tab.0.right/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322785" />
     <state x="603" y="151" key="RollbackChangesDialog" timestamp="1599487720946">
       <screen x="0" y="0" width="1680" height="1050" />
