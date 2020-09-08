@@ -6,7 +6,10 @@ from sympy import symbols, diff, Eq, solve
 from sympy.abc import t
 from sympy.plotting import plot
 from tetracamthon.helper import save_attribute_to_pkl, \
-    load_attribute_from_pkl, trans_degree_to_time
+    load_attribute_from_pkl, trans_degree_to_time, move_sympy_plot_to_plt_axes, \
+    trans_time_to_degree
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 class Coefficient(object):
@@ -390,5 +393,52 @@ class Spline(object):
                          line_color=line_color)
                 )
         return result
+
+    def plot_spline_on_subplots(self,
+                                whether_save_png=False,
+                                whether_show_figure=False,
+                                whether_knots_ticks=True,
+                                ):
+        cur_lis = self.prepare_plots_for_plt()
+        knots = self.knots
+        fig, axs = plt.subplots(nrows=len(cur_lis),
+                                figsize=(16, 10),
+                                )
+        fig.suptitle('PVAJ Curves of {}'.format(self.name),
+                     fontsize=14, fontweight='bold')
+        y_labels = [
+            "Position\n(mm)",
+            "Velocity \n(mm/sec)",
+            "Acceleration \n(mm/sec^2)",
+            "Jerk \n(mm/sec^3)"
+        ]
+        for i in range(len(axs)):
+            move_sympy_plot_to_plt_axes(cur_lis[i], axs[i])
+            axs[i].set_ylabel(y_labels[i])
+            axs[i].tick_params(labelcolor='tab:gray')
+            axs[i].set_xlabel('machine degree')
+            if whether_knots_ticks:
+                axs[i].set_xticks([knots[j] for j in range(len(knots))])
+                # axs[i].set_xticklabels([(k % 2) * '\n' +
+                axs[i].set_xticklabels([str(
+                    round(trans_time_to_degree(knots[k]), 1 )
+                ) +
+                                        " order: " +
+                                        str(self.max_orders[k]) + '\n' +
+                                        str(self.pvajps[k][i])
+                                        for k in range(len(knots))])
+            else:
+                axs[i].set_xticks(trans_degree_to_time(
+                    np.linspace(0, 360, 37, endpoint=True)))
+                axs[i].set_xticklabels([(i % 2) * '\n' + str(
+                    int(np.linspace(0, 360, 37, endpoint=True)[i]))
+                                        for i in range(37)])
+            axs[i].grid(True)
+        fig.align_ylabels(axs)
+        if whether_save_png:
+            plt.savefig('../plot/plot_of_{}.png'.format(name), dpi=720)
+        if whether_show_figure:
+            plt.show()
+        return fig, axs
 
     # def take_samples_for_plt(self):

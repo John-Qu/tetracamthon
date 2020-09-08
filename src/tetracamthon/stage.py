@@ -1,5 +1,4 @@
 from tetracamthon.polynomial import Spline, KnotsInSpline
-from tetracamthon.helper import plot_subplots_on_one_figure
 
 
 class O4O2(Spline):
@@ -20,12 +19,9 @@ class O4O2(Spline):
                         )
         self.a_set_of_informed_knots = a_set_of_informed_knots
 
-    def plot(self, whether_save_png=False):
+    def plot_symbolically(self, whether_save_png=False):
         name = self.name + "\n" + str(self.a_set_of_informed_knots)
-        plot_subplots_on_one_figure(
-            self.prepare_plots_for_plt(),
-            self.knots,
-            name=name,
+        self.plot_spline_on_subplots(
             whether_save_png=whether_save_png,
             whether_show_figure=True,
             whether_knots_ticks=True,

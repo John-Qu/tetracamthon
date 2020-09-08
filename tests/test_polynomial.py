@@ -1,6 +1,3 @@
-from tetracamthon.helper import plot_subplots_on_one_figure
-
-
 def test_init_with_co_sym(a_polynomial):
     print(a_polynomial.init_with_co_sym())
     assert 'C_00' in str(a_polynomial.expr_with_co_sym[0])
@@ -184,11 +181,9 @@ def test_get_pvajp_at_point(a_sample_spline_reloaded):
 
 
 def test_prepare_plots_for_plt(a_sample_spline_reloaded):
-    plot_subplots_on_one_figure(
-        a_sample_spline_reloaded.prepare_plots_for_plt(),
-        a_sample_spline_reloaded.knots,
-        name="a_sample_spline",
+    a_sample_spline_reloaded.plot_spline_on_subplots(
         whether_save_png=False,
         whether_show_figure=True,
         whether_knots_ticks=True,
     )
+    assert True
