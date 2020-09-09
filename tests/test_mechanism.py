@@ -51,8 +51,8 @@ def test_get_theta_of_r_o4o2_expr():
     assert "theta" in str(result)
 
 
-def test_get_o_bc_of_r_o4o2(a_slide_rocker):
-    sr = a_slide_rocker
+def test_get_o_bc_of_r_o4o2(a_slide_rocker_of_compact_flex):
+    sr = a_slide_rocker_of_compact_flex
     result = sr.get_o_BC_of_r_O4O2()
     print("Type of result is " + str(type(result)))
     print("Here it is: " + str(result))
@@ -62,8 +62,8 @@ def test_get_o_bc_of_r_o4o2(a_slide_rocker):
     assert abs((theta_min / pi * 180).evalf() - 200) < 0.001
 
 
-def test_get_x_a02_of_o_bc(a_forward):
-    fw = a_forward
+def test_get_x_a02_of_o_bc(a_forward_slide_rocker_of_compact_flex):
+    fw = a_forward_slide_rocker_of_compact_flex
     result = fw.get_x_AO2_of_o_BC()
     print("Type of result is " + str(type(result)))
     print("Here it is: " + str(result))
@@ -71,8 +71,8 @@ def test_get_x_a02_of_o_bc(a_forward):
     assert "theta" in str(result)
 
 
-def test_get_x_ao2_of_r_o4o2(a_forward):
-    fw = a_forward
+def test_get_x_ao2_of_r_o4o2(a_forward_slide_rocker_of_compact_flex):
+    fw = a_forward_slide_rocker_of_compact_flex
     result = fw.get_x_AO2_of_r_O4O2()
     print("Type of result is " + str(type(result)))
     print("Here it is: " + str(result))
@@ -80,8 +80,8 @@ def test_get_x_ao2_of_r_o4o2(a_forward):
     assert "r_O4O2" in str(result)
 
 
-def test_get_y_ao2_of_r_o4o2(a_forward):
-    fw = a_forward
+def test_get_y_ao2_of_r_o4o2(a_forward_slide_rocker_of_compact_flex):
+    fw = a_forward_slide_rocker_of_compact_flex
     result = fw.get_y_AO2_of_r_O4O2()
     print("Type of result is " + str(type(result)))
     print("Here it is: " + str(result))
@@ -89,8 +89,8 @@ def test_get_y_ao2_of_r_o4o2(a_forward):
     assert "r_O4O2" in str(result)
 
 
-def test_get_vx_ao2_of_vr_o4o2(a_forward):
-    fw = a_forward
+def test_get_vx_ao2_of_vr_o4o2(a_forward_slide_rocker_of_compact_flex):
+    fw = a_forward_slide_rocker_of_compact_flex
     result = fw.get_vx_AO2_of_vr_O4O2()
     print("Type of result is " + str(type(result)))
     print("Here it is: " + str(result))
@@ -101,8 +101,8 @@ def test_get_vx_ao2_of_vr_o4o2(a_forward):
     assert "v(t)" in str(result)
 
 
-def test_get_vy_ao2_of_vr_o4o2(a_forward):
-    fw = a_forward
+def test_get_vy_ao2_of_vr_o4o2(a_forward_slide_rocker_of_compact_flex):
+    fw = a_forward_slide_rocker_of_compact_flex
     result = fw.get_vy_AO2_of_vr_O4O2()
     print("Type of result is " + str(type(result)))
     print("Here it is: " + str(result))
@@ -113,8 +113,8 @@ def test_get_vy_ao2_of_vr_o4o2(a_forward):
     assert "v(t)" in str(result)
 
 
-def test_get_r_o4o2_of_o_bc(a_backward):
-    bw = a_backward
+def test_get_r_o4o2_of_o_bc(a_backward_slide_rocker_of_compact_flex):
+    bw = a_backward_slide_rocker_of_compact_flex
     result = bw.get_r_O4O2_of_o_BC()
     print("Type of result is " + str(type(result)))
     print("Here is its LaTex form: " + latex(str(result)))
@@ -127,8 +127,8 @@ def test_get_r_o4o2_of_o_bc(a_backward):
     assert "r_O4O2" not in str(result)
 
 
-def test_get_o_bc_of_x_ao2(a_backward):
-    bw = a_backward
+def test_get_o_bc_of_x_ao2(a_backward_slide_rocker_of_compact_flex):
+    bw = a_backward_slide_rocker_of_compact_flex
     result = bw.get_o_BC_of_x_AO2()
     print("Type of result is " + str(type(result)))
     print("Here is its LaTex form: " + latex(str(result)))
@@ -140,8 +140,8 @@ def test_get_o_bc_of_x_ao2(a_backward):
     assert abs(o_bc_min_in_deg - o_bc_min_in_deg_expected) < 1
 
 
-def test_get_o_bc_of_y_ao2(a_backward):
-    bw = a_backward
+def test_get_o_bc_of_y_ao2(a_backward_slide_rocker_of_compact_flex):
+    bw = a_backward_slide_rocker_of_compact_flex
     result = bw.get_o_BC_of_y_AO2()
     print("Type of result is " + str(type(result)))
     print("Here is its LaTex form: " + latex(str(result)))
@@ -152,8 +152,8 @@ def test_get_o_bc_of_y_ao2(a_backward):
     assert abs(o_bc_min_in_deg - o_bc_min_in_deg_expected) < 1
 
 
-def test_get_r_o4o2_of_x_ao2(a_backward):
-    bw = a_backward
+def test_get_r_o4o2_of_x_ao2(a_backward_slide_rocker_of_compact_flex):
+    bw = a_backward_slide_rocker_of_compact_flex
     result = bw.get_r_O4O2_of_x_AO2()
     print("Type of result is " + str(type(result)))
     print("Here is its LaTex form: " + latex(str(result)))

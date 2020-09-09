@@ -7,16 +7,16 @@ from tetracamthon.stage import O4O2
 
 
 @pytest.fixture(scope='session')
-def path_to_csv():
+def path_to_tetra_pak_a3_flex_cam_acc_data_721_csv():
     """Return a path to a cvs file for testing."""
     return "/Users/johnqu/PycharmProjects/Tetracamthon/src" + \
            "/a3flex/tetra_pak_a3_flex_cam_acc_data_721.csv"
 
 
 @pytest.fixture(scope='session')
-def a_slide_rocker():
+def a_slide_rocker_of_compact_flex():
     sr = SlideRocker(name="SlideRocker",
-                     a_spec_id=1,
+                     a_spec_id="compact_flex",
                      path_to_csv="/Users/johnqu/PycharmProjects/Tetracamthon/"
                                  "src/tetracamthon/"
                                  "tetracamthon_lind_dimensions.csv")
@@ -24,9 +24,9 @@ def a_slide_rocker():
 
 
 @pytest.fixture(scope='session')
-def a_forward():
+def a_forward_slide_rocker_of_compact_flex():
     fw = Forward(name="Forward",
-                 a_spec_id=1,
+                 a_spec_id="compact_flex",
                  path_to_csv="/Users/johnqu/PycharmProjects/Tetracamthon/"
                              "src/tetracamthon/"
                              "tetracamthon_lind_dimensions.csv")
@@ -34,9 +34,9 @@ def a_forward():
 
 
 @pytest.fixture(scope='session')
-def a_backward():
+def a_backward_slide_rocker_of_compact_flex():
     bw = Backward(name="Backward",
-                  a_spec_id=1,
+                  a_spec_id="compact_flex",
                   path_to_csv="/Users/johnqu/PycharmProjects/Tetracamthon/"
                               "src/tetracamthon/"
                               "tetracamthon_lind_dimensions.csv")
@@ -59,47 +59,6 @@ def a_solution():
         symbols("C_04"): 5,
         symbols("C_05"): 6
     }
-
-
-@pytest.fixture(scope='session')
-def a_set_of_knot_pvajp():
-    start = KnotPVAJP(knot=0,
-                      pvajp=(
-                          0,
-                          0,
-                          0,
-                          None,
-                          None,
-                      ),
-                      smooth_depth=6)
-    knot1 = KnotPVAJP(knot=1,
-                      pvajp=(
-                          0.3,
-                          None,
-                          None,
-                          None,
-                          None,
-                      ),
-                      smooth_depth=6)
-    knot2 = KnotPVAJP(knot=2,
-                      pvajp=(
-                          0.6,
-                          None,
-                          None,
-                          None,
-                          None,
-                      ),
-                      smooth_depth=6)
-    end = KnotPVAJP(knot=3,
-                    pvajp=(
-                        1,
-                        0,
-                        0,
-                        None,
-                        None,
-                    ),
-                    smooth_depth=6)
-    return [start, knot1, knot2, end]
 
 
 @pytest.fixture(scope='session')

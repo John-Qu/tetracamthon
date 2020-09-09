@@ -29,16 +29,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/plots/plot_of_O4_to_O2_Spline.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_conditional_equations.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_conditional_equations.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_pieces_of_polynomial.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_pieces_of_polynomial.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_solution.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_solution.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_variables.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/data/memo_a_sample_spline_with_four_knots_variables.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetracamthon/stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/stage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mechanism/TP A3 CP Flex.dxf" beforeDir="false" afterPath="$PROJECT_DIR$/mechanism/TP A3 CP Flex.dxf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tetracamthon/mechanism.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/mechanism.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tetracamthon/tetracamthon_lind_dimensions.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/tetracamthon_lind_dimensions.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_polynomial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_draw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_draw_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_mechanism.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_mechanism.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -378,7 +375,14 @@
       <option name="project" value="LOCAL" />
       <updated>1599528849532</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Annotate peak points even with little imaginary solution part.">
+      <created>1599562269523</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1599562269523</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -435,7 +439,8 @@
     <MESSAGE value="Rename csv knot file names." />
     <MESSAGE value="Add knot pvaj value and order of curve onto subplots." />
     <MESSAGE value="Add csv knots file name to plot title." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add csv knots file name to plot title." />
+    <MESSAGE value="Annotate peak points even with little imaginary solution part." />
+    <option name="LAST_COMMIT_MESSAGE" value="Annotate peak points even with little imaginary solution part." />
   </component>
   <component name="WindowStateProjectService">
     <state x="474" y="210" key="#Inspections" timestamp="1598237920969">
@@ -471,33 +476,33 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="0" y="203" key="#xdebugger.XInspectDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1598276212851" />
-    <state x="417" y="14" key="CommitChangelistDialog2" timestamp="1599528849291">
+    <state x="417" y="14" key="CommitChangelistDialog2" timestamp="1599562269255">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="417" y="14" key="CommitChangelistDialog2/0.0.1680.1050@0.0.1680.1050" timestamp="1599528849291" />
+    <state x="417" y="14" key="CommitChangelistDialog2/0.0.1680.1050@0.0.1680.1050" timestamp="1599562269255" />
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog" timestamp="1599487719117">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1599487719117" />
-    <state width="1659" height="330" key="GridCell.Tab.0.bottom" timestamp="1599561835726">
+    <state width="1659" height="330" key="GridCell.Tab.0.bottom" timestamp="1599562450445">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="330" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599561835726" />
+    <state width="1659" height="330" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599562450445" />
     <state width="1659" height="529" key="GridCell.Tab.0.bottom/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322785" />
-    <state width="1659" height="330" key="GridCell.Tab.0.center" timestamp="1599561835725">
+    <state width="1659" height="330" key="GridCell.Tab.0.center" timestamp="1599562450443">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="330" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599561835725" />
+    <state width="1659" height="330" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599562450443" />
     <state width="1659" height="529" key="GridCell.Tab.0.center/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322784" />
-    <state width="1659" height="330" key="GridCell.Tab.0.left" timestamp="1599561835724">
+    <state width="1659" height="330" key="GridCell.Tab.0.left" timestamp="1599562450442">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="330" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599561835724" />
+    <state width="1659" height="330" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599562450442" />
     <state width="1659" height="529" key="GridCell.Tab.0.left/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322783" />
-    <state width="1659" height="330" key="GridCell.Tab.0.right" timestamp="1599561835725">
+    <state width="1659" height="330" key="GridCell.Tab.0.right" timestamp="1599562450444">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="330" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599561835725" />
+    <state width="1659" height="330" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599562450444" />
     <state width="1659" height="529" key="GridCell.Tab.0.right/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322785" />
     <state x="603" y="151" key="RollbackChangesDialog" timestamp="1599487720946">
       <screen x="0" y="0" width="1680" height="1050" />
@@ -511,6 +516,10 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state width="588" height="445" key="SwitcherDM/0.0.1680.1050@0.0.1680.1050" timestamp="1599526780318" />
+    <state x="440" y="261" key="Vcs.Push.Dialog.v2" timestamp="1599562405379">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="440" y="261" key="Vcs.Push.Dialog.v2/0.0.1680.1050@0.0.1680.1050" timestamp="1599562405379" />
     <state x="542" y="235" width="596" height="580" key="find.popup" timestamp="1598340549734">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
