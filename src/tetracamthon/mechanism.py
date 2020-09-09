@@ -7,6 +7,7 @@ from sympy.abc import t
 from sympy.parsing.sympy_parser import parse_expr
 
 from tetracamthon.helper import Variable, Memory
+from tetracamthon.stage import O4O2
 
 
 class Link(object):
@@ -112,7 +113,7 @@ class LinkDim(object):
             Row = namedtuple('Row', headings)
             for r in f_csv:
                 row = Row(*r)
-                self.spec_id.append(float(row.spec_id))
+                self.spec_id.append(str(row.spec_id))
                 self.r_BO4.append(float(row.r_BO4))
                 self.r_BC.append(float(row.r_BC))
                 self.r_CO2.append(float(row.r_CO2))
@@ -125,17 +126,17 @@ class LinkDim(object):
 
 class LinksWithDim(object):
     def __init__(self, a_spec_id, path_to_csv):  # test passed
-        link_dim = LinkDim(path_to_csv)
+        link_dims = LinkDim(path_to_csv)
         self.spec_id = a_spec_id
-        index = link_dim.spec_id.index(self.spec_id)
-        self.lBO4 = BO4(link_dim.r_BO4[index])
-        self.lBC = BC(link_dim.r_BC[index])
-        self.lCO2 = CO2(link_dim.r_CO2[index],
-                        o_value=link_dim.o_CO2[index])
-        self.lDC = DC(link_dim.r_DC[index])
-        self.lAD = AD(link_dim.r_AD[index])
+        index = link_dims.spec_id.index(self.spec_id)
+        self.lBO4 = BO4(link_dims.r_BO4[index])
+        self.lBC = BC(link_dims.r_BC[index])
+        self.lCO2 = CO2(link_dims.r_CO2[index],
+                        o_value=link_dims.o_CO2[index])
+        self.lDC = DC(link_dims.r_DC[index])
+        self.lAD = AD(link_dims.r_AD[index])
         self.lAC = AC(sqrt(self.lAD.r.val ** 2 + self.lDC.r.val ** 2))
-        self.lO4O2 = O4O2(None, o_value=link_dim.o_O4O2[index])
+        self.lO4O2 = O4O2(None, o_value=link_dims.o_O4O2[index])
         self.lBC.o.sym = symbols("theta")
         self.lBO4.o.sym = symbols("alpha")
         self.ang_ACD_val = atan2(self.lAD.r.val, self.lDC.r.val)
@@ -210,6 +211,11 @@ class SlideRocker(LinksWithDim):
         self.memo.update_memo(name, result)
         return result
 
+
+class Forward(SlideRocker):
+    def __init__(self, name, a_spec_id, path_to_csv):
+        SlideRocker.__init__(self, name, a_spec_id, path_to_csv)
+
     def get_o_BC_of_r_O4O2(self):
         name = "o_BC_of_r_O4O2"
         if name in self.memo.dict:
@@ -218,11 +224,6 @@ class SlideRocker(LinksWithDim):
                        self.lBC.o.sym)[1]
         self.memo.update_memo(name, result)
         return result
-
-
-class Forward(SlideRocker):
-    def __init__(self, name, a_spec_id, path_to_csv):
-        SlideRocker.__init__(self, name, a_spec_id, path_to_csv)
 
     def get_x_AO2_of_o_BC(self):
         name = "x_AO2_of_o_BC"
@@ -284,12 +285,6 @@ class Forward(SlideRocker):
 class Backward(SlideRocker):
     def __init__(self, name, a_spec_id, path_to_csv):
         SlideRocker.__init__(self, name, a_spec_id, path_to_csv)
-        self.theta = Function("theta")(t)
-        self.omega = Function("omega")(t)
-        self.x_R_AO2 = Function("x_AO2")(t)
-        self.y_R_AO2 = Function("y_AO2")(t)
-        self.x_V_AO2 = Function("vx_AO2")(t)
-        self.y_V_AO2 = Function("vy_AO2")(t)
 
     def get_r_O4O2_of_o_BC(self):
         name = "r_O4O2_of_o_BC"
@@ -329,5 +324,4 @@ class Backward(SlideRocker):
         )
         self.memo.update_memo(name, result)
         return result
-
 
