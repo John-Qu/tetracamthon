@@ -153,15 +153,15 @@ def test_load_solved_pieces_of_polynomial(a_sample_spline_reloaded):
 
 
 def test_find_index_of_piece_of_point(a_sample_spline_reloaded):
-    index_a = a_sample_spline_reloaded.find_index_of_piece_of_point(0)
+    index_a = a_sample_spline_reloaded.get_index_of_piece_of_point(0)
     assert index_a == 0
-    index_b = a_sample_spline_reloaded.find_index_of_piece_of_point(1.2)
+    index_b = a_sample_spline_reloaded.get_index_of_piece_of_point(1.2)
     assert index_b == 1
-    index_c = a_sample_spline_reloaded.find_index_of_piece_of_point(1)
+    index_c = a_sample_spline_reloaded.get_index_of_piece_of_point(1)
     assert index_c == 1
-    index_d = a_sample_spline_reloaded.find_index_of_piece_of_point(2.2)
+    index_d = a_sample_spline_reloaded.get_index_of_piece_of_point(2.2)
     assert index_d == 2
-    index_e = a_sample_spline_reloaded.find_index_of_piece_of_point(3)
+    index_e = a_sample_spline_reloaded.get_index_of_piece_of_point(3)
     assert index_e == 2
 
 

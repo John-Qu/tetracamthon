@@ -2,12 +2,14 @@ import csv
 from collections import namedtuple
 
 from sympy import symbols, cos, pi, atan2, sqrt, solve, sin, Function, \
-    Derivative
+    Derivative, Eq, diff
 from sympy.abc import t
 from sympy.parsing.sympy_parser import parse_expr
 
-from tetracamthon.helper import Variable, Memory
-from tetracamthon.stage import O4O2
+from tetracamthon.helper import Variable, Memory, trans_degree_to_time, \
+    trans_time_to_degree
+from tetracamthon.packages import Package
+from tetracamthon.stage import JawToYork
 
 
 class Link(object):
@@ -95,7 +97,7 @@ class AO2(Link):
 
 
 class LinkDim(object):
-    def __init__(self, path_to_csv):
+    def __init__(self, path_to_link_dim_csv):
         self.spec_id = []
         self.r_BO4 = []
         self.r_BC = []
@@ -104,10 +106,10 @@ class LinkDim(object):
         self.r_AD = []
         self.o_O4O2 = []
         self.o_CO2 = []
-        self.read_in_csv_data(path_to_csv)
+        self.read_in_csv_data(path_to_link_dim_csv)
 
-    def read_in_csv_data(self, path_to_csv):  # test passed
-        with open(path_to_csv) as f:
+    def read_in_csv_data(self, path_to_link_dim_csv):  # test passed
+        with open(path_to_link_dim_csv) as f:
             f_csv = csv.reader(f)
             headings = next(f_csv)
             Row = namedtuple('Row', headings)
@@ -125,8 +127,8 @@ class LinkDim(object):
 
 
 class LinksWithDim(object):
-    def __init__(self, a_spec_id, path_to_csv):  # test passed
-        link_dims = LinkDim(path_to_csv)
+    def __init__(self, a_spec_id, path_to_link_dim_csv):  # test passed
+        link_dims = LinkDim(path_to_link_dim_csv)
         self.spec_id = a_spec_id
         index = link_dims.spec_id.index(self.spec_id)
         self.lBO4 = BO4(link_dims.r_BO4[index])
@@ -145,8 +147,8 @@ class LinksWithDim(object):
 
 
 class SlideRocker(LinksWithDim):
-    def __init__(self, name, a_spec_id, path_to_csv):
-        LinksWithDim.__init__(self, a_spec_id, path_to_csv)
+    def __init__(self, name, a_spec_id, path_to_link_dim_csv):
+        LinksWithDim.__init__(self, a_spec_id, path_to_link_dim_csv)
         self.name = name
         self.r = Function("r")(t)
         self.v = Function("v")(t)
@@ -213,8 +215,11 @@ class SlideRocker(LinksWithDim):
 
 
 class Forward(SlideRocker):
-    def __init__(self, name, a_spec_id, path_to_csv):
-        SlideRocker.__init__(self, name, a_spec_id, path_to_csv)
+    def __init__(self,
+                 name: str,
+                 a_spec_id: str,
+                 path_to_link_dim_csv: str):
+        SlideRocker.__init__(self, name, a_spec_id, path_to_link_dim_csv)
 
     def get_o_BC_of_r_O4O2(self):
         name = "o_BC_of_r_O4O2"
@@ -283,8 +288,8 @@ class Forward(SlideRocker):
 
 
 class Backward(SlideRocker):
-    def __init__(self, name, a_spec_id, path_to_csv):
-        SlideRocker.__init__(self, name, a_spec_id, path_to_csv)
+    def __init__(self, name, a_spec_id, path_to_link_dim_csv):
+        SlideRocker.__init__(self, name, a_spec_id, path_to_link_dim_csv)
 
     def get_r_O4O2_of_o_BC(self):
         name = "r_O4O2_of_o_BC"
@@ -324,4 +329,127 @@ class Backward(SlideRocker):
         )
         self.memo.update_memo(name, result)
         return result
+
+
+class TracingOfPointA(object):
+    def __init__(self,
+                 name: str,
+                 a_spec_id: str,
+                 a_path_to_link_dim_csv: str,
+                 whether_reload: bool = True):
+        self.jaw_on_york_spline = JawToYork(whether_reload=whether_reload)
+        self.forward = Forward("a_forward_mechanism",
+                               a_spec_id,
+                               a_path_to_link_dim_csv
+                               )
+        self.backward = Backward("a_backward_mechanism",
+                                 a_spec_id,
+                                 a_path_to_link_dim_csv
+                                 )
+        self.package = Package(1000, 'Square', 72, 71, 198, 5, 285.00)
+        self.memo = Memory(name +
+                           "with" + self.jaw_on_york_spline.name +
+                           "for" + a_spec_id)
+        self.r_O4O2_of_x_AO2 = self.backward.get_r_O4O2_of_x_AO2()
+        self.x_AO2_sym = self.backward.lAO2.x.sym
+        self.r_O4O2_sym = self.forward.lO4O2.r.sym
+        self.r_O4O2_polynomial_while_touching = \
+            self.jaw_on_york_spline.get_polynomial_at_point(
+                trans_degree_to_time(85)
+            )
+        if whether_reload:
+            self.memo.load()
+
+    def get_r_O4O2_when_closed(self):
+        name = "r_O4O2_when_closed"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        x_AO2_when_closed = -1.5 / 2
+        result = self.r_O4O2_of_x_AO2.subs(self.x_AO2_sym, x_AO2_when_closed)
+        self.memo.update_memo(name, result)
+        return result
+
+    def get_r_O4O2_when_touched(self):
+        name = "r_O4O2_when_touched"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        x_AO2_when_touched = -self.package.depth / 2
+        result = self.r_O4O2_of_x_AO2.subs(self.x_AO2_sym, x_AO2_when_touched)
+        self.memo.update_memo(name, result)
+        return result
+
+    def get_t_touched(self):
+        name = "t_touched"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        jaw_to_york_spline_pos_touched = - (
+                self.get_r_O4O2_when_touched() - self.get_r_O4O2_when_closed()
+        )
+        the_polynomial = self.r_O4O2_polynomial_while_touching
+        the_pos_expr = the_polynomial.get_expr_with_co_val()[0]
+        the_equation = Eq(the_pos_expr, jaw_to_york_spline_pos_touched)
+        # print(the_equation)
+        result = solve(the_equation, t)[2]
+        # print(trans_time_to_degree(result))
+        self.memo.update_memo(name, result)
+        return result
+
+    def get_r_O4O2_of_t_in_jaw_on_york_spline(self):
+        name = "r_O4O2_of_t_in_jaw_on_york_spline"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        pos_expr_O4_to_O2_in_jaw_on_york_spline = \
+            self.r_O4O2_polynomial_while_touching.get_expr_with_co_val()[0]
+        result = ((- pos_expr_O4_to_O2_in_jaw_on_york_spline)
+                  + self.get_r_O4O2_when_closed())
+        self.memo.update_memo(name, result)
+        return result
+
+    def get_y_AO2_of_t_while_touching(self):
+        name = "y_AO2_of_t_while_touching"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        result = self.forward.get_y_AO2_of_r_O4O2().subs(
+            self.r_O4O2_sym, self.get_r_O4O2_of_t_in_jaw_on_york_spline())
+        self.memo.update_memo(name, result)
+        return result
+
+    def get_x_AO2_of_t_while_touching(self):
+        name = "x_AO2_of_t_while_touching"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        result = self.forward.get_x_AO2_of_r_O4O2().subs(
+            self.r_O4O2_sym, self.get_r_O4O2_of_t_in_jaw_on_york_spline())
+        self.memo.update_memo(name, result)
+        return result
+
+    def get_x_AO5_of_t_while_touching(self):
+        name = "x_AO5_of_t_while_touching"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        result = self.get_x_AO2_of_t_while_touching()
+        self.memo.update_memo(name, result)
+        return result
+
+    def get_y_AO5_of_t_while_touching(self):
+        name = "y_AO5_of_t_while_touching"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        r_GO5 = self.package.depth / 2
+        s = self.package.slim
+        r_AG = ((r_GO5 - 0.75) ** 2 + s ** 2) ** 0.5
+        result = (r_AG ** 2 -
+                  (r_GO5 + self.get_x_AO5_of_t_while_touching()) ** 2
+                  ) ** 0.5
+        self.memo.update_memo(name, result)
+        return result
+
+    def get_vx_AO5_while_touching(self):
+        name = "vx_AO5_while_touching"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        result = diff(self.get_x_AO5_of_t_while_touching(), t)
+        self.memo.update_memo(name, result)
+        return result
+
 

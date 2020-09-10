@@ -28,14 +28,16 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="">
+    <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="Implemented Tracing of A class to vx, for only necessary latter.">
+      <change afterPath="$PROJECT_DIR$/src/tetracamthon/knots_of_shaking_hand_with_touching.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mechanism/TP A3 CP Flex.dxf" beforeDir="false" afterPath="$PROJECT_DIR$/mechanism/TP A3 CP Flex.dxf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tetracamthon/mechanism.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/mechanism.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetracamthon/tetracamthon_lind_dimensions.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/tetracamthon_lind_dimensions.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tetracamthon/stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/stage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_draw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_draw_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_mechanism.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_mechanism.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_polynomial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_stage.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +81,7 @@
       <recent name="$PROJECT_DIR$/docs/reference" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.pytest for test_stage.test_plot_an_o4o2_spline_with_minimum_five_knots">
+  <component name="RunManager" selected="Python tests.pytest for test_mechanism.test_get_vx_ao5_while_touching">
     <configuration name="Tetracamthon" type="PythonConfigurationType" factoryName="Python">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -124,7 +126,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_polynomial.test_calculate_peak_points" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_mechanism.test_get_t_touched" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -136,11 +138,11 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_polynomial.test_calculate_peak_points&quot;" />
+      <option name="_new_target" value="&quot;test_mechanism.test_get_t_touched&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_polynomial.test_find_index_of_piece_of_point" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_mechanism.test_get_vx_ao5_while_touching" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -152,11 +154,11 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_polynomial.test_find_index_of_piece_of_point&quot;" />
+      <option name="_new_target" value="&quot;test_mechanism.test_get_vx_ao5_while_touching&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_polynomial.test_get_pvajp_at_point" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_mechanism.test_get_x_ao2_of_t_while_touching" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -168,11 +170,11 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_polynomial.test_get_pvajp_at_point&quot;" />
+      <option name="_new_target" value="&quot;test_mechanism.test_get_x_ao2_of_t_while_touching&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_polynomial.test_prepare_plots_for_plt" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_mechanism.test_get_y_ao2_of_t_while_touching" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -184,11 +186,11 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_polynomial.test_prepare_plots_for_plt&quot;" />
+      <option name="_new_target" value="&quot;test_mechanism.test_get_y_ao2_of_t_while_touching&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_stage.test_plot_an_o4o2_spline_with_minimum_five_knots" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_mechanism.test_get_y_ao5_of_t_while_touching" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -200,17 +202,17 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_stage.test_plot_an_o4o2_spline_with_minimum_five_knots&quot;" />
+      <option name="_new_target" value="&quot;test_mechanism.test_get_y_ao5_of_t_while_touching&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.pytest for test_stage.test_plot_an_o4o2_spline_with_minimum_five_knots" />
-        <item itemvalue="Python tests.pytest for test_polynomial.test_prepare_plots_for_plt" />
-        <item itemvalue="Python tests.pytest for test_polynomial.test_calculate_peak_points" />
-        <item itemvalue="Python tests.pytest for test_polynomial.test_get_pvajp_at_point" />
-        <item itemvalue="Python tests.pytest for test_polynomial.test_find_index_of_piece_of_point" />
+        <item itemvalue="Python tests.pytest for test_mechanism.test_get_vx_ao5_while_touching" />
+        <item itemvalue="Python tests.pytest for test_mechanism.test_get_y_ao5_of_t_while_touching" />
+        <item itemvalue="Python tests.pytest for test_mechanism.test_get_x_ao2_of_t_while_touching" />
+        <item itemvalue="Python tests.pytest for test_mechanism.test_get_y_ao2_of_t_while_touching" />
+        <item itemvalue="Python tests.pytest for test_mechanism.test_get_t_touched" />
       </list>
     </recent_temporary>
   </component>
@@ -382,7 +384,21 @@
       <option name="project" value="LOCAL" />
       <updated>1599562269523</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="change dim spec_id into meaningful string.">
+      <created>1599632618263</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1599632618263</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Clear Backward attributes.">
+      <created>1599632830642</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1599632830642</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -440,7 +456,10 @@
     <MESSAGE value="Add knot pvaj value and order of curve onto subplots." />
     <MESSAGE value="Add csv knots file name to plot title." />
     <MESSAGE value="Annotate peak points even with little imaginary solution part." />
-    <option name="LAST_COMMIT_MESSAGE" value="Annotate peak points even with little imaginary solution part." />
+    <MESSAGE value="change dim spec_id into meaningful string." />
+    <MESSAGE value="Clear Backward attributes." />
+    <MESSAGE value="Implemented Tracing of A class to vx, for only necessary latter." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented Tracing of A class to vx, for only necessary latter." />
   </component>
   <component name="WindowStateProjectService">
     <state x="474" y="210" key="#Inspections" timestamp="1598237920969">
@@ -472,37 +491,41 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="528" y="268" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1597219576039" />
+    <state x="529" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1599633359575">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="529" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1599633359575" />
     <state x="0" y="203" key="#xdebugger.XInspectDialog" timestamp="1598276212851">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="0" y="203" key="#xdebugger.XInspectDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1598276212851" />
-    <state x="417" y="14" key="CommitChangelistDialog2" timestamp="1599562269255">
+    <state x="417" y="14" key="CommitChangelistDialog2" timestamp="1599723128868">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="417" y="14" key="CommitChangelistDialog2/0.0.1680.1050@0.0.1680.1050" timestamp="1599562269255" />
+    <state x="417" y="14" key="CommitChangelistDialog2/0.0.1680.1050@0.0.1680.1050" timestamp="1599723128868" />
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog" timestamp="1599487719117">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1599487719117" />
-    <state width="1659" height="330" key="GridCell.Tab.0.bottom" timestamp="1599562450445">
+    <state width="1659" height="477" key="GridCell.Tab.0.bottom" timestamp="1599720752447">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="330" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599562450445" />
+    <state width="1659" height="477" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599720752447" />
     <state width="1659" height="529" key="GridCell.Tab.0.bottom/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322785" />
-    <state width="1659" height="330" key="GridCell.Tab.0.center" timestamp="1599562450443">
+    <state width="1659" height="477" key="GridCell.Tab.0.center" timestamp="1599720752446">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="330" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599562450443" />
+    <state width="1659" height="477" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599720752446" />
     <state width="1659" height="529" key="GridCell.Tab.0.center/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322784" />
-    <state width="1659" height="330" key="GridCell.Tab.0.left" timestamp="1599562450442">
+    <state width="1659" height="477" key="GridCell.Tab.0.left" timestamp="1599720752445">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="330" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599562450442" />
+    <state width="1659" height="477" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599720752445" />
     <state width="1659" height="529" key="GridCell.Tab.0.left/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322783" />
-    <state width="1659" height="330" key="GridCell.Tab.0.right" timestamp="1599562450444">
+    <state width="1659" height="477" key="GridCell.Tab.0.right" timestamp="1599720752446">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="330" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599562450444" />
+    <state width="1659" height="477" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599720752446" />
     <state width="1659" height="529" key="GridCell.Tab.0.right/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322785" />
     <state x="603" y="151" key="RollbackChangesDialog" timestamp="1599487720946">
       <screen x="0" y="0" width="1680" height="1050" />
@@ -512,10 +535,10 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="341" y="164" key="SettingsEditor/0.0.1680.1050@0.0.1680.1050" timestamp="1599294827996" />
-    <state width="588" height="445" key="SwitcherDM" timestamp="1599526780318">
+    <state width="588" height="445" key="SwitcherDM" timestamp="1599697490334">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="588" height="445" key="SwitcherDM/0.0.1680.1050@0.0.1680.1050" timestamp="1599526780318" />
+    <state width="588" height="445" key="SwitcherDM/0.0.1680.1050@0.0.1680.1050" timestamp="1599697490334" />
     <state x="440" y="261" key="Vcs.Push.Dialog.v2" timestamp="1599562405379">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

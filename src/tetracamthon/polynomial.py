@@ -122,11 +122,14 @@ class KnotPVAJP(object):
 
 
 class KnotsInSpline(object):
-    def __init__(self, path_to_csv="/Users/johnqu/PycharmProjects/"
-                                   "Tetracamthon/data/sample_knots.csv"):
+    def __init__(self, path_to_knots_csv="/Users/johnqu/PycharmProjects/"
+                                         "Tetracamthon/data/sample_knots.csv"):
         self.knots_with_info = []
-        self.csv_file_name = find_file_name_from_a_path(path_to_csv)
-        self.read_in_csv_data(path_to_csv=path_to_csv)
+        self.csv_file_name = find_file_name_from_a_path(path_to_knots_csv)
+        self.read_in_csv_data(path_to_knots_csv=path_to_knots_csv)
+
+    def trunk_part_of_knots(self, start_knot_id, ending_knot):
+        pass  # TODO
 
     def __str__(self):
         result = ""
@@ -134,9 +137,9 @@ class KnotsInSpline(object):
             result += str(knot_with_info) + "\n"
         return result
 
-    def read_in_csv_data(self, path_to_csv):
+    def read_in_csv_data(self, path_to_knots_csv):
         """Get 360 degree york and jaw acceleration data from a csv file."""
-        with open(path_to_csv) as f:
+        with open(path_to_knots_csv) as f:
             f_csv = csv.reader(f)
             headings = next(f_csv)
             Row = namedtuple('Row', headings)
@@ -358,7 +361,7 @@ class Spline(object):
         name = self.name + "_solution"
         self.solution = load_attribute_from_pkl(name)
 
-    def find_index_of_piece_of_point(self, t_point):
+    def get_index_of_piece_of_point(self, t_point):
         index = bisect(self.knots, t_point)
         if index == 0:
             result = 0
@@ -369,7 +372,7 @@ class Spline(object):
         return result
 
     def get_polynomial_at_point(self, t_point):
-        index_of_piece = self.find_index_of_piece_of_point(t_point)
+        index_of_piece = self.get_index_of_piece_of_point(t_point)
         return self.get_pieces_of_polynomial()[index_of_piece]
 
     def get_pvajp_at_point(self, t_point):

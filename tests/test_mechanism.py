@@ -1,12 +1,15 @@
 from tetracamthon.mechanism import Forward, LinkDim, LinksWithDim, \
     SlideRocker, Forward
 from sympy import pi, symbols, latex
+from sympy.abc import t
+from tetracamthon.helper import trans_time_to_degree, trans_degree_to_time
 
 
 def test_read_in_csv_data():
-    link_dim = LinkDim(path_to_csv="/Users/johnqu/PycharmProjects/Tetracamthon"
-                                   "/src/tetracamthon/"
-                                   "tetracamthon_lind_dimensions.csv")
+    link_dim = LinkDim(
+        path_to_link_dim_csv="/Users/johnqu/PycharmProjects/Tetracamthon"
+                             "/src/tetracamthon/"
+                             "tetracamthon_lind_dimensions.csv")
     assert link_dim.spec_id[0] == 1
     assert link_dim.r_BO4[0] == 155
     assert link_dim.r_BC[0] == 100
@@ -19,9 +22,9 @@ def test_read_in_csv_data():
 
 def test_links_with_dim():
     l_w_d = LinksWithDim(a_spec_id=1,
-                         path_to_csv="/Users/johnqu/PycharmProjects/"
-                                     "Tetracamthon/src/tetracamthon/"
-                                     "tetracamthon_lind_dimensions.csv")
+                         path_to_link_dim_csv="/Users/johnqu/PycharmProjects/"
+                                              "Tetracamthon/src/tetracamthon/"
+                                              "tetracamthon_lind_dimensions.csv")
     assert l_w_d.lBO4.r.val == 155
     assert l_w_d.lBO4.r.sym == symbols("r_BO4")
     assert l_w_d.lBO4.o.sym == symbols("alpha")
@@ -41,9 +44,9 @@ def test_links_with_dim():
 def test_get_theta_of_r_o4o2_expr():
     sr = SlideRocker(name="Basis",
                      a_spec_id=1,
-                     path_to_csv="/Users/johnqu/PycharmProjects/Tetracamthon/"
-                                 "src/tetracamthon/"
-                                 "tetracamthon_lind_dimensions.csv")
+                     path_to_link_dim_csv="/Users/johnqu/PycharmProjects/Tetracamthon/"
+                                          "src/tetracamthon/"
+                                          "tetracamthon_lind_dimensions.csv")
     result = sr.get_equation_of_r_O4O2_and_o_BC()
     print("Type of result is " + str(type(result)))
     print("Here it is: " + str(result))
@@ -173,4 +176,95 @@ def test_get_r_o4o2_of_x_ao2(a_backward_slide_rocker_of_compact_flex):
     assert abs(r_O4O2_stroke - r_O4O2_stroke_expected) < 5
 
 
+def test_get_r_O4O2_when_closed(
+        a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+):
+    sel = a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+    assert abs(sel.get_r_O4O2_when_closed() - 52.0476394259659) < 0.001
 
+
+def test_get_r_O4O2_when_touched(
+        a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+):
+    sel = a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+    result = sel.get_r_O4O2_when_touched()
+    # print(result)
+    assert abs(result - 102.988204030727) < 0.001
+
+
+def test_get_t_touched(
+        a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+):
+    sel = a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+    result = sel.get_t_touched()
+    # print(trans_time_to_degree(result))
+    assert abs(
+        sel.jaw_on_york_spline.get_pvajp_at_point(result)[0] - (-50.94)
+    ) < 0.01
+
+
+def test_get_y_ao2_of_t_while_touching(
+        a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+):
+    sel = a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+    y_AO2_of_t_when_touched = sel.get_y_AO2_of_t_while_touching().subs(
+        t, trans_degree_to_time(137.5)
+    )
+    print(y_AO2_of_t_when_touched)
+    assert abs(y_AO2_of_t_when_touched - 185) < 5
+
+
+def test_get_x_ao2_of_t_while_touching(
+        a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+):
+    sel = a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+    t_when_closed = trans_degree_to_time(137.5)
+    x_AO2_of_t_when_closed = sel.get_x_AO2_of_t_while_touching().subs(
+        t, t_when_closed
+    )
+    print("x_AO2_of_t_when_closed: ", x_AO2_of_t_when_closed)
+    assert abs(x_AO2_of_t_when_closed - (- 1.5 / 2)) < 0.01
+    t_when_touched = sel.get_t_touched()
+    x_AO2_of_t_when_touched = sel.get_x_AO2_of_t_while_touching().subs(
+        t, t_when_touched
+    )
+    print("x_AO2_of_t_when_touched: ", x_AO2_of_t_when_touched)
+    assert abs(x_AO2_of_t_when_touched - (- 35.5)) < 0.01
+
+
+def test_get_y_ao5_of_t_while_touching(
+        a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+):
+    sel = a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+    result = sel.get_y_AO5_of_t_while_touching()
+    t_when_touched = sel.get_t_touched()
+    y_AO5_of_t_when_touched = result.subs(
+        t, t_when_touched
+    )
+    print("y_AO5_of_t_when_touched: ", y_AO5_of_t_when_touched)
+    assert abs(y_AO5_of_t_when_touched - 35) < 1
+    t_when_closed = trans_degree_to_time(137.5)
+    y_AO5_of_t_when_closed = result.subs(
+        t, t_when_closed
+    )
+    print("y_AO5_of_t_when_closed: ", y_AO5_of_t_when_closed)
+    assert abs(y_AO5_of_t_when_closed - sel.package.slim) < 0.01
+
+
+def test_get_vx_ao5_while_touching(
+        a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+):
+    sel = a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+    result = sel.get_vx_AO5_while_touching()
+    t_when_touched = sel.get_t_touched()
+    vx_AO5_when_touched = result.subs(
+        t, t_when_touched
+    )
+    print("vx_AO5_when_touched: ", vx_AO5_when_touched)
+    assert abs(vx_AO5_when_touched - 832.68) < 1
+    t_when_closed = trans_degree_to_time(137.5)
+    vx_AO5_when_closed = result.subs(
+        t, t_when_closed
+    )
+    print("vx_AO5_when_closed: ", vx_AO5_when_closed )
+    assert abs(vx_AO5_when_closed) < 1
