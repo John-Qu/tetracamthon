@@ -30,14 +30,13 @@
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="Implemented Tracing of A class to vx, for only necessary latter.">
       <change afterPath="$PROJECT_DIR$/src/tetracamthon/knots_of_shaking_hand_with_touching.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/tetracamthon/package.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_package.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tetracamthon/mechanism.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/mechanism.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tetracamthon/stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/stage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_mechanism.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_mechanism.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_polynomial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_stage.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -398,7 +397,14 @@
       <option name="project" value="LOCAL" />
       <updated>1599632830642</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Implemented Tracing of A class to vx, for only necessary latter.">
+      <created>1599723177432</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1599723177432</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -499,33 +505,33 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="0" y="203" key="#xdebugger.XInspectDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1598276212851" />
-    <state x="417" y="14" key="CommitChangelistDialog2" timestamp="1599723128868">
+    <state x="417" y="14" key="CommitChangelistDialog2" timestamp="1599723176941">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="417" y="14" key="CommitChangelistDialog2/0.0.1680.1050@0.0.1680.1050" timestamp="1599723128868" />
+    <state x="417" y="14" key="CommitChangelistDialog2/0.0.1680.1050@0.0.1680.1050" timestamp="1599723176941" />
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog" timestamp="1599487719117">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1599487719117" />
-    <state width="1659" height="477" key="GridCell.Tab.0.bottom" timestamp="1599720752447">
+    <state width="1659" height="477" key="GridCell.Tab.0.bottom" timestamp="1599746214386">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="477" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599720752447" />
+    <state width="1659" height="477" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1599746214386" />
     <state width="1659" height="529" key="GridCell.Tab.0.bottom/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322785" />
-    <state width="1659" height="477" key="GridCell.Tab.0.center" timestamp="1599720752446">
+    <state width="1659" height="477" key="GridCell.Tab.0.center" timestamp="1599746214385">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="477" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599720752446" />
+    <state width="1659" height="477" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1599746214385" />
     <state width="1659" height="529" key="GridCell.Tab.0.center/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322784" />
-    <state width="1659" height="477" key="GridCell.Tab.0.left" timestamp="1599720752445">
+    <state width="1659" height="477" key="GridCell.Tab.0.left" timestamp="1599746214384">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="477" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599720752445" />
+    <state width="1659" height="477" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1599746214384" />
     <state width="1659" height="529" key="GridCell.Tab.0.left/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322783" />
-    <state width="1659" height="477" key="GridCell.Tab.0.right" timestamp="1599720752446">
+    <state width="1659" height="477" key="GridCell.Tab.0.right" timestamp="1599746214385">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1659" height="477" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599720752446" />
+    <state width="1659" height="477" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1599746214385" />
     <state width="1659" height="529" key="GridCell.Tab.0.right/0.23.1680.1027@0.23.1680.1027" timestamp="1599526322785" />
     <state x="603" y="151" key="RollbackChangesDialog" timestamp="1599487720946">
       <screen x="0" y="0" width="1680" height="1050" />
@@ -535,10 +541,10 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="341" y="164" key="SettingsEditor/0.0.1680.1050@0.0.1680.1050" timestamp="1599294827996" />
-    <state width="588" height="445" key="SwitcherDM" timestamp="1599697490334">
+    <state width="588" height="445" key="SwitcherDM" timestamp="1599744170734">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="588" height="445" key="SwitcherDM/0.0.1680.1050@0.0.1680.1050" timestamp="1599697490334" />
+    <state width="588" height="445" key="SwitcherDM/0.0.1680.1050@0.0.1680.1050" timestamp="1599744170734" />
     <state x="440" y="261" key="Vcs.Push.Dialog.v2" timestamp="1599562405379">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

@@ -1,4 +1,4 @@
-from tetracamthon.mechanism import Forward, LinkDim, LinksWithDim, \
+from tetracamthon.mechanism import Forward, LinkDimension, LinksWithDim, \
     SlideRocker, Forward
 from sympy import pi, symbols, latex
 from sympy.abc import t
@@ -6,7 +6,7 @@ from tetracamthon.helper import trans_time_to_degree, trans_degree_to_time
 
 
 def test_read_in_csv_data():
-    link_dim = LinkDim(
+    link_dim = LinkDimension(
         path_to_link_dim_csv="/Users/johnqu/PycharmProjects/Tetracamthon"
                              "/src/tetracamthon/"
                              "tetracamthon_lind_dimensions.csv")
@@ -177,91 +177,93 @@ def test_get_r_o4o2_of_x_ao2(a_backward_slide_rocker_of_compact_flex):
 
 
 def test_get_r_O4O2_when_closed(
-        a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+        a_tracing_of_point_a_with_330sq_dim
 ):
-    sel = a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
-    assert abs(sel.get_r_O4O2_when_closed() - 52.0476394259659) < 0.001
+    sel = a_tracing_of_point_a_with_330sq_dim
+    result = sel.get_r_O4O2_when_closed()
+    print('r_O4O2_when_closed: ', result)
+    assert abs(result - 52.0476394259659) < 0.001
 
 
 def test_get_r_O4O2_when_touched(
-        a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+        a_tracing_of_point_a_with_330sq_dim
 ):
-    sel = a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+    sel = a_tracing_of_point_a_with_330sq_dim
     result = sel.get_r_O4O2_when_touched()
-    # print(result)
-    assert abs(result - 102.988204030727) < 0.001
+    print(result)
+    assert abs(result - 92.0968732113941) < 0.001
 
 
 def test_get_t_touched(
-        a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+        a_tracing_of_point_a_with_330sq_dim
 ):
-    sel = a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+    sel = a_tracing_of_point_a_with_330sq_dim
     result = sel.get_t_touched()
-    # print(trans_time_to_degree(result))
+    print('\n The degree when touched: ', trans_time_to_degree(result))
     assert abs(
-        sel.jaw_on_york_spline.get_pvajp_at_point(result)[0] - (-50.94)
+        sel.jaw_on_york_spline.get_pvajp_at_point(result)[0] - (-40.05)
     ) < 0.01
 
 
 def test_get_y_ao2_of_t_while_touching(
-        a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+        a_tracing_of_point_a_with_330sq_dim
 ):
-    sel = a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+    sel = a_tracing_of_point_a_with_330sq_dim
     y_AO2_of_t_when_touched = sel.get_y_AO2_of_t_while_touching().subs(
         t, trans_degree_to_time(137.5)
     )
-    print(y_AO2_of_t_when_touched)
-    assert abs(y_AO2_of_t_when_touched - 185) < 5
+    print('\n y_AO2_of_t_when_touched: ', y_AO2_of_t_when_touched)
+    assert abs(y_AO2_of_t_when_touched - 164.44) < 1
 
 
 def test_get_x_ao2_of_t_while_touching(
-        a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+        a_tracing_of_point_a_with_330sq_dim
 ):
-    sel = a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+    sel = a_tracing_of_point_a_with_330sq_dim
     t_when_closed = trans_degree_to_time(137.5)
     x_AO2_of_t_when_closed = sel.get_x_AO2_of_t_while_touching().subs(
         t, t_when_closed
     )
-    print("x_AO2_of_t_when_closed: ", x_AO2_of_t_when_closed)
+    print("\n x_AO2_of_t_when_closed: ", x_AO2_of_t_when_closed)
     assert abs(x_AO2_of_t_when_closed - (- 1.5 / 2)) < 0.01
     t_when_touched = sel.get_t_touched()
     x_AO2_of_t_when_touched = sel.get_x_AO2_of_t_while_touching().subs(
         t, t_when_touched
     )
     print("x_AO2_of_t_when_touched: ", x_AO2_of_t_when_touched)
-    assert abs(x_AO2_of_t_when_touched - (- 35.5)) < 0.01
+    assert abs(x_AO2_of_t_when_touched - (- 24.25)) < 0.01
 
 
 def test_get_y_ao5_of_t_while_touching(
-        a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+        a_tracing_of_point_a_with_330sq_dim
 ):
-    sel = a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+    sel = a_tracing_of_point_a_with_330sq_dim
     result = sel.get_y_AO5_of_t_while_touching()
     t_when_touched = sel.get_t_touched()
-    y_AO5_of_t_when_touched = result.subs(
+    y_AO5_when_touched = result.subs(
         t, t_when_touched
     )
-    print("y_AO5_of_t_when_touched: ", y_AO5_of_t_when_touched)
-    assert abs(y_AO5_of_t_when_touched - 35) < 1
+    print("\ny_AO5_when_touched: ", y_AO5_when_touched)
+    assert abs(y_AO5_when_touched - 24.25) < 1
     t_when_closed = trans_degree_to_time(137.5)
-    y_AO5_of_t_when_closed = result.subs(
+    y_AO5_when_closed = result.subs(
         t, t_when_closed
     )
-    print("y_AO5_of_t_when_closed: ", y_AO5_of_t_when_closed)
-    assert abs(y_AO5_of_t_when_closed - sel.package.slim) < 0.01
+    print("y_AO5_when_closed: ", y_AO5_when_closed)
+    assert abs(y_AO5_when_closed - sel.package.top_gap) < 0.01
 
 
 def test_get_vx_ao5_while_touching(
-        a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
+        a_tracing_of_point_a_with_330sq_dim
 ):
-    sel = a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim
-    result = sel.get_vx_AO5_while_touching()
+    sel = a_tracing_of_point_a_with_330sq_dim
+    result = sel.get_vx_AO5_of_t_while_touching()
     t_when_touched = sel.get_t_touched()
     vx_AO5_when_touched = result.subs(
         t, t_when_touched
     )
-    print("vx_AO5_when_touched: ", vx_AO5_when_touched)
-    assert abs(vx_AO5_when_touched - 832.68) < 1
+    print("\nvx_AO5_when_touched: ", vx_AO5_when_touched)
+    assert abs(vx_AO5_when_touched - 639.565) < 1
     t_when_closed = trans_degree_to_time(137.5)
     vx_AO5_when_closed = result.subs(
         t, t_when_closed

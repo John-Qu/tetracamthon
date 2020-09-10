@@ -8,7 +8,7 @@ from sympy.parsing.sympy_parser import parse_expr
 
 from tetracamthon.helper import Variable, Memory, trans_degree_to_time, \
     trans_time_to_degree
-from tetracamthon.packages import Package
+from tetracamthon.package import Package
 from tetracamthon.stage import JawToYork
 
 
@@ -96,7 +96,7 @@ class AO2(Link):
             self.o.set_value(o_value)
 
 
-class LinkDim(object):
+class LinkDimension(object):
     def __init__(self, path_to_link_dim_csv):
         self.spec_id = []
         self.r_BO4 = []
@@ -128,7 +128,7 @@ class LinkDim(object):
 
 class LinksWithDim(object):
     def __init__(self, a_spec_id, path_to_link_dim_csv):  # test passed
-        link_dims = LinkDim(path_to_link_dim_csv)
+        link_dims = LinkDimension(path_to_link_dim_csv)
         self.spec_id = a_spec_id
         index = link_dims.spec_id.index(self.spec_id)
         self.lBO4 = BO4(link_dims.r_BO4[index])
@@ -335,6 +335,7 @@ class TracingOfPointA(object):
     def __init__(self,
                  name: str,
                  a_spec_id: str,
+                 a_package_id: str,
                  a_path_to_link_dim_csv: str,
                  whether_reload: bool = True):
         self.jaw_on_york_spline = JawToYork(whether_reload=whether_reload)
@@ -346,7 +347,7 @@ class TracingOfPointA(object):
                                  a_spec_id,
                                  a_path_to_link_dim_csv
                                  )
-        self.package = Package(1000, 'Square', 72, 71, 198, 5, 285.00)
+        self.package = Package(a_package_id)
         self.memo = Memory(name +
                            "with" + self.jaw_on_york_spline.name +
                            "for" + a_spec_id)
@@ -436,7 +437,7 @@ class TracingOfPointA(object):
         if name in self.memo.dict:
             return self.memo.dict[name]
         r_GO5 = self.package.depth / 2
-        s = self.package.slim
+        s = self.package.top_gap
         r_AG = ((r_GO5 - 0.75) ** 2 + s ** 2) ** 0.5
         result = (r_AG ** 2 -
                   (r_GO5 + self.get_x_AO5_of_t_while_touching()) ** 2
@@ -444,7 +445,7 @@ class TracingOfPointA(object):
         self.memo.update_memo(name, result)
         return result
 
-    def get_vx_AO5_while_touching(self):
+    def get_vx_AO5_of_t_while_touching(self):
         name = "vx_AO5_while_touching"
         if name in self.memo.dict:
             return self.memo.dict[name]

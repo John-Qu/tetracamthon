@@ -2,9 +2,10 @@ import pytest
 from sympy import symbols
 from tetracamthon.mechanism import Forward, Backward, SlideRocker, \
     TracingOfPointA
-from tetracamthon.polynomial import Polynomial, KnotPVAJP, KnotsInSpline, \
+from tetracamthon.polynomial import Polynomial,  KnotsInSpline, \
     Spline
 from tetracamthon.stage import JawToYork
+from tetracamthon.package import Package, Productivity, Production
 
 
 @pytest.fixture(scope='session')
@@ -110,14 +111,43 @@ def an_jaw_on_york_spline_with_minimum_five_knots():
 
 
 @pytest.fixture(scope='session')
-def a_tracing_of_point_a_with_five_knots_jaw_on_york_spline_of_flex_dim():
+def a_tracing_of_point_a_with_330sq_dim():
     result = TracingOfPointA(
         name="a_tracing_of_point_a_with_five_knots_o4o2_spline",
-        a_spec_id="flex",
+        a_spec_id="compact_flex",
+        a_package_id='330SQ',
         a_path_to_link_dim_csv='/Users/johnqu/PycharmProjects/'
                                'Tetracamthon/src/tetracamthon/'
                                'tetracamthon_lind_dimensions.csv',
-        # whether_reload=False,
-        whether_reload=True,
+        whether_reload=False,
+        # whether_reload=True,
     )
+    return result
+
+
+@pytest.fixture(scope='class')
+def a_1000sq_package():
+    result = Package("1000SQ")
+    return result
+
+
+@pytest.fixture(scope='class')
+def a_330sq_package():
+    result = Package("330SQ")
+    return result
+
+
+@pytest.fixture(scope='class')
+def a_production_of_1000sq_8000pph():
+    package_1000sq = Package("1000SQ")
+    productivity_8000 = Productivity(8000)
+    result = Production(package_1000sq, productivity_8000)
+    return result
+
+
+@pytest.fixture(scope='class')
+def a_production_of_330sq_8000pph():
+    package_1000sq = Package("330SQ")
+    productivity_8000 = Productivity(8000)
+    result = Production(package_1000sq, productivity_8000)
     return result
