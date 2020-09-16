@@ -127,7 +127,7 @@ class KnotPVAJP(object):
 
 class KnotsInSpline(object):
     def __init__(self, knots_info_csv="/Users/johnqu/PycharmProjects/"
-                                      "Tetracamthon/data/sample_knots.csv"):
+                                      "tetracamthon/data/sample_knots.csv"):
         self.knots_with_info = []
         self.csv_file_name = find_file_name_from_a_path(knots_info_csv)
         self.read_in_csv_data(path_to_knots_csv=knots_info_csv)
@@ -461,7 +461,7 @@ class Spline(object):
             axs[i].grid(True)
         fig.align_ylabels(axs)
         if whether_save_png:
-            plt.savefig("/Users/johnqu/PycharmProjects/Tetracamthon/"
+            plt.savefig("/Users/johnqu/PycharmProjects/tetracamthon/"
                         "plots/plot_of_{}.png".format(self.name), dpi=720)
         if whether_show_figure:
             plt.show()

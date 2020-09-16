@@ -339,7 +339,7 @@ class TracingOfPointA(object):
                  a_spec_id="flex",
                  a_package_id='1000SQ',
                  a_path_to_link_dim_csv='/Users/johnqu/PycharmProjects/'
-                                        'Tetracamthon/src/tetracamthon/'
+                                        'tetracamthon/src/tetracamthon/'
                                         'tetracamthon_lind_dimensions.csv',
                  whether_reload=False,
                  ):

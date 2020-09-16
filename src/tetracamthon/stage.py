@@ -13,7 +13,7 @@ class JawOnYork(Spline):
                  name="spline_of_jaw_on_york",
                  informed_knots=KnotsInSpline(
                      knots_info_csv="/Users/johnqu/PycharmProjects/"
-                                    "Tetracamthon/src/tetracamthon/knot_info/"
+                                    "tetracamthon/src/tetracamthon/knot_info/"
                                     "jaw_on_york_with_eight_knots.csv"
                  ),
                  whether_reload=False,
@@ -38,7 +38,7 @@ class ShakingHandWithClampingBottom(Spline):
                  name="spline_of_shaking_hand_with_clamping_bottom",
                  a_set_of_informed_knots=KnotsInSpline(
                      knots_info_csv="/Users/johnqu/PycharmProjects/"
-                                    "Tetracamthon/src/tetracamthon/knot_info/"
+                                    "tetracamthon/src/tetracamthon/knot_info/"
                                     "shaking_hand_with_clamping_bottom.csv"
                  ),
                  a_production=Production(Package('1000SQ'), Productivity(
@@ -88,7 +88,7 @@ class ShakingHandWithFoldingEar(Spline):
                  name="spline_of_shaking_hand_with_folding_ear",
                  a_set_of_informed_knots=KnotsInSpline(
                      knots_info_csv="/Users/johnqu/PycharmProjects/"
-                                    "Tetracamthon/src/tetracamthon/knot_info/"
+                                    "tetracamthon/src/tetracamthon/knot_info/"
                                     "shaking_hand_with_folding_ear.csv"
                  ),
                  a_production=Production(Package('1000SQ'), Productivity(
@@ -134,7 +134,7 @@ class Pulling(Spline):
                  a_set_of_informed_knots=KnotsInSpline(
                      knots_info_csv=(
                              "/Users/johnqu/PycharmProjects/" +
-                             "Tetracamthon/src/tetracamthon/knot_info/" +
+                             "tetracamthon/src/tetracamthon/knot_info/" +
                              "pulling.csv"
                      ),
                  ),
@@ -168,7 +168,7 @@ class ClampingBottom(Spline):
                  a_set_of_informed_knots=KnotsInSpline(
                      knots_info_csv=(
                              "/Users/johnqu/PycharmProjects/"
-                             "Tetracamthon/src/tetracamthon/knot_info/"
+                             "tetracamthon/src/tetracamthon/knot_info/"
                              "clamping_bottom.csv"
                      ),
                  ),
@@ -303,7 +303,7 @@ if __name__ == "__main__":
     # joy = JawOnYork(whether_reload=True)
     # joy.plot_symbolically()
     # ###
-    sel = ClampingBottom(whether_reload=False)
+    sel = ClampingBottom(whether_reload=True)
     # print("95: ", sel.get_pvajp_at_point(trans_degree_to_time(95)))
     # print("100: ", sel.get_pvajp_at_point(trans_degree_to_time(100)))
     # print("110: ", sel.get_pvajp_at_point(trans_degree_to_time(110)))
@@ -312,6 +312,6 @@ if __name__ == "__main__":
     # print("137: ", sel.get_pvajp_at_point(trans_degree_to_time(137.5)))
     # sel.plot_one_polynomial_at_one_depth(0,1)
     sel.plot_to_depth_of_acceleration()
-    sel.plot_spline_on_subplots()
+    # sel.plot_spline_on_subplots()
     # sel = ShakingHandWithClampingBottom(whether_reload=False)
     # sel.plot_symbolically()

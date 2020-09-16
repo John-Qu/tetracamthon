@@ -9,7 +9,7 @@ def test_jaw_on_york_init():
         name="O4_to_O2_spline_with_nine_knots",
         informed_knots=KnotsInSpline(
             knots_info_csv="/Users/johnqu/PycharmProjects/"
-                           "Tetracamthon/src/tetracamthon/knot_info/"
+                           "tetracamthon/src/tetracamthon/knot_info/"
                            "jaw_on_york_with_nine_knots.csv"
         ),
         whether_reload=False,

@@ -22,14 +22,19 @@
     <select>
       <path>
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:master" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:origin/master" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="Implemented Tracing of A class to vx, for only necessary latter.">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="Copy src and tests folder from work up to Sep. 16.">
+      <change beforePath="$PROJECT_DIR$/src/tetracamthon/mechanism.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/mechanism.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/polynomial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tetracamthon/stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/stage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_stage.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +78,7 @@
       <recent name="$PROJECT_DIR$/docs/reference" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.pytest for test_mechanism.test_get_vx_ao5_while_touching">
+  <component name="RunManager" selected="Python.stage">
     <configuration name="Tetracamthon" type="PythonConfigurationType" factoryName="Python">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -118,20 +123,23 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_mechanism.test_get_t_touched" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="stage" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Tetracamthon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/tetracamthon" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_mechanism.test_get_t_touched&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/tetracamthon/stage.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
     <configuration name="pytest for test_mechanism.test_get_vx_ao5_while_touching" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
@@ -200,11 +208,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.stage" />
         <item itemvalue="Python tests.pytest for test_mechanism.test_get_vx_ao5_while_touching" />
         <item itemvalue="Python tests.pytest for test_mechanism.test_get_y_ao5_of_t_while_touching" />
         <item itemvalue="Python tests.pytest for test_mechanism.test_get_x_ao2_of_t_while_touching" />
         <item itemvalue="Python tests.pytest for test_mechanism.test_get_y_ao2_of_t_while_touching" />
-        <item itemvalue="Python tests.pytest for test_mechanism.test_get_t_touched" />
       </list>
     </recent_temporary>
   </component>
@@ -397,7 +405,14 @@
       <option name="project" value="LOCAL" />
       <updated>1599723177432</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Copy src and tests folder from work up to Sep. 16.">
+      <created>1600245666010</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1600245666010</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -411,19 +426,7 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="master" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
+            <State />
           </value>
         </entry>
       </map>
@@ -458,7 +461,8 @@
     <MESSAGE value="change dim spec_id into meaningful string." />
     <MESSAGE value="Clear Backward attributes." />
     <MESSAGE value="Implemented Tracing of A class to vx, for only necessary latter." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented Tracing of A class to vx, for only necessary latter." />
+    <MESSAGE value="Copy src and tests folder from work up to Sep. 16." />
+    <option name="LAST_COMMIT_MESSAGE" value="Copy src and tests folder from work up to Sep. 16." />
   </component>
   <component name="WindowStateProjectService">
     <state x="474" y="210" key="#Inspections" timestamp="1598237920969">
