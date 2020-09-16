@@ -335,7 +335,7 @@ class Backward(SlideRocker):
 class TracingOfPointA(object):
     def __init__(self,
                  a_jaw_on_york_spline,
-                 name="a_tracing_of_point_a_with_five_knots_o4o2_spline",
+                 name="a_tracing_of_point_a",
                  a_spec_id="flex",
                  a_package_id='1000SQ',
                  a_path_to_link_dim_csv='/Users/johnqu/PycharmProjects/'
@@ -354,8 +354,8 @@ class TracingOfPointA(object):
                                  )
         self.package = Package(a_package_id)
         self.memo = Memory(name +
-                           "with" + self.joy_spline.name +
-                           "for" + a_spec_id)
+                           " with " + self.joy_spline.name +
+                           " for " + a_spec_id)
         self.r_O4O2_of_x_AO2 = self.backward.get_r_O4O2_of_x_AO2()
         self.x_AO2_sym = self.backward.lAO2.x.sym
         self.r_O4O2_sym = self.forward.lO4O2.r.sym
