@@ -1,0 +1,8 @@
+spec_id,volume,shape,width,depth,height,longitude_sealing_overlap,web_repeated_length,top_gap
+250SQ,250,square,43,41.5,126.8,5,185,1
+100B,100,base,47,32,69.3,4,113.33,1
+125S,125,slim,47,32,86,4,130,1
+1000B,1000,base,94,63,166,5,245,1
+1000SQ,1000,square,72,71,198,5,285,1
+330SQ,330,square,49.5,48.5,124.6,6,190,1
+200m,200,mini,53,38,106,6,160,1
