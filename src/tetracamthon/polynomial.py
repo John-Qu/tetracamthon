@@ -62,6 +62,7 @@ class Polynomial(object):
 
     def diffs(self, expr):
         result = []
+        # for index_of_depth in range(1, self.max_order):
         for index_of_depth in range(1, self.max_order):
             result.append(diff(expr, t, index_of_depth))
         return result
@@ -80,10 +81,13 @@ class Polynomial(object):
             co_i = self.co_lis[index_of_order]
             co_i.val = solution[co_i.sym]
             expr = expr.subs(co_i.sym, co_i.val)
+        self.fill_expr_lis_with_diff(expr)
+        return self.expr_with_co_val
+
+    def fill_expr_lis_with_diff(self, expr):
         self.expr_with_co_val.clear()
         self.expr_with_co_val.append(expr)
         self.expr_with_co_val.extend(self.diffs(expr))
-        return self.expr_with_co_val
 
     def get_expr_with_co_val(self):
         if len(self.expr_with_co_val):
@@ -122,11 +126,11 @@ class KnotPVAJP(object):
 
 
 class KnotsInSpline(object):
-    def __init__(self, path_to_knots_csv="/Users/johnqu/PycharmProjects/"
-                                         "Tetracamthon/data/sample_knots.csv"):
+    def __init__(self, knots_info_csv="/Users/johnqu/PycharmProjects/"
+                                      "Tetracamthon/data/sample_knots.csv"):
         self.knots_with_info = []
-        self.csv_file_name = find_file_name_from_a_path(path_to_knots_csv)
-        self.read_in_csv_data(path_to_knots_csv=path_to_knots_csv)
+        self.csv_file_name = find_file_name_from_a_path(knots_info_csv)
+        self.read_in_csv_data(path_to_knots_csv=knots_info_csv)
 
     def trunk_part_of_knots(self, start_knot_id, ending_knot):
         pass  # TODO
@@ -151,13 +155,13 @@ class KnotsInSpline(object):
                         knot=float(row.knot),
                         polynomial_order=int(
                             row.polynomial_order),
-                        pvajp=(
+                        pvajp=[
                             float(row.position),
                             float(row.velocity),
                             float(row.acceleration),
                             float(row.jerk),
                             float(row.ping)
-                        ),
+                        ],
                         smooth_depth=int(row.smooth_depth)
                     )
                 )
@@ -170,6 +174,7 @@ class Spline(object):
                  a_set_of_informed_knots=None,
                  whether_reload=False,
                  whether_trans_knots_degree_to_time=True,
+                 whether_solve=True,
                  ):
         self.name = name
         self.informed_knots = a_set_of_informed_knots
@@ -193,16 +198,18 @@ class Spline(object):
             self.load_solution()
         else:
             self.pieces_of_polynomial = []
+            self.build_polynomials()
             self.interpolating_equations = []
             self.smoothness_equations = []
             self.periodic_equations = []
             self.variables = []
             self.solution = {}
-            self.solve_spline_pieces()
-            self.save_solved_pieces_of_polynomial()
-            self.save_solution()
-            self.save_conditional_equations()
-            self.save_variables()
+            if whether_solve:
+                self.solve_spline_pieces()
+                self.save_solved_pieces_of_polynomial()
+                self.save_solution()
+                self.save_conditional_equations()
+                self.save_variables()
 
     def build_polynomials(self):
         for piece_id in range(self.num_of_pieces):
@@ -385,13 +392,16 @@ class Spline(object):
 
     def prepare_plots_for_plt(self, line_color='blue'):
         result = []
-        for index_of_depth in range(4):
+        for index_of_depth in range(max([
+            self.get_pieces_of_polynomial()[i].max_order for i in range(
+                self.num_of_pieces)
+        ])):
             result.append(
                 plot(0, (t, self.knots[0], self.knots[-1]), show=False)
             )
         for index_of_piece in range(self.num_of_pieces):
             polynomial = self.get_pieces_of_polynomial()[index_of_piece]
-            for index_of_depth in range(4):
+            for index_of_depth in range(polynomial.max_order):
                 expression = polynomial.get_expr_with_co_val()[index_of_depth]
                 result[index_of_depth].extend(
                     plot(expression,
@@ -404,6 +414,7 @@ class Spline(object):
         return result
 
     def plot_spline_on_subplots(self,
+                                axs_num=4,
                                 whether_save_png=False,
                                 whether_show_figure=False,
                                 whether_knots_ticks=True,
@@ -411,7 +422,8 @@ class Spline(object):
                                 ):
         cur_lis = self.prepare_plots_for_plt()
         knots = self.knots
-        fig, axs = plt.subplots(nrows=len(cur_lis),
+        fig, axs = plt.subplots(nrows=axs_num,
+                                # fig, axs=plt.subplots(nrows=len(cur_lis),
                                 figsize=(16, 10),
                                 )
         fig.suptitle('PVAJ Curves of {} \n with {}.csv'.format(
@@ -433,7 +445,7 @@ class Spline(object):
             axs[i].set_xlabel('machine degree')
             if whether_knots_ticks:
                 axs[i].set_xticks([knots[j] for j in range(len(knots))])
-                axs[i].set_xticklabels([str(
+                axs[i].set_xticklabels([(k % 2) * '\n\n' + str(
                     round(trans_time_to_degree(knots[k]), 1)
                 ) +
                                         " ord: " + str(self.max_orders[k]) +
@@ -503,4 +515,23 @@ class Spline(object):
             result.append(result_in_piece)
         return result
 
-    # def annotate_peak_value(self):
+    def modify_knot_value(self, knot_id, depth_of_value, value):
+        for knot_with_info in self.informed_knots.knots_with_info:
+            if knot_with_info.knot_id == knot_id:
+                knot_with_info.pvajp[depth_of_value] = value
+                return knot_with_info
+
+    def get_knot_with_info_by_knot_id(self, a_knot_id: str):
+        for knot_with_info in self.informed_knots.knots_with_info:
+            if knot_with_info.knot_id == a_knot_id:
+                return knot_with_info
+
+    def modify_knot(self, a_knot_id, knot):
+        the_knot_with_info = self.get_knot_with_info_by_knot_id(a_knot_id)
+        the_knot_with_info.knot = knot
+        return the_knot_with_info
+
+    def insert_knot_with_info(self, knot_with_info, index_of_insert):
+        self.informed_knots.knots_with_info.insert(
+            index_of_insert, knot_with_info
+        )

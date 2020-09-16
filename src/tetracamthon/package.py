@@ -95,28 +95,73 @@ class Production(object):
         self.package = a_package
         self.productivity = a_productivity
 
+    def get_average_velocity(self):
+        result = - (
+                self.package.web_repeated_length /
+                (self.productivity.get_cycle_time() / 2)
+        )
+        return result
+
+    def get_time_of_main_pulling(self):
+        result = trans_degree_to_time(
+            (264 - 194),
+            cycle_time=self.productivity.get_cycle_time()
+        )
+        return result
+
+    def get_time_of_pre_pulling(self):
+        result = trans_degree_to_time(
+            (144 - 140),
+            cycle_time=self.productivity.get_cycle_time()
+        )
+        return result
+
+    def get_time_of_folding(self):
+        result = trans_degree_to_time(
+            (194 - 144),
+            cycle_time=self.productivity.get_cycle_time()
+        )
+        return result
+
+    def get_extra_length_of_folding(self, ratio=0.7):
+        length_fold_fully = self.package.depth / 2
+        result = length_fold_fully * ratio
+        return result
+
+    def get_time_of_clamping(self):
+        result = trans_degree_to_time(
+            (320 - 264),
+            cycle_time=self.productivity.get_cycle_time()
+        )
+        return result
+
+    def get_extra_length_of_clamping(self):
+        result = self.package.depth / 2 - self.package.top_gap
+        return result
+
+
     def get_less_pulled_length_in_shaking_with_holding(self,
                                                        ratio: float = 1.0):
         length_hold_fully = self.package.depth / 2
-        result = length_hold_fully * ratio
+        result = - length_hold_fully * ratio
         return result
 
     def get_less_pulled_length_in_shaking_with_folding(self,
                                                        ratio: float = 0.7):
         length_fold_fully = self.package.depth / 2
-        result = length_fold_fully * ratio
+        result = - length_fold_fully * ratio
         return result
 
     def get_main_pulling_velocity(self):
-        average_velocity = (
-                self.package.web_repeated_length /
-                (self.productivity.get_cycle_time() / 2)
-        )
-        time_of_main_pulling = trans_degree_to_time(264 - 194)
-        result = - (
-                (self.get_less_pulled_length_in_shaking_with_holding() +
-                 self.get_less_pulled_length_in_shaking_with_folding() +
-                 average_velocity * time_of_main_pulling) /
-                time_of_main_pulling
+        """With 330SQ 8000 pph, just right with Tetra's curve. But the
+        algorithm is wrong."""
+        average_velocity = self.get_average_velocity()
+        time_of_main_pulling = self.get_time_of_main_pulling()
+        result = (
+                (
+                        self.get_less_pulled_length_in_shaking_with_holding() +
+                        self.get_less_pulled_length_in_shaking_with_folding() +
+                        average_velocity * time_of_main_pulling
+                ) / time_of_main_pulling
         )
         return result

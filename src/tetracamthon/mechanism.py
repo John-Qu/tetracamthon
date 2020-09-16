@@ -2,14 +2,15 @@ import csv
 from collections import namedtuple
 
 from sympy import symbols, cos, pi, atan2, sqrt, solve, sin, Function, \
-    Derivative, Eq, diff
+    Derivative, Eq, diff, plot
 from sympy.abc import t
 from sympy.parsing.sympy_parser import parse_expr
 
 from tetracamthon.helper import Variable, Memory, trans_degree_to_time, \
-    trans_time_to_degree
+    move_sympy_plot_to_plt_axes, trans_time_to_degree
 from tetracamthon.package import Package
-from tetracamthon.stage import JawToYork
+
+import matplotlib.pyplot as plt
 
 
 class Link(object):
@@ -273,7 +274,7 @@ class Forward(SlideRocker):
         vx_AO2 = self.get_x_AO2_of_r_O4O2().subs(
             [(self.lO4O2.r.sym, self.r)]).diff(t)
         result = vx_AO2.subs(Derivative(self.r, t), self.v)
-        self.memo.update_memo(name, result)
+        # self.memo.update_memo(name, result)
         return result
 
     def get_vy_AO2_of_vr_O4O2(self):
@@ -283,7 +284,7 @@ class Forward(SlideRocker):
         vy_AO2 = self.get_y_AO2_of_r_O4O2().subs(
             [(self.lO4O2.r.sym, self.r)]).diff(t)
         result = vy_AO2.subs(Derivative(self.r, t), self.v)
-        self.memo.update_memo(name, result)
+        # self.memo.update_memo(name, result)  # TODO: why r not right?
         return result
 
 
@@ -333,12 +334,16 @@ class Backward(SlideRocker):
 
 class TracingOfPointA(object):
     def __init__(self,
-                 name: str,
-                 a_spec_id: str,
-                 a_package_id: str,
-                 a_path_to_link_dim_csv: str,
-                 whether_reload: bool = True):
-        self.jaw_on_york_spline = JawToYork(whether_reload=whether_reload)
+                 a_jaw_on_york_spline,
+                 name="a_tracing_of_point_a_with_five_knots_o4o2_spline",
+                 a_spec_id="flex",
+                 a_package_id='1000SQ',
+                 a_path_to_link_dim_csv='/Users/johnqu/PycharmProjects/'
+                                        'Tetracamthon/src/tetracamthon/'
+                                        'tetracamthon_lind_dimensions.csv',
+                 whether_reload=False,
+                 ):
+        self.joy_spline = a_jaw_on_york_spline
         self.forward = Forward("a_forward_mechanism",
                                a_spec_id,
                                a_path_to_link_dim_csv
@@ -349,17 +354,45 @@ class TracingOfPointA(object):
                                  )
         self.package = Package(a_package_id)
         self.memo = Memory(name +
-                           "with" + self.jaw_on_york_spline.name +
+                           "with" + self.joy_spline.name +
                            "for" + a_spec_id)
         self.r_O4O2_of_x_AO2 = self.backward.get_r_O4O2_of_x_AO2()
         self.x_AO2_sym = self.backward.lAO2.x.sym
         self.r_O4O2_sym = self.forward.lO4O2.r.sym
-        self.r_O4O2_polynomial_while_touching = \
-            self.jaw_on_york_spline.get_polynomial_at_point(
-                trans_degree_to_time(85)
-            )
+        self.joy_position_of_ts_while_clamping = (
+            self.get_joy_position_of_ts_while_clamping()
+        )
+        self.joy_velocity_of_ts_while_clamping = (
+            self.get_joy_velocity_of_ts_while_clamping()
+        )
         if whether_reload:
             self.memo.load()
+
+    def get_joy_polynomials_while_clamping(self):
+        return (
+            self.joy_spline.get_polynomial_at_point(
+                trans_degree_to_time(90)
+            ),
+            self.joy_spline.get_polynomial_at_point(
+                trans_degree_to_time(130)
+            )
+        )
+
+    def get_joy_position_of_ts_while_clamping(self):
+        return (
+            (self.get_joy_polynomials_while_clamping()[0].
+                get_expr_with_co_val()[0]),
+            (self.get_joy_polynomials_while_clamping()[1].
+                get_expr_with_co_val()[0])
+        )
+
+    def get_joy_velocity_of_ts_while_clamping(self):
+        return (
+            (self.get_joy_polynomials_while_clamping()[0].
+                get_expr_with_co_val()[1]),
+            (self.get_joy_polynomials_while_clamping()[1].
+                get_expr_with_co_val()[1])
+        )
 
     def get_r_O4O2_when_closed(self):
         name = "r_O4O2_when_closed"
@@ -383,74 +416,251 @@ class TracingOfPointA(object):
         name = "t_touched"
         if name in self.memo.dict:
             return self.memo.dict[name]
-        jaw_to_york_spline_pos_touched = - (
+        joy_spline_position_touched = - (
                 self.get_r_O4O2_when_touched() - self.get_r_O4O2_when_closed()
         )
-        the_polynomial = self.r_O4O2_polynomial_while_touching
-        the_pos_expr = the_polynomial.get_expr_with_co_val()[0]
-        the_equation = Eq(the_pos_expr, jaw_to_york_spline_pos_touched)
-        # print(the_equation)
+        joy_position_of_t_while_touching = (
+            self.joy_position_of_ts_while_clamping[0]
+        )
+        the_equation = Eq(
+            joy_position_of_t_while_touching, joy_spline_position_touched)
         result = solve(the_equation, t)[2]
-        # print(trans_time_to_degree(result))
         self.memo.update_memo(name, result)
         return result
 
-    def get_r_O4O2_of_t_in_jaw_on_york_spline(self):
+    def get_r_O4O2_functions_of_t_with_joy_spline(self):
         name = "r_O4O2_of_t_in_jaw_on_york_spline"
         if name in self.memo.dict:
             return self.memo.dict[name]
-        pos_expr_O4_to_O2_in_jaw_on_york_spline = \
-            self.r_O4O2_polynomial_while_touching.get_expr_with_co_val()[0]
-        result = ((- pos_expr_O4_to_O2_in_jaw_on_york_spline)
-                  + self.get_r_O4O2_when_closed())
+        result = (
+            (- self.joy_position_of_ts_while_clamping[0]
+             + self.get_r_O4O2_when_closed()),
+            (- self.joy_position_of_ts_while_clamping[1]
+             + self.get_r_O4O2_when_closed()),
+        )
         self.memo.update_memo(name, result)
         return result
 
-    def get_y_AO2_of_t_while_touching(self):
+    def get_y_AO2_of_t_while_clamping(self):
         name = "y_AO2_of_t_while_touching"
         if name in self.memo.dict:
             return self.memo.dict[name]
-        result = self.forward.get_y_AO2_of_r_O4O2().subs(
-            self.r_O4O2_sym, self.get_r_O4O2_of_t_in_jaw_on_york_spline())
+        result = (
+            self.forward.get_y_AO2_of_r_O4O2().subs(
+                self.r_O4O2_sym,
+                self.get_r_O4O2_functions_of_t_with_joy_spline()[0]
+            ),
+            self.forward.get_y_AO2_of_r_O4O2().subs(
+                self.r_O4O2_sym,
+                self.get_r_O4O2_functions_of_t_with_joy_spline()[1]
+            )
+        )
         self.memo.update_memo(name, result)
         return result
 
-    def get_x_AO2_of_t_while_touching(self):
+    def get_x_AO2_of_t_while_clamping(self):
         name = "x_AO2_of_t_while_touching"
         if name in self.memo.dict:
             return self.memo.dict[name]
-        result = self.forward.get_x_AO2_of_r_O4O2().subs(
-            self.r_O4O2_sym, self.get_r_O4O2_of_t_in_jaw_on_york_spline())
+        result = (
+            self.forward.get_x_AO2_of_r_O4O2().subs(
+                self.r_O4O2_sym,
+                self.get_r_O4O2_functions_of_t_with_joy_spline()[0]
+            ),
+            self.forward.get_x_AO2_of_r_O4O2().subs(
+                self.r_O4O2_sym,
+                self.get_r_O4O2_functions_of_t_with_joy_spline()[1]
+            )
+        )
         self.memo.update_memo(name, result)
         return result
 
-    def get_x_AO5_of_t_while_touching(self):
+    def get_x_AO5_of_t_while_clamping(self):
         name = "x_AO5_of_t_while_touching"
         if name in self.memo.dict:
             return self.memo.dict[name]
-        result = self.get_x_AO2_of_t_while_touching()
+        result = self.get_x_AO2_of_t_while_clamping()
         self.memo.update_memo(name, result)
         return result
 
-    def get_y_AO5_of_t_while_touching(self):
+    def get_y_AO5_of_t_while_clamping(self):
         name = "y_AO5_of_t_while_touching"
         if name in self.memo.dict:
             return self.memo.dict[name]
         r_GO5 = self.package.depth / 2
         s = self.package.top_gap
         r_AG = ((r_GO5 - 0.75) ** 2 + s ** 2) ** 0.5
-        result = (r_AG ** 2 -
-                  (r_GO5 + self.get_x_AO5_of_t_while_touching()) ** 2
-                  ) ** 0.5
+        result = (
+            (r_AG ** 2 -
+             (r_GO5 + self.get_x_AO5_of_t_while_clamping()[0]) ** 2
+             ) ** 0.5,
+            (r_AG ** 2 -
+             (r_GO5 + self.get_x_AO5_of_t_while_clamping()[1]) ** 2
+             ) ** 0.5
+        )
         self.memo.update_memo(name, result)
         return result
 
-    def get_vx_AO5_of_t_while_touching(self):
-        name = "vx_AO5_while_touching"
+    def get_vx_AO5_of_t_while_clamping(self):
+        name = "vx_AO5_of_t_while_touching"
         if name in self.memo.dict:
             return self.memo.dict[name]
-        result = diff(self.get_x_AO5_of_t_while_touching(), t)
+        result = (
+            diff(self.get_x_AO5_of_t_while_clamping()[0], t),
+            diff(self.get_x_AO5_of_t_while_clamping()[1], t),
+        )
         self.memo.update_memo(name, result)
         return result
 
+    def get_vy_AO5_of_t_while_clamping(self):
+        name = "vy_AO5_of_t_while_touching"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        result = (
+            diff(self.get_y_AO5_of_t_while_clamping()[0], t),
+            diff(self.get_y_AO5_of_t_while_clamping()[1], t),
+        )
+        self.memo.update_memo(name, result)
+        return result
 
+    def get_ax_AO5_of_t_while_clamping(self):
+        name = "ax_AO5_of_t_while_touching"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        result = (
+            diff(self.get_vx_AO5_of_t_while_clamping()[0], t),
+            diff(self.get_vx_AO5_of_t_while_clamping()[1], t),
+        )
+        self.memo.update_memo(name, result)
+        return result
+
+    def get_ay_AO5_of_t_while_clamping(self):
+        name = "ay_AO5_of_t_while_clamping"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        result = (
+            diff(self.get_vy_AO5_of_t_while_clamping()[0], t),
+            diff(self.get_vy_AO5_of_t_while_clamping()[1], t)
+        )
+        self.memo.update_memo(name, result)
+        return result
+
+    def get_vx_AO2_of_t_while_clamping(self):
+        name = "vx_AO2_of_t_while_clamping"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        result = (
+            diff(self.get_x_AO2_of_t_while_clamping()[0], t),
+            diff(self.get_x_AO2_of_t_while_clamping()[1], t),
+        )
+        self.memo.update_memo(name, result)
+        return result
+
+    def get_vy_AO2_of_t_while_clamping(self):
+        name = "vy_AO2_of_t_while_clamping"
+        if name in self.memo.dict:
+            return self.memo.dict[name]
+        result = (
+            diff(self.get_y_AO2_of_t_while_clamping()[0], t),
+            diff(self.get_y_AO2_of_t_while_clamping()[1], t),
+        )
+        self.memo.update_memo(name, result)
+        return result
+
+    def ploy_symbolically(self):
+        touch_time = self.get_t_touched()
+        print('touch_time: ', touch_time)
+        knot2 = (
+            trans_degree_to_time(
+                self.joy_spline.get_knot_with_info_by_knot_id('knot2').knot
+            )
+        )
+        print('knot2: ', knot2)
+        closed = (
+            trans_degree_to_time(
+                self.joy_spline.get_knot_with_info_by_knot_id('closed').knot
+            )
+        )
+        print('closed: ', closed)
+        x_ticks = [
+            touch_time,
+            trans_degree_to_time(95),
+            trans_degree_to_time(100),
+            trans_degree_to_time(105),
+            trans_degree_to_time(110),
+            trans_degree_to_time(120),
+            knot2,
+            trans_degree_to_time(125),
+            trans_degree_to_time(130),
+            trans_degree_to_time(135),
+            closed,
+        ]
+        x_AO5_plot = plot(self.get_x_AO5_of_t_while_clamping()[0],
+                          (t, touch_time, knot2),
+                          title="x_AO5",
+                          ylabel='mm',
+                          show=False)
+        x_AO5_plot.extend(
+            plot(self.get_x_AO5_of_t_while_clamping()[1],
+                 (t, knot2, closed),
+                 show=False)
+        )
+        y_AO2_plot = plot(self.get_y_AO2_of_t_while_clamping()[0],
+                          (t, touch_time, knot2),
+                          title="y_AO2",
+                          ylabel='mm',
+                          show=False)
+        y_AO2_plot.extend(
+            plot(self.get_y_AO2_of_t_while_clamping()[1], (t, knot2, closed))
+        )
+        y_AO5_plot = plot(self.get_y_AO5_of_t_while_clamping()[0],
+                          (t, touch_time, knot2),
+                          title="y_AO5",
+                          ylabel='mm',
+                          show=False)
+        y_AO5_plot.extend(
+            plot(self.get_y_AO5_of_t_while_clamping()[1], (t, knot2, closed))
+        )
+        vx_AO5_plot = plot(self.get_vx_AO5_of_t_while_clamping()[0],
+                           (t, touch_time, knot2),
+                           title="vx_AO5",
+                           ylabel='mm/s',
+                           show=False)
+        vx_AO5_plot.extend(
+            plot(self.get_vy_AO5_of_t_while_clamping()[1], (t, knot2, closed))
+        )
+        vy_AO5_plot = plot(self.get_vy_AO5_of_t_while_clamping()[0],
+                           (t, touch_time, knot2),
+                           title="vy_AO5",
+                           ylabel='mm/s',
+                           show=False)
+        vy_AO5_plot.extend(
+            plot(self.get_vy_AO5_of_t_while_clamping()[1], (t, knot2, closed))
+        )
+        vx_AO2_plot = plot(self.get_vx_AO2_of_t_while_clamping()[0],
+                           (t, touch_time, knot2),
+                           title="vx_AO2",
+                           ylabel='mm/s',
+                           show=False)
+        vx_AO2_plot.extend(
+            plot(self.get_vx_AO2_of_t_while_clamping()[1], (t, knot2, closed))
+        )
+        vy_AO2_plot = plot(self.get_vy_AO2_of_t_while_clamping()[0],
+                           (t, touch_time, knot2),
+                           title="vy_AO2",
+                           ylabel='mm/s',
+                           show=False)
+        vy_AO2_plot.extend(
+            plot(self.get_vy_AO2_of_t_while_clamping()[1], (t, knot2, closed))
+        )
+        fig, axs = plt.subplots(nrows=4)
+        move_sympy_plot_to_plt_axes(y_AO2_plot, axs[0])
+        move_sympy_plot_to_plt_axes(vy_AO2_plot, axs[1])
+        move_sympy_plot_to_plt_axes(y_AO5_plot, axs[2])
+        move_sympy_plot_to_plt_axes(vy_AO5_plot, axs[3])
+        for ax in axs:
+            ax.grid(True)
+            ax.set_xticks(x_ticks)
+            ax.set_xticklabels([str(trans_time_to_degree(x_ticks[i]))
+                                for i in range(len(x_ticks))])
+        plt.show()

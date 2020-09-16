@@ -10,7 +10,7 @@ def test_read_in_csv_data():
         path_to_link_dim_csv="/Users/johnqu/PycharmProjects/Tetracamthon"
                              "/src/tetracamthon/"
                              "tetracamthon_lind_dimensions.csv")
-    assert link_dim.spec_id[0] == 1
+    assert link_dim.spec_id[0] == 'compect_flex'
     assert link_dim.r_BO4[0] == 155
     assert link_dim.r_BC[0] == 100
     assert link_dim.r_CO2[0] == 60
@@ -21,7 +21,7 @@ def test_read_in_csv_data():
 
 
 def test_links_with_dim():
-    l_w_d = LinksWithDim(a_spec_id=1,
+    l_w_d = LinksWithDim(a_spec_id='compact_flex',
                          path_to_link_dim_csv="/Users/johnqu/PycharmProjects/"
                                               "Tetracamthon/src/tetracamthon/"
                                               "tetracamthon_lind_dimensions.csv")
@@ -43,9 +43,9 @@ def test_links_with_dim():
 
 def test_get_theta_of_r_o4o2_expr():
     sr = SlideRocker(name="Basis",
-                     a_spec_id=1,
-                     path_to_link_dim_csv="/Users/johnqu/PycharmProjects/Tetracamthon/"
-                                          "src/tetracamthon/"
+                     a_spec_id='compact_flex',
+                     path_to_link_dim_csv="/Users/johnqu/PycharmProjects/"
+                                          "Tetracamthon/src/tetracamthon/"
                                           "tetracamthon_lind_dimensions.csv")
     result = sr.get_equation_of_r_O4O2_and_o_BC()
     print("Type of result is " + str(type(result)))
@@ -177,74 +177,84 @@ def test_get_r_o4o2_of_x_ao2(a_backward_slide_rocker_of_compact_flex):
 
 
 def test_get_r_O4O2_when_closed(
-        a_tracing_of_point_a_with_330sq_dim
+        a_tracing_of_point_a_with_1000sq_dim
 ):
-    sel = a_tracing_of_point_a_with_330sq_dim
+    sel = a_tracing_of_point_a_with_1000sq_dim
     result = sel.get_r_O4O2_when_closed()
     print('r_O4O2_when_closed: ', result)
     assert abs(result - 52.0476394259659) < 0.001
 
 
 def test_get_r_O4O2_when_touched(
-        a_tracing_of_point_a_with_330sq_dim
+        a_tracing_of_point_a_with_1000sq_dim
 ):
-    sel = a_tracing_of_point_a_with_330sq_dim
+    sel = a_tracing_of_point_a_with_1000sq_dim
     result = sel.get_r_O4O2_when_touched()
     print(result)
-    assert abs(result - 92.0968732113941) < 0.001
+    assert abs(result - 102.988204030727) < 0.001
 
 
 def test_get_t_touched(
-        a_tracing_of_point_a_with_330sq_dim
+        a_tracing_of_point_a_with_1000sq_dim
 ):
-    sel = a_tracing_of_point_a_with_330sq_dim
+    sel = a_tracing_of_point_a_with_1000sq_dim
     result = sel.get_t_touched()
     print('\n The degree when touched: ', trans_time_to_degree(result))
+    # The degree when touched:  81.1097320417263
+    # The degree when touched:  90.5571576293787 2020-09-14 20:38:32
     assert abs(
-        sel.jaw_on_york_spline.get_pvajp_at_point(result)[0] - (-40.05)
+        sel.joy_spline.get_pvajp_at_point(result)[0] - (-50.94)
     ) < 0.01
 
 
 def test_get_y_ao2_of_t_while_touching(
-        a_tracing_of_point_a_with_330sq_dim
+        a_tracing_of_point_a_with_1000sq_dim
 ):
-    sel = a_tracing_of_point_a_with_330sq_dim
-    y_AO2_of_t_when_touched = sel.get_y_AO2_of_t_while_touching().subs(
-        t, trans_degree_to_time(137.5)
+    sel = a_tracing_of_point_a_with_1000sq_dim
+    t_when_closed = trans_degree_to_time(137.5)
+    y_AO2_of_t_when_closed = sel.get_y_AO2_of_t_while_clamping().subs(
+        t, t_when_closed
     )
-    print('\n y_AO2_of_t_when_touched: ', y_AO2_of_t_when_touched)
-    assert abs(y_AO2_of_t_when_touched - 164.44) < 1
+    print('\n y_AO2_of_t_when_closed: ', y_AO2_of_t_when_closed)
+    assert abs(y_AO2_of_t_when_closed - 182.31) < 0.01
+    # y_AO2_of_t_when_closed: 182.309999999999
+    t_when_touched = sel.get_t_touched()
+    y_AO2_of_t_when_touched = sel.get_y_AO2_of_t_while_clamping().subs(
+        t, t_when_touched
+    )
+    print("y_AO2_of_t_when_touched: ", y_AO2_of_t_when_touched)
+    assert abs(y_AO2_of_t_when_touched - 190.124297763331) < 0.01
 
 
 def test_get_x_ao2_of_t_while_touching(
-        a_tracing_of_point_a_with_330sq_dim
+        a_tracing_of_point_a_with_1000sq_dim
 ):
-    sel = a_tracing_of_point_a_with_330sq_dim
+    sel = a_tracing_of_point_a_with_1000sq_dim
     t_when_closed = trans_degree_to_time(137.5)
-    x_AO2_of_t_when_closed = sel.get_x_AO2_of_t_while_touching().subs(
+    x_AO2_of_t_when_closed = sel.get_x_AO2_of_t_while_clamping().subs(
         t, t_when_closed
     )
     print("\n x_AO2_of_t_when_closed: ", x_AO2_of_t_when_closed)
     assert abs(x_AO2_of_t_when_closed - (- 1.5 / 2)) < 0.01
     t_when_touched = sel.get_t_touched()
-    x_AO2_of_t_when_touched = sel.get_x_AO2_of_t_while_touching().subs(
+    x_AO2_of_t_when_touched = sel.get_x_AO2_of_t_while_clamping().subs(
         t, t_when_touched
     )
     print("x_AO2_of_t_when_touched: ", x_AO2_of_t_when_touched)
-    assert abs(x_AO2_of_t_when_touched - (- 24.25)) < 0.01
+    assert abs(x_AO2_of_t_when_touched - (- 35.5)) < 0.01
 
 
 def test_get_y_ao5_of_t_while_touching(
-        a_tracing_of_point_a_with_330sq_dim
+        a_tracing_of_point_a_with_1000sq_dim
 ):
-    sel = a_tracing_of_point_a_with_330sq_dim
-    result = sel.get_y_AO5_of_t_while_touching()
+    sel = a_tracing_of_point_a_with_1000sq_dim
+    result = sel.get_y_AO5_of_t_while_clamping()
     t_when_touched = sel.get_t_touched()
     y_AO5_when_touched = result.subs(
         t, t_when_touched
     )
     print("\ny_AO5_when_touched: ", y_AO5_when_touched)
-    assert abs(y_AO5_when_touched - 24.25) < 1
+    assert abs(y_AO5_when_touched - 34.7643855116123) < 1
     t_when_closed = trans_degree_to_time(137.5)
     y_AO5_when_closed = result.subs(
         t, t_when_closed
@@ -254,19 +264,67 @@ def test_get_y_ao5_of_t_while_touching(
 
 
 def test_get_vx_ao5_while_touching(
-        a_tracing_of_point_a_with_330sq_dim
+        a_tracing_of_point_a_with_1000sq_dim
 ):
-    sel = a_tracing_of_point_a_with_330sq_dim
-    result = sel.get_vx_AO5_of_t_while_touching()
+    sel = a_tracing_of_point_a_with_1000sq_dim
+    result = sel.get_vx_AO5_of_t_while_clamping()
     t_when_touched = sel.get_t_touched()
     vx_AO5_when_touched = result.subs(
         t, t_when_touched
     )
     print("\nvx_AO5_when_touched: ", vx_AO5_when_touched)
-    assert abs(vx_AO5_when_touched - 639.565) < 1
+    assert abs(vx_AO5_when_touched - 832.683830654868) < 1
     t_when_closed = trans_degree_to_time(137.5)
     vx_AO5_when_closed = result.subs(
         t, t_when_closed
     )
-    print("vx_AO5_when_closed: ", vx_AO5_when_closed )
+    print("vx_AO5_when_closed: ", vx_AO5_when_closed)
     assert abs(vx_AO5_when_closed) < 1
+
+
+def test_get_vx_ao2_of_t_while_touching(
+        a_tracing_of_point_a_with_1000sq_dim
+):
+    sel = a_tracing_of_point_a_with_1000sq_dim
+    result = sel.get_vx_AO2_of_t_while_clamping()
+    t_when_touched = sel.get_t_touched()
+    vx_AO2_when_touched = result.subs(
+        t, t_when_touched
+    )
+    print("\nvx_AO2_when_touched: ", vx_AO2_when_touched)
+    assert abs(vx_AO2_when_touched - 832.683830654868) < 1
+    t_when_closed = trans_degree_to_time(137.5)
+    vx_AO2_when_closed = result.subs(
+        t, t_when_closed
+    )
+    print("vx_AO2_when_closed: ", vx_AO2_when_closed)
+    assert abs(vx_AO2_when_closed) < 1
+
+
+def test_get_vy_ao2_of_t_while_touching(
+        a_tracing_of_point_a_with_1000sq_dim
+):
+    sel = a_tracing_of_point_a_with_1000sq_dim
+    result = sel.get_vy_AO2_of_t_while_clamping()
+    t_when_touched = sel.get_t_touched()
+    vy_AO2_when_touched = result.subs(
+        t, t_when_touched
+    )
+    print("\nvy_AO2_when_touched: ", vy_AO2_when_touched)
+    assert abs(vy_AO2_when_touched - (-107.302191729536)) < 1
+    t_when_closed = trans_degree_to_time(137.5)
+    vy_AO2_when_closed = result.subs(
+        t, t_when_closed
+    )
+    print("vy_AO2_when_closed: ", vy_AO2_when_closed)
+    assert abs(vy_AO2_when_closed) < 1
+
+
+def test_ploy_symbolically(
+        a_tracing_of_point_a_with_1000sq_dim
+):
+    a_tracing_of_point_a_with_1000sq_dim.ploy_symbolically()
+
+
+def test_get_y_ao2_of_r_o4o2():
+    assert False

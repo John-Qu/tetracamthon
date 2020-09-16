@@ -29,14 +29,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c46ad84a-d91c-4157-b6d5-6303e3f504af" name="Default Changelist" comment="Implemented Tracing of A class to vx, for only necessary latter.">
-      <change afterPath="$PROJECT_DIR$/src/tetracamthon/knots_of_shaking_hand_with_touching.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tetracamthon/package.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_package.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetracamthon/mechanism.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/mechanism.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tetracamthon/stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tetracamthon/stage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_mechanism.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_mechanism.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -1,10 +1,9 @@
 import pytest
 from sympy import symbols
-from tetracamthon.mechanism import Forward, Backward, SlideRocker, \
-    TracingOfPointA
-from tetracamthon.polynomial import Polynomial,  KnotsInSpline, \
+from tetracamthon.mechanism import Forward, Backward, SlideRocker
+from tetracamthon.polynomial import Polynomial, KnotsInSpline, \
     Spline
-from tetracamthon.stage import JawToYork
+from tetracamthon.stage import JawOnYork, TracingOfPointA
 from tetracamthon.package import Package, Productivity, Production
 
 
@@ -64,9 +63,9 @@ def a_solution():
 
 @pytest.fixture(scope='session')
 def a_sample_knots_in_spline():
-    return KnotsInSpline(path_to_knots_csv="/Users/johnqu/PycharmProjects/"
-                                           "Tetracamthon/data/"
-                                           "sample_knots.csv")
+    return KnotsInSpline(knots_info_csv="/Users/johnqu/PycharmProjects/"
+                                        "Tetracamthon/data/"
+                                        "sample_knots.csv")
 
 
 @pytest.fixture(scope='session')
@@ -86,12 +85,12 @@ def a_sample_spline_reloaded(a_sample_knots_in_spline):
 
 @pytest.fixture(scope='session')
 def an_jaw_on_york_spline_with_nine_knots():
-    return JawToYork(
+    return JawOnYork(
         name="O4_to_O2_Spline",
-        a_set_of_informed_knots=KnotsInSpline(
-            path_to_knots_csv="/Users/johnqu/PycharmProjects/"
-                              "Tetracamthon/src/tetracamthon/"
-                              "knots_of_o4o2_with_nine_knots.csv"
+        informed_knots=KnotsInSpline(
+            knots_info_csv="/Users/johnqu/PycharmProjects/"
+                           "Tetracamthon/src/tetracamthon/knot_info/"
+                           "jaw_on_york_with_nine_knots.csv"
         ),
         whether_reload=False,
     )
@@ -99,12 +98,25 @@ def an_jaw_on_york_spline_with_nine_knots():
 
 @pytest.fixture(scope='session')
 def an_jaw_on_york_spline_with_minimum_five_knots():
-    return JawToYork(
+    return JawOnYork(
         name="jaw_on_york_Spline",
-        a_set_of_informed_knots=KnotsInSpline(
-            path_to_knots_csv="/Users/johnqu/PycharmProjects/"
-                              "Tetracamthon/src/tetracamthon/"
-                              "knots_of_o4o2_with_minimum_five_knots.csv"
+        informed_knots=KnotsInSpline(
+            knots_info_csv="/Users/johnqu/PycharmProjects/"
+                           "Tetracamthon/src/tetracamthon/knot_info/"
+                           "jaw_on_york_with_minimum_five_knots.csv"
+        ),
+        whether_reload=False,
+    )
+
+
+@pytest.fixture(scope='session')
+def an_jaw_on_york_spline_with_trying_knots():
+    return JawOnYork(
+        name="jaw_on_york_Spline",
+        informed_knots=KnotsInSpline(
+            knots_info_csv="/Users/johnqu/PycharmProjects/"
+                           "Tetracamthon/src/tetracamthon/knot_info/"
+                           "jaw_on_york_with_trying_knots.csv"
         ),
         whether_reload=False,
     )
@@ -113,9 +125,26 @@ def an_jaw_on_york_spline_with_minimum_five_knots():
 @pytest.fixture(scope='session')
 def a_tracing_of_point_a_with_330sq_dim():
     result = TracingOfPointA(
+        a_jaw_on_york_spline=JawOnYork(),
         name="a_tracing_of_point_a_with_five_knots_o4o2_spline",
         a_spec_id="compact_flex",
         a_package_id='330SQ',
+        a_path_to_link_dim_csv='/Users/johnqu/PycharmProjects/'
+                               'Tetracamthon/src/tetracamthon/knot_info/'
+                               'tetracamthon_lind_dimensions.csv',
+        whether_reload=False,
+        # whether_reload=True,
+    )
+    return result
+
+
+@pytest.fixture(scope='class')
+def a_tracing_of_point_a_with_1000sq_dim():
+    result = TracingOfPointA(
+        a_jaw_on_york_spline=JawOnYork(whether_reload=True),
+        name="a_tracing_of_point_a_with_five_knots_o4o2_spline",
+        a_spec_id="flex",
+        a_package_id='1000SQ',
         a_path_to_link_dim_csv='/Users/johnqu/PycharmProjects/'
                                'Tetracamthon/src/tetracamthon/'
                                'tetracamthon_lind_dimensions.csv',
