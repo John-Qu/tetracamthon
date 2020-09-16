@@ -301,9 +301,9 @@ class Climbing(Spline):
 
 
 if __name__ == "__main__":
-    joy = JawOnYork(whether_reload=False)
+    # joy = JawOnYork(whether_reload=False)
     # joy.plot_symbolically()
-    # shake2 = ShakingHandWithClampingBottom(whether_reload=False)
+    shake2 = ShakingHandWithClampingBottom(whether_reload=False)
     # clamp = ClampingBottom(whether_reload=True)
     # clamp.plot_one_polynomial_at_one_depth(0,1)
     # clamp.plot_to_depth_of_acceleration()
