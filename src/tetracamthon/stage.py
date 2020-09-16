@@ -180,7 +180,9 @@ class ClampingBottom(Spline):
                          )
                  ),
                  a_tracing_of_point_a=TracingOfPointA(
-                     a_jaw_on_york_spline=JawOnYork(),
+                     a_jaw_on_york_spline=JawOnYork(
+                         whether_reload=True,
+                     ),
                      whether_reload=True,
                  ),
                  whether_reload=False,
@@ -205,7 +207,6 @@ class ClampingBottom(Spline):
                         whether_reload=False,
                         whether_solve=False
                         )
-        print('knots: ', trans_time_to_degree(self.knots))
         if whether_reload:
             self.load_solved_pieces_of_polynomial()
         else:
@@ -300,18 +301,12 @@ class Climbing(Spline):
 
 
 if __name__ == "__main__":
-    # joy = JawOnYork(whether_reload=True)
+    joy = JawOnYork(whether_reload=False)
     # joy.plot_symbolically()
-    # ###
-    sel = ClampingBottom(whether_reload=True)
-    # print("95: ", sel.get_pvajp_at_point(trans_degree_to_time(95)))
-    # print("100: ", sel.get_pvajp_at_point(trans_degree_to_time(100)))
-    # print("110: ", sel.get_pvajp_at_point(trans_degree_to_time(110)))
-    # print("120: ", sel.get_pvajp_at_point(trans_degree_to_time(120)))
-    # print("130: ", sel.get_pvajp_at_point(trans_degree_to_time(130)))
-    # print("137: ", sel.get_pvajp_at_point(trans_degree_to_time(137.5)))
-    # sel.plot_one_polynomial_at_one_depth(0,1)
-    sel.plot_to_depth_of_acceleration()
+    # shake2 = ShakingHandWithClampingBottom(whether_reload=False)
+    # clamp = ClampingBottom(whether_reload=True)
+    # clamp.plot_one_polynomial_at_one_depth(0,1)
+    # clamp.plot_to_depth_of_acceleration()
     # sel.plot_spline_on_subplots()
     # sel = ShakingHandWithClampingBottom(whether_reload=False)
     # sel.plot_symbolically()
