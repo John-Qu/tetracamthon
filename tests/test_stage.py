@@ -1,5 +1,5 @@
 from tetracamthon.stage import JawOnYork, ShakingHandWithClampingBottom, \
-    ShakingHandWithFoldingEar, Pulling, ClampingBottom
+    ShakingHandWithFoldingEar, PullingTube, ClampingBottom
 from tetracamthon.polynomial import KnotsInSpline
 from tetracamthon.helper import trans_degree_to_time
 
@@ -61,7 +61,7 @@ def test_plot_shaking_hand_with_folding_ear_symbolically():
 
 
 def test_pulling():
-    sel = Pulling()
+    sel = PullingTube()
     print('\n', sel.informed_knots.knots_with_info[0])
     print(sel.informed_knots.knots_with_info[-1])
     sel.plot_spline_on_subplots(

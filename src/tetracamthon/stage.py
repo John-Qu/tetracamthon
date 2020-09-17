@@ -128,14 +128,14 @@ class ShakingHandWithFoldingEar(Spline):
         )
 
 
-class Pulling(Spline):
+class PullingTube(Spline):
     def __init__(self,
-                 name="spline_of_pulling",
+                 name="spline_of_pulling_tube",
                  a_set_of_informed_knots=KnotsInSpline(
                      knots_info_csv=(
                              "/Users/johnqu/PycharmProjects/" +
                              "tetracamthon/src/tetracamthon/knot_info/" +
-                             "pulling.csv"
+                             "pulling_tube.csv"
                      ),
                  ),
                  a_production=Production(Package('1000SQ'),
@@ -149,12 +149,62 @@ class Pulling(Spline):
             1,
             self.production.get_average_velocity()
         )
-        # self.modify_knot_value(
-        #     'end',
-        #     0,
-        #     (self.production.get_average_velocity() *
-        #      trans_degree_to_time(264 - 194))
-        # )
+        Spline.__init__(self,
+                        name=name,
+                        a_set_of_informed_knots=self.informed_knots,
+                        whether_reload=whether_reload,
+                        )
+
+
+class WaitingLock(Spline):
+    def __init__(self,
+                 name="spline_of_waiting_lock",
+                 a_set_of_informed_knots=KnotsInSpline(
+                     knots_info_csv=(
+                             "/Users/johnqu/PycharmProjects/" +
+                             "tetracamthon/src/tetracamthon/knot_info/" +
+                             "waiting_lock.csv"
+                     ),
+                 ),
+                 a_production=Production(Package('1000SQ'),
+                                         Productivity(8000)),
+                 whether_reload=False,
+                 ):
+        self.production = a_production
+        self.informed_knots = a_set_of_informed_knots
+        self.modify_knot_value(
+            'start',
+            1,
+            self.production.get_average_velocity()
+        )
+        Spline.__init__(self,
+                        name=name,
+                        a_set_of_informed_knots=self.informed_knots,
+                        whether_reload=whether_reload,
+                        )
+
+
+class WaitingKnife(Spline):
+    def __init__(self,
+                 name="spline_of_waiting_knife",
+                 a_set_of_informed_knots=KnotsInSpline(
+                     knots_info_csv=(
+                             "/Users/johnqu/PycharmProjects/" +
+                             "tetracamthon/src/tetracamthon/knot_info/" +
+                             "waiting_knife.csv"
+                     ),
+                 ),
+                 a_production=Production(Package('1000SQ'),
+                                         Productivity(8000)),
+                 whether_reload=False,
+                 ):
+        self.production = a_production
+        self.informed_knots = a_set_of_informed_knots
+        self.modify_knot_value(
+            'start',
+            1,
+            self.production.get_average_velocity()
+        )
         Spline.__init__(self,
                         name=name,
                         a_set_of_informed_knots=self.informed_knots,
@@ -295,18 +345,91 @@ class ClampingBottom(Spline):
         self.plot_spline_on_subplots(axs_num=3)
 
 
-class Climbing(Spline):
-    def __init__(self):
-        pass
+class ClimbingBack(Spline):
+    def __init__(self,
+                 name="spline_of_climbing_back",
+                 informed_knots=KnotsInSpline(
+                     knots_info_csv=(
+                             "/Users/johnqu/PycharmProjects/" +
+                             "tetracamthon/src/tetracamthon/knot_info/" +
+                             "climbing_back.csv"
+                     ),
+                 ),
+                 a_production=Production(Package('1000SQ'),
+                                         Productivity(8000)),
+                 a_tracing_of_point_a=TracingOfPointA(
+                     a_jaw_on_york_spline=JawOnYork(
+                         whether_reload=True,
+                     ),
+                     whether_reload=True,
+                 ),
+                 whether_reload=False,
+                 ):
+        self.production = a_production
+        self.informed_knots = informed_knots
+        self.tracing = a_tracing_of_point_a
+        Spline.__init__(self,
+                        name=name,
+                        a_set_of_informed_knots=self.informed_knots,
+                        whether_reload=whether_reload,
+                        )
+
+
+class ThrowingPack(Spline):
+    def __init__(self,
+                 name="spline_of_throwing_pack",
+                 informed_knots=KnotsInSpline(
+                     knots_info_csv=(
+                             "/Users/johnqu/PycharmProjects/" +
+                             "tetracamthon/src/tetracamthon/knot_info/" +
+                             "throwing_pack.csv"
+                     ),
+                 ),
+                 a_production=Production(Package('1000SQ'),
+                                         Productivity(8000)),
+                 a_tracing_of_point_a=TracingOfPointA(
+                     a_jaw_on_york_spline=JawOnYork(
+                         whether_reload=True,
+                     ),
+                     whether_reload=True,
+                 ),
+                 whether_reload=False,
+                 ):
+        self.production = a_production
+        self.informed_knots = informed_knots
+        self.tracing = a_tracing_of_point_a
+        Spline.__init__(self,
+                        name=name,
+                        a_set_of_informed_knots=self.informed_knots,
+                        whether_reload=whether_reload,
+                        )
+
+
 
 
 if __name__ == "__main__":
     # joy = JawOnYork(whether_reload=False)
     # joy.plot_symbolically()
-    shake2 = ShakingHandWithClampingBottom(whether_reload=False)
-    # clamp = ClampingBottom(whether_reload=True)
+    # shake_hand = ShakingHandWithClampingBottom(whether_reload=False)
+    # shake_hand.plot_symbolically()
+    # clamp_bottom = ClampingBottom(whether_reload=True)
     # clamp.plot_one_polynomial_at_one_depth(0,1)
     # clamp.plot_to_depth_of_acceleration()
-    # sel.plot_spline_on_subplots()
-    # sel = ShakingHandWithClampingBottom(whether_reload=False)
-    # sel.plot_symbolically()
+    # pvajp_touched = clamp_bottom.get_pvajp_at_point(
+    #     clamp_bottom.tracing.get_t_touched()
+    # )
+    # print('pvajp_touched: ', pvajp_touched )
+    # climbing_back = ClimbingBack(whether_reload=True)
+    # climbing_back.plot_spline_on_subplots()
+    # print(climbing_back.get_pvajp_at_point(
+    #     climbing_back.tracing.get_t_touched()
+    # ))
+    # [354.415588719000, -488.761120504327, -9980.89100900479, 1105021.88922076,
+    #  -223511120.319773]
+    # pulling_tube = PullingTube(whether_reload=False)
+    # waiting_lock = WaitingLock(whether_reload=False)
+    # waiting_knife = WaitingKnife(whether_reload=False)
+    throwing_pack = ThrowingPack(whether_reload=False)
+    throwing_pack.plot_spline_on_subplots()
+
+
