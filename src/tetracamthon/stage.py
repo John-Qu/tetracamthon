@@ -561,8 +561,8 @@ if __name__ == "__main__":
     #     clamp_bottom.tracing.get_t_touched()
     # )
     # print('pvajp_touched: ', pvajp_touched )
-    # climbing_back = ClimbingBack(whether_reload=True)
-    # climbing_back.plot_spline_on_subplots()
+    climbing_back = ClimbingBack(whether_reload=False)
+    climbing_back.plot_spline_on_subplots()
     # print(climbing_back.get_pvajp_at_point(
     #     climbing_back.tracing.get_t_touched()
     # ))
@@ -573,5 +573,5 @@ if __name__ == "__main__":
     # waiting_knife = WaitingKnife(whether_reload=False)
     # throwing_pack = ThrowingPack(whether_reload=False)
     # throwing_pack.plot_spline_on_subplots()
-    stages = Stages(whether_reload=False)
-    print(stages.collect_connectors())
+    # stages = Stages(whether_reload=False)
+    # print(stages.collect_connectors())
