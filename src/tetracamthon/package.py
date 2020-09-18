@@ -42,9 +42,11 @@ class PackageDimension(object):
 
 
 class Package(object):
-    def __init__(self, a_spec_id: str, ):
+    def __init__(self, a_package_id: str, a_spec_id: str = 'flex'):
+        self.package_id = a_package_id
+        self.spec_id = a_spec_id
         dims = PackageDimension()
-        i = dims.spec_id.index(a_spec_id)
+        i = dims.spec_id.index(self.package_id)
         self.volume = dims.volume[i]
         self.shape = dims.shape[i]
         self.width = dims.width[i]

@@ -1,3 +1,5 @@
+from math import sqrt
+
 from sympy import plot
 from tetracamthon.helper import trans_degree_to_time, trans_time_to_degree, \
     move_sympy_plot_to_plt_axes
@@ -55,9 +57,10 @@ class ShakingHandWithClampingBottom(Spline):
         self.modify_knot_value(
             'end',
             0,
-            (self.production.get_average_velocity() *
-             self.production.get_time_of_clamping() +
-             self.production.get_extra_length_of_clamping())
+            -sqrt((-self.production.get_average_velocity() *
+                   self.production.get_time_of_clamping() -
+                   self.production.get_extra_length_of_clamping()) ** 2
+                  - (self.production.get_extra_length_of_clamping()) ** 2)
         )
         self.modify_knot_value(
             'end',
@@ -387,17 +390,10 @@ class ThrowingPack(Spline):
                  ),
                  a_production=Production(Package('1000SQ'),
                                          Productivity(8000)),
-                 a_tracing_of_point_a=TracingOfPointA(
-                     a_jaw_on_york_spline=JawOnYork(
-                         whether_reload=True,
-                     ),
-                     whether_reload=True,
-                 ),
                  whether_reload=False,
                  ):
         self.production = a_production
         self.informed_knots = informed_knots
-        self.tracing = a_tracing_of_point_a
         Spline.__init__(self,
                         name=name,
                         a_set_of_informed_knots=self.informed_knots,
@@ -405,6 +401,151 @@ class ThrowingPack(Spline):
                         )
 
 
+class Stages(object):
+    def __init__(
+            self,
+            machine_production=Production(
+                Package('1000SQ'), Productivity(8000)),
+            whether_reload=False):
+        self.production = machine_production
+        self.jaw_on_york = JawOnYork(
+            whether_reload=whether_reload
+        )
+        self.tracing_of_point_a = TracingOfPointA(
+            self.jaw_on_york,
+            a_spec_id=self.production.package.spec_id,
+            a_package_id=self.production.package.package_id,
+            whether_reload=whether_reload
+        )
+        self.throwing_pack = ThrowingPack(
+            name='stage_of_throwing_pack',
+            a_production=self.production,
+            whether_reload=whether_reload
+        )
+        self.climbing_back = ClimbingBack(
+            name="stage_of_climbing_back",
+            a_production=self.production,
+            a_tracing_of_point_a=self.tracing_of_point_a,
+            whether_reload=whether_reload
+        )
+        self.pulling_tube = PullingTube(
+            name='stage_of_pulling_tube',
+            a_production=self.production,
+            whether_reload=whether_reload
+        )
+        self.waiting_lock = WaitingLock(
+            name='stage_of_waiting_lock',
+            a_production=self.production,
+            whether_reload=whether_reload
+        )
+        self.waiting_knife = WaitingKnife(
+            name='stage_of_waiting_knife',
+            a_production=self.production,
+            whether_reload=whether_reload
+        )
+        self.shaking_hand_with_clamping_bottom = ShakingHandWithClampingBottom(
+            name='stage_of_shaking_hand_with_clamping_bottom',
+            a_production=self.production,
+            whether_reload=whether_reload
+        )
+        self.shaking_hand_with_folding_ear = ShakingHandWithFoldingEar(
+            name='stage_of_shaking_hand_with_folding_ear',
+            a_production=self.production,
+            whether_reload=whether_reload
+        )
+        self.clamping_bottom = ClampingBottom(
+            name='stage_of_clamping_bottom',
+            a_production=self.production,
+            a_spline_of_shake_hand_with_clamping_bottom=(
+                self.shaking_hand_with_clamping_bottom
+            ),
+            a_tracing_of_point_a=self.tracing_of_point_a,
+            whether_reload=whether_reload,
+        )
+        self.connectors = {}
+
+    def collect_connectors(self):
+        self.connectors['throwing_pack_end_acc'] = (
+            self.throwing_pack.get_a_dyn_at_boundary('end', 2)
+        )
+        self.connectors['throwing_pack_end_jer'] = (
+            self.throwing_pack.get_a_dyn_at_boundary('end', 3)
+        )
+        self.connectors['throwing_pack_start_pos'] = (
+            self.throwing_pack.get_a_dyn_at_boundary('start', 0)
+        )
+        self.connectors['waiting_knife_end_pos'] = (
+            self.connectors['throwing_pack_start_pos']
+        )
+        self.connectors['waiting_knife_start_pos'] = (
+            self.connectors['waiting_knife_end_pos'] +
+            self.waiting_knife.get_a_dyn_at_boundary('start', 0) -
+            self.waiting_knife.get_a_dyn_at_boundary('end', 0)
+        )
+        self.connectors['shaking_hand_with_clamping_bottom_end_pos'] = (
+            self.connectors['waiting_knife_start_pos']
+        )
+        self.connectors['shaking_hand_with_clamping_bottom_start_pos'] = (
+            self.connectors['shaking_hand_with_clamping_bottom_end_pos'] +
+            self.shaking_hand_with_clamping_bottom.get_a_dyn_at_boundary(
+                    'start', 0) -
+            self.shaking_hand_with_clamping_bottom.get_a_dyn_at_boundary(
+                    'end', 0)
+        )
+        self.connectors['pulling_tube_end_pos'] = (
+            self.connectors['shaking_hand_with_clamping_bottom_start_pos']
+        )
+        self.connectors['pulling_tube_start_pos'] = (
+            self.connectors['pulling_tube_end_pos'] +
+            self.pulling_tube.get_a_dyn_at_boundary('start', 0) -
+            self.pulling_tube.get_a_dyn_at_boundary('end', 0)
+        )
+        self.connectors['shaking_hand_with_folding_ear_end_pos'] = (
+            self.connectors['pulling_tube_start_pos']
+        )
+        self.connectors['shaking_hand_with_folding_ear_start_pos'] = (
+            self.connectors['shaking_hand_with_folding_ear_end_pos'] +
+            self.shaking_hand_with_folding_ear.get_a_dyn_at_boundary(
+                    'start', 0) -
+            self.shaking_hand_with_folding_ear.get_a_dyn_at_boundary(
+                    'end', 0)
+        )
+        self.connectors['clamping_bottom_end_pos'] = (
+            self.connectors['shaking_hand_with_folding_ear_start_pos']
+        )
+        self.connectors['clamping_bottom_start_pos'] = (
+            self.connectors['clamping_bottom_end_pos'] +
+            self.clamping_bottom.get_a_dyn_at_boundary('start', 0) -
+            self.clamping_bottom.get_a_dyn_at_boundary('end', 0)
+        )
+        self.connectors['clamping_bottom_start_vel'] = (
+            self.clamping_bottom.get_a_dyn_at_boundary('start', 1)
+        )
+        self.connectors['clamping_bottom_start_acc'] = (
+            self.clamping_bottom.get_a_dyn_at_boundary('start', 2)
+        )
+        self.connectors['clamping_bottom_start_jer'] = (
+            self.clamping_bottom.get_a_dyn_at_boundary('start', 3)
+        )
+        self.connectors['climbing_back_end_pos'] = (
+            self.connectors['clamping_bottom_start_pos']
+        )
+        self.connectors['climbing_back_end_vel'] = (
+            self.connectors['clamping_bottom_start_vel']
+        )
+        self.connectors['climbing_back_end_acc'] = (
+            self.connectors['clamping_bottom_start_acc']
+        )
+        self.connectors['climbing_back_end_jer'] = (
+            self.connectors['clamping_bottom_start_jer']
+        )
+        self.connectors['climbing_back_start_acc'] = (
+            self.connectors['throwing_pack_end_acc']
+        )
+        self.connectors['climbing_back_start_jer'] = (
+            self.connectors['throwing_pack_end_jer']
+        )
+        return self.connectors
 
 
 if __name__ == "__main__":
@@ -412,6 +553,7 @@ if __name__ == "__main__":
     # joy.plot_symbolically()
     # shake_hand = ShakingHandWithClampingBottom(whether_reload=False)
     # shake_hand.plot_symbolically()
+    # print(shake_hand.get_pvajp_at_point(shake_hand.knots[-1]))
     # clamp_bottom = ClampingBottom(whether_reload=True)
     # clamp.plot_one_polynomial_at_one_depth(0,1)
     # clamp.plot_to_depth_of_acceleration()
@@ -429,7 +571,7 @@ if __name__ == "__main__":
     # pulling_tube = PullingTube(whether_reload=False)
     # waiting_lock = WaitingLock(whether_reload=False)
     # waiting_knife = WaitingKnife(whether_reload=False)
-    throwing_pack = ThrowingPack(whether_reload=False)
-    throwing_pack.plot_spline_on_subplots()
-
-
+    # throwing_pack = ThrowingPack(whether_reload=False)
+    # throwing_pack.plot_spline_on_subplots()
+    stages = Stages(whether_reload=False)
+    print(stages.collect_connectors())

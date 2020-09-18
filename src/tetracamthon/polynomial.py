@@ -382,12 +382,21 @@ class Spline(object):
         index_of_piece = self.get_index_of_piece_of_point(t_point)
         return self.get_pieces_of_polynomial()[index_of_piece]
 
-    def get_pvajp_at_point(self, t_point):
+    def get_pvajp_at_point(self, t_point, to_depth=5):
         polynomial = self.get_polynomial_at_point(t_point)
         expressions = polynomial.get_expr_with_co_val()
         result = []
-        for index_of_depth in range(5):
+        for index_of_depth in range(to_depth):
             result.append(expressions[index_of_depth].subs(t, t_point))
+        return result
+
+    def get_a_dyn_at_boundary(self, start_or_end: str, i_pvajp: int):
+        if start_or_end == 'start':
+            index = 0
+        else:
+            index = -1
+        expression = self.pieces_of_polynomial[index].expr_with_co_val[i_pvajp]
+        result = expression.subs(t, self.knots[index])
         return result
 
     def prepare_plots_for_plt(self, line_color='blue'):
