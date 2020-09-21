@@ -194,3 +194,8 @@ def test_calculate_peak_points(a_sample_spline):
     result = a_sample_spline.calculate_peak_points()
     print(result)
     assert True
+
+
+def test_change_boundary_knot_info():
+
+    assert False

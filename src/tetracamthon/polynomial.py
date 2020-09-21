@@ -119,7 +119,7 @@ class KnotPVAJP(object):
         result = 'Knot: "' + str(self.knot_id) + '"'
         result += " at " + str(self.knot) + " deg "
         for data in self.pvajp:
-            result += "{0:8}".format(data)
+            result += "{0:12}".format(data)
         result += " Smooth depth: " + str(self.smooth_depth)
         result += " with piece order: " + str(self.polynomial_order)
         return result
@@ -131,9 +131,6 @@ class KnotsInSpline(object):
         self.knots_with_info = []
         self.csv_file_name = find_file_name_from_a_path(knots_info_csv)
         self.read_in_csv_data(path_to_knots_csv=knots_info_csv)
-
-    def trunk_part_of_knots(self, start_knot_id, ending_knot):
-        pass  # TODO
 
     def __str__(self):
         result = ""
@@ -166,6 +163,35 @@ class KnotsInSpline(object):
                     )
                 )
         return self
+
+    def change_boundary_knot_info(
+            self,
+            start_or_end: str,
+            knot=None,
+            pos=None,
+            vel=None,
+            acc=None,
+            jer=None,
+            pin=None,
+    ):
+        if start_or_end == 'start':
+            index = 0
+        else:
+            index = -1
+        knot_with_info = self.knots_with_info[index]
+        if knot:
+            knot_with_info.knot = knot
+        if pos:
+            knot_with_info.pvajp[0] = pos
+        if vel:
+            knot_with_info.pvajp[1] = vel
+        if acc:
+            knot_with_info.pvajp[2] = acc
+        if jer:
+            knot_with_info.pvajp[3] = jer
+        if pin:
+            knot_with_info.pvajp[4] = pin
+        return knot_with_info
 
 
 class Spline(object):
@@ -428,6 +454,7 @@ class Spline(object):
                                 whether_show_figure=False,
                                 whether_knots_ticks=True,
                                 whether_annotate=False,
+                                fig_title=None
                                 ):
         cur_lis = self.prepare_plots_for_plt()
         knots = self.knots
@@ -435,9 +462,12 @@ class Spline(object):
                                 # fig, axs=plt.subplots(nrows=len(cur_lis),
                                 figsize=(16, 10),
                                 )
-        fig.suptitle('PVAJ Curves of {} \n with {}.csv'.format(
-            self.name, self.informed_knots.csv_file_name),
-            fontsize=14, fontweight='bold')
+        if fig_title:
+            fig.suptitle(fig_title, fontsize=14, fontweight='bold')
+        else:
+            fig.suptitle('PVAJ Curves of {} \n with {}.csv'.format(
+                self.name, self.informed_knots.csv_file_name),
+                fontsize=14, fontweight='bold')
         y_labels = [
             "Position\n(mm)",
             "Velocity \n(mm/sec)",

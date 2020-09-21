@@ -51,16 +51,18 @@ class ShakingHandWithClampingBottom(Spline):
         self.informed_knots = a_set_of_informed_knots
         self.modify_knot_value(
             'start',
-            1,
-            self.production.get_average_velocity()
+            0,
+            (self.informed_knots.knots_with_info[-1].pvajp[0] +
+             sqrt((-self.production.get_average_velocity() *
+                   self.production.get_time_of_clamping() -
+                   self.production.get_extra_length_of_clamping()) ** 2 -
+                  (self.production.get_extra_length_of_clamping()) ** 2)
+             )
         )
         self.modify_knot_value(
-            'end',
-            0,
-            -sqrt((-self.production.get_average_velocity() *
-                   self.production.get_time_of_clamping() -
-                   self.production.get_extra_length_of_clamping()) ** 2
-                  - (self.production.get_extra_length_of_clamping()) ** 2)
+            'start',
+            1,
+            self.production.get_average_velocity()
         )
         self.modify_knot_value(
             'end',
@@ -102,14 +104,17 @@ class ShakingHandWithFoldingEar(Spline):
         self.informed_knots = a_set_of_informed_knots
         self.modify_knot_value(
             'start',
-            1,
-            self.production.get_average_velocity())
-        self.modify_knot_value(
-            'end',
             0,
-            (self.production.get_average_velocity() *
-             self.production.get_time_of_folding() +
-             self.production.get_extra_length_of_folding())
+            (self.informed_knots.knots_with_info[-1].pvajp[0] -
+             (self.production.get_average_velocity() *
+              self.production.get_time_of_folding() +
+              self.production.get_extra_length_of_folding())
+             )
+        )
+        self.modify_knot_value(
+            'start',
+            1,
+            self.production.get_average_velocity()
         )
         self.modify_knot_value(
             'end',
@@ -269,11 +274,11 @@ class ClampingBottom(Spline):
     def construct_pieces(self):
         """Construct pieces with mechanism dimension, shaking hand spline, and
         tracing of point A functions.
-        r_O5O2: constant float
+        r_o5o2: constant float
         left_york_pos_of_t: shaking hand spline of left york by right york's
             time, also has two pieces:
             84d______ps[0]___________111.5d_________ps[1]______________140d
-        y_AO2_of_t, y_AO5_of_t: tracing of point A, whose function expressions
+        y_ao2_of_t, y_ao5_of_t: tracing of point A, whose function expressions
             has two element:
                 91d__________pt[0]__________________121d______pt[1]____137d
         So for the knots of ClampingBottom:
@@ -281,9 +286,9 @@ class ClampingBottom(Spline):
             the index of shaking and tracing are:
                      ps[0] pt[0]           ps[1]pt[0]      ps[1]pt[1]
         """
-        r_O5O2 = self.get_distance_o5o2()
-        y_AO2_of_t = self.tracing.get_y_AO2_of_t_while_clamping()
-        y_AO5_of_t = self.tracing.get_y_AO5_of_t_while_clamping()
+        r_o5o2 = self.get_distance_o5o2()
+        y_ao2_of_t = self.tracing.get_y_AO2_of_t_while_clamping()
+        y_ao5_of_t = self.tracing.get_y_AO5_of_t_while_clamping()
         left_york_pos_of_t = (
             (self.shaking.get_pieces_of_polynomial()[0]
              .get_expr_with_co_val()[0].subs(t, self.get_t_left_york())),
@@ -302,9 +307,9 @@ class ClampingBottom(Spline):
                 i_of_tracing = 1
             expr_i = (
                     left_york_pos_of_t[i_of_shaking]
-                    + y_AO5_of_t[i_of_tracing]
-                    - y_AO2_of_t[i_of_tracing]
-                    + r_O5O2
+                    + y_ao5_of_t[i_of_tracing]
+                    - y_ao2_of_t[i_of_tracing]
+                    + r_o5o2
             )
             self.pieces_of_polynomial[i_of_piece].fill_expr_lis_with_diff(
                 expr_i
@@ -324,7 +329,8 @@ class ClampingBottom(Spline):
                 self.production.package.height +
                 self.production.package.horizontal_sealing_length +
                 self.tracing.forward.lDC.r.val -
-                self.production.package.top_gap
+                self.production.package.top_gap +
+                3.99189865564460
         )
         return result
 
@@ -351,7 +357,7 @@ class ClampingBottom(Spline):
 class ClimbingBack(Spline):
     def __init__(self,
                  name="spline_of_climbing_back",
-                 informed_knots=KnotsInSpline(
+                 a_set_of_informed_knots=KnotsInSpline(
                      knots_info_csv=(
                              "/Users/johnqu/PycharmProjects/" +
                              "tetracamthon/src/tetracamthon/knot_info/" +
@@ -369,8 +375,10 @@ class ClimbingBack(Spline):
                  whether_reload=False,
                  ):
         self.production = a_production
-        self.informed_knots = informed_knots
+        self.informed_knots = a_set_of_informed_knots
         self.tracing = a_tracing_of_point_a
+        self.modify_knot('touch', trans_time_to_degree(
+            self.tracing.get_t_touched()))
         Spline.__init__(self,
                         name=name,
                         a_set_of_informed_knots=self.informed_knots,
@@ -401,11 +409,13 @@ class ThrowingPack(Spline):
                         )
 
 
-class Stages(object):
+class StagesConnector(object):
     def __init__(
             self,
             machine_production=Production(
-                Package('1000SQ'), Productivity(8000)),
+                Package('1000SQ'),
+                Productivity(8000)
+            ),
             whether_reload=False):
         self.production = machine_production
         self.jaw_on_york = JawOnYork(
@@ -418,43 +428,34 @@ class Stages(object):
             whether_reload=whether_reload
         )
         self.throwing_pack = ThrowingPack(
-            name='stage_of_throwing_pack',
             a_production=self.production,
             whether_reload=whether_reload
         )
         self.climbing_back = ClimbingBack(
-            name="stage_of_climbing_back",
             a_production=self.production,
-            a_tracing_of_point_a=self.tracing_of_point_a,
             whether_reload=whether_reload
         )
         self.pulling_tube = PullingTube(
-            name='stage_of_pulling_tube',
             a_production=self.production,
             whether_reload=whether_reload
         )
         self.waiting_lock = WaitingLock(
-            name='stage_of_waiting_lock',
             a_production=self.production,
             whether_reload=whether_reload
         )
         self.waiting_knife = WaitingKnife(
-            name='stage_of_waiting_knife',
             a_production=self.production,
             whether_reload=whether_reload
         )
         self.shaking_hand_with_clamping_bottom = ShakingHandWithClampingBottom(
-            name='stage_of_shaking_hand_with_clamping_bottom',
             a_production=self.production,
             whether_reload=whether_reload
         )
         self.shaking_hand_with_folding_ear = ShakingHandWithFoldingEar(
-            name='stage_of_shaking_hand_with_folding_ear',
             a_production=self.production,
             whether_reload=whether_reload
         )
         self.clamping_bottom = ClampingBottom(
-            name='stage_of_clamping_bottom',
             a_production=self.production,
             a_spline_of_shake_hand_with_clamping_bottom=(
                 self.shaking_hand_with_clamping_bottom
@@ -462,90 +463,101 @@ class Stages(object):
             a_tracing_of_point_a=self.tracing_of_point_a,
             whether_reload=whether_reload,
         )
-        self.connectors = {}
+        self.connector = {}
+        self.collect_connectors()
 
     def collect_connectors(self):
-        self.connectors['throwing_pack_end_acc'] = (
+        if len(self.connector):
+            return self.connector
+        self.connector['throwing_pack_end_acc'] = (
             self.throwing_pack.get_a_dyn_at_boundary('end', 2)
         )
-        self.connectors['throwing_pack_end_jer'] = (
+        self.connector['throwing_pack_end_jer'] = (
             self.throwing_pack.get_a_dyn_at_boundary('end', 3)
         )
-        self.connectors['throwing_pack_start_pos'] = (
+        self.connector['throwing_pack_start_pos'] = (
             self.throwing_pack.get_a_dyn_at_boundary('start', 0)
         )
-        self.connectors['waiting_knife_end_pos'] = (
-            self.connectors['throwing_pack_start_pos']
+        self.connector['waiting_knife_end_pos'] = (
+            self.connector['throwing_pack_start_pos']
         )
-        self.connectors['waiting_knife_start_pos'] = (
-            self.connectors['waiting_knife_end_pos'] +
-            self.waiting_knife.get_a_dyn_at_boundary('start', 0) -
-            self.waiting_knife.get_a_dyn_at_boundary('end', 0)
+        self.connector['waiting_knife_start_pos'] = (
+                self.connector['waiting_knife_end_pos'] +
+                self.waiting_knife.get_a_dyn_at_boundary('start', 0) -
+                self.waiting_knife.get_a_dyn_at_boundary('end', 0)
         )
-        self.connectors['shaking_hand_with_clamping_bottom_end_pos'] = (
-            self.connectors['waiting_knife_start_pos']
+        self.connector['shaking_hand_with_clamping_bottom_end_pos'] = (
+            self.connector['waiting_knife_start_pos']
         )
-        self.connectors['shaking_hand_with_clamping_bottom_start_pos'] = (
-            self.connectors['shaking_hand_with_clamping_bottom_end_pos'] +
-            self.shaking_hand_with_clamping_bottom.get_a_dyn_at_boundary(
+        self.connector['shaking_hand_with_clamping_bottom_start_pos'] = (
+                self.connector['shaking_hand_with_clamping_bottom_end_pos'] +
+                self.shaking_hand_with_clamping_bottom.get_a_dyn_at_boundary(
                     'start', 0) -
-            self.shaking_hand_with_clamping_bottom.get_a_dyn_at_boundary(
+                self.shaking_hand_with_clamping_bottom.get_a_dyn_at_boundary(
                     'end', 0)
         )
-        self.connectors['pulling_tube_end_pos'] = (
-            self.connectors['shaking_hand_with_clamping_bottom_start_pos']
+        self.connector['pulling_tube_end_pos'] = (
+            self.connector['shaking_hand_with_clamping_bottom_start_pos']
         )
-        self.connectors['pulling_tube_start_pos'] = (
-            self.connectors['pulling_tube_end_pos'] +
-            self.pulling_tube.get_a_dyn_at_boundary('start', 0) -
-            self.pulling_tube.get_a_dyn_at_boundary('end', 0)
+        self.connector['pulling_tube_start_pos'] = (
+                self.connector['pulling_tube_end_pos'] +
+                self.pulling_tube.get_a_dyn_at_boundary('start', 0) -
+                self.pulling_tube.get_a_dyn_at_boundary('end', 0)
         )
-        self.connectors['shaking_hand_with_folding_ear_end_pos'] = (
-            self.connectors['pulling_tube_start_pos']
+        self.connector['shaking_hand_with_folding_ear_end_pos'] = (
+            self.connector['pulling_tube_start_pos']
         )
-        self.connectors['shaking_hand_with_folding_ear_start_pos'] = (
-            self.connectors['shaking_hand_with_folding_ear_end_pos'] +
-            self.shaking_hand_with_folding_ear.get_a_dyn_at_boundary(
+        self.connector['shaking_hand_with_folding_ear_start_pos'] = (
+                self.connector['shaking_hand_with_folding_ear_end_pos'] +
+                self.shaking_hand_with_folding_ear.get_a_dyn_at_boundary(
                     'start', 0) -
-            self.shaking_hand_with_folding_ear.get_a_dyn_at_boundary(
+                self.shaking_hand_with_folding_ear.get_a_dyn_at_boundary(
                     'end', 0)
         )
-        self.connectors['clamping_bottom_end_pos'] = (
-            self.connectors['shaking_hand_with_folding_ear_start_pos']
+        self.connector['waiting_lock_end_pos'] = (
+            self.connector['shaking_hand_with_folding_ear_start_pos']
         )
-        self.connectors['clamping_bottom_start_pos'] = (
-            self.connectors['clamping_bottom_end_pos'] +
-            self.clamping_bottom.get_a_dyn_at_boundary('start', 0) -
-            self.clamping_bottom.get_a_dyn_at_boundary('end', 0)
+        self.connector['waiting_lock_start_pos'] = (
+                self.connector['waiting_lock_end_pos'] +
+                self.waiting_lock.get_a_dyn_at_boundary('start', 0) -
+                self.waiting_lock.get_a_dyn_at_boundary('end', 0)
         )
-        self.connectors['clamping_bottom_start_vel'] = (
+        self.connector['clamping_bottom_end_pos'] = (
+            self.connector['waiting_lock_start_pos']
+        )
+        self.connector['clamping_bottom_start_pos'] = (
+                self.connector['clamping_bottom_end_pos'] +
+                self.clamping_bottom.get_a_dyn_at_boundary('start', 0) -
+                self.clamping_bottom.get_a_dyn_at_boundary('end', 0)
+        )
+        self.connector['clamping_bottom_start_vel'] = (
             self.clamping_bottom.get_a_dyn_at_boundary('start', 1)
         )
-        self.connectors['clamping_bottom_start_acc'] = (
+        self.connector['clamping_bottom_start_acc'] = (
             self.clamping_bottom.get_a_dyn_at_boundary('start', 2)
         )
-        self.connectors['clamping_bottom_start_jer'] = (
+        self.connector['clamping_bottom_start_jer'] = (
             self.clamping_bottom.get_a_dyn_at_boundary('start', 3)
         )
-        self.connectors['climbing_back_end_pos'] = (
-            self.connectors['clamping_bottom_start_pos']
+        self.connector['climbing_back_end_pos'] = (
+            self.connector['clamping_bottom_start_pos']
         )
-        self.connectors['climbing_back_end_vel'] = (
-            self.connectors['clamping_bottom_start_vel']
+        self.connector['climbing_back_end_vel'] = (
+            self.connector['clamping_bottom_start_vel']
         )
-        self.connectors['climbing_back_end_acc'] = (
-            self.connectors['clamping_bottom_start_acc']
+        self.connector['climbing_back_end_acc'] = (
+            self.connector['clamping_bottom_start_acc']
         )
-        self.connectors['climbing_back_end_jer'] = (
-            self.connectors['clamping_bottom_start_jer']
+        self.connector['climbing_back_end_jer'] = (
+            self.connector['clamping_bottom_start_jer']
         )
-        self.connectors['climbing_back_start_acc'] = (
-            self.connectors['throwing_pack_end_acc']
+        self.connector['climbing_back_start_acc'] = (
+            self.connector['throwing_pack_end_acc']
         )
-        self.connectors['climbing_back_start_jer'] = (
-            self.connectors['throwing_pack_end_jer']
+        self.connector['climbing_back_start_jer'] = (
+            self.connector['throwing_pack_end_jer']
         )
-        return self.connectors
+        return self.connector
 
 
 if __name__ == "__main__":
@@ -561,17 +573,15 @@ if __name__ == "__main__":
     #     clamp_bottom.tracing.get_t_touched()
     # )
     # print('pvajp_touched: ', pvajp_touched )
-    climbing_back = ClimbingBack(whether_reload=False)
-    climbing_back.plot_spline_on_subplots()
+    # climbing_back = ClimbingBack(whether_reload=False)
+    # climbing_back.plot_spline_on_subplots()
     # print(climbing_back.get_pvajp_at_point(
     #     climbing_back.tracing.get_t_touched()
     # ))
-    # [354.415588719000, -488.761120504327, -9980.89100900479, 1105021.88922076,
-    #  -223511120.319773]
     # pulling_tube = PullingTube(whether_reload=False)
     # waiting_lock = WaitingLock(whether_reload=False)
     # waiting_knife = WaitingKnife(whether_reload=False)
     # throwing_pack = ThrowingPack(whether_reload=False)
     # throwing_pack.plot_spline_on_subplots()
-    # stages = Stages(whether_reload=False)
-    # print(stages.collect_connectors())
+    stages = StagesConnector(whether_reload=False)
+    print(stages.collect_connectors())

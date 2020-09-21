@@ -1,4 +1,4 @@
 knot_id,knot,polynomial_order,position,velocity,acceleration,jerk,ping,smooth_depth
-start,264,7,0,-633.3,0,0,nan,0
+start,264,7,41.76,-633.3,0,0,nan,0
 knot3,291.5,8,nan,nan,0,-200000,nan,5
-end,317,0,-41.76,-633.3,0,0,nan,0
+end,317,0,0,-633.3,0,0,nan,0
