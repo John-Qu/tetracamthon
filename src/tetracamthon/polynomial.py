@@ -425,18 +425,24 @@ class Spline(object):
         result = expression.subs(t, self.knots[index])
         return result
 
-    def prepare_plots_for_plt(self, line_color='blue'):
+    def prepare_plots_for_plt(self,
+                              line_color='blue',
+                              ignore_piece_at_depth=''):
         result = []
-        for index_of_depth in range(max([
-            self.get_pieces_of_polynomial()[i].max_order for i in range(
-                self.num_of_pieces)
-        ])):
+        # for index_of_depth in range(max([
+        #     self.get_pieces_of_polynomial()[i].max_order for i in range(
+        #         self.num_of_pieces)
+        # ])):
+        for index_of_depth in range(4):
             result.append(
                 plot(0, (t, self.knots[0], self.knots[-1]), show=False)
             )
         for index_of_piece in range(self.num_of_pieces):
             polynomial = self.get_pieces_of_polynomial()[index_of_piece]
-            for index_of_depth in range(polynomial.max_order):
+            for index_of_depth in range(min([polynomial.max_order, 4])):
+                piece_at_depth = str(index_of_piece) + str(index_of_depth)
+                if piece_at_depth in ignore_piece_at_depth:
+                    continue
                 expression = polynomial.get_expr_with_co_val()[index_of_depth]
                 result[index_of_depth].extend(
                     plot(expression,
@@ -454,9 +460,12 @@ class Spline(object):
                                 whether_show_figure=False,
                                 whether_knots_ticks=True,
                                 whether_annotate=False,
-                                fig_title=None
+                                fig_title=None,
+                                ignore_piece_at_depth='',
                                 ):
-        cur_lis = self.prepare_plots_for_plt()
+        cur_lis = self.prepare_plots_for_plt(
+            ignore_piece_at_depth=ignore_piece_at_depth
+        )
         knots = self.knots
         fig, axs = plt.subplots(nrows=axs_num,
                                 # fig, axs=plt.subplots(nrows=len(cur_lis),

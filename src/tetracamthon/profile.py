@@ -201,17 +201,23 @@ class YorkProfile(Spline):
         return result
 
 
+class JawProfile(Spline):
+    def __init__(self):
+        pass
+
+
 if __name__ == "__main__":
-    york_profile = YorkProfile(whether_reload=False)
+    york_profile = YorkProfile(whether_reload=True)
     # york_profile.stages[0].plot_spline_on_subplots(axs_num=4)
     # york_profile.stages[1].plot_spline_on_subplots(axs_num=3)
     # print(york_profile.knots)
     # print(len(york_profile.knots))
     # print(len(york_profile.pieces_of_polynomial))
     york_profile.plot_spline_on_subplots(
-        axs_num=3,
+        axs_num=4,
         fig_title="York Profile",
-        whether_knots_ticks=False
+        whether_knots_ticks=False,
+        ignore_piece_at_depth='13'
     )
     # print(york_profile.stages[-3].informed_knots)
     # clamping_start_knot = york_profile.stages[1].knots[0]

@@ -186,6 +186,7 @@ def test_prepare_plots_for_plt(a_sample_spline_reloaded):
         whether_show_figure=True,
         whether_knots_ticks=True,
         whether_annotate=True,
+        ignore_piece_at_depth='03'
     )
     assert True
 
