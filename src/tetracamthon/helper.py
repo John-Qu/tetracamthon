@@ -1,8 +1,15 @@
 import pickle
+from pathlib import Path
 
 from sympy import symbols
 import matplotlib.pyplot as plt
 import numpy as np
+
+DATA_DIR = Path(__file__).resolve().parents[2] / 'data'
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+def data_path(name):
+    return str(DATA_DIR / f'{name}.pkl')
 
 
 class Variable(object):
@@ -26,16 +33,12 @@ class Memory(object):
         self.save()  # init a data file
 
     def save(self):
-        output = open(
-            '/Users/johnqu/PycharmProjects/'
-            'Tetracamthon/data/memo_{}.pkl'.format(self.name), 'wb')
+        output = open(data_path('memo_{}'.format(self.name)), 'wb')
         pickle.dump(self.dict, output)
         output.close()
 
     def load(self):
-        pkl_file = open(
-            '/Users/johnqu/PycharmProjects/'
-            'Tetracamthon/data/memo_{}.pkl'.format(self.name), 'rb')
+        pkl_file = open(data_path('memo_{}'.format(self.name)), 'rb')
         self.dict = pickle.load(pkl_file)
         pkl_file.close()
         return self.dict
@@ -58,17 +61,13 @@ class Memory(object):
 
 
 def save_attribute_to_pkl(name, data):
-    output = open(
-        '/Users/johnqu/PycharmProjects/'
-        'Tetracamthon/data/memo_{}.pkl'.format(name), 'wb')
+    output = open(data_path('memo_{}'.format(name)), 'wb')
     pickle.dump(data, output)
     output.close()
 
 
 def load_attribute_from_pkl(name):
-    pkl_file = open(
-        '/Users/johnqu/PycharmProjects/'
-        'Tetracamthon/data/memo_{}.pkl'.format(name), 'rb')
+    pkl_file = open(data_path('memo_{}'.format(name)), 'rb')
     result = pickle.load(pkl_file)
     pkl_file.close()
     return result

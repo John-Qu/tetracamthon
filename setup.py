@@ -8,7 +8,7 @@ setup(
     author='John Qu',
     author_email="johnqu1982@gmail.com",
     url="https://github.com/John-Qu/tetracamthon",
-    package=find_packages(where='src'),
+    packages=find_packages(where='src'),
     package_dir={'': 'src'},
 )
 
@@ -20,6 +20,6 @@ setup(
     author='John Qu',
     author_email="johnqu1982@gmail.com",
     url="https://github.com/John-Qu/tetracamthon",
-    package=find_packages(where='src'),
+    packages=find_packages(where='src'),
     package_dir={'': 'src'},
 )
