@@ -1,7 +1,7 @@
 numpy~=1.23.5
 sympy~=1.12
-matplotlib~=3.7.3
-scipy~=1.10.1
+matplotlib~=3.7.4
+scipy~=1.9.1
 setuptools>=65
 networkx~=2.8.8
 scikit-image~=0.20.0
