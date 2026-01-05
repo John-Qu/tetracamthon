@@ -1,6 +1,6 @@
 import pickle
 
-from sympy import symbols, diff, nan, Eq, solve
+from sympy import symbols, diff, nan, Eq, solve, linsolve
 from sympy.abc import x
 from sympy.plotting import plot
 
@@ -80,7 +80,8 @@ class Polynomial(object):
         for i in range(len(old_expr)):
             expr_i = old_expr[i]
             self.expr.append(
-                expr_i.subs([(coe[index_of_coe], solution[coe[index_of_coe]])
+                expr_i.subs([(coe[index_of_coe],
+                              solution.get(coe[index_of_coe], 0))
                              for index_of_coe in range(self.order)]))
 
     def replace_expr(self, new_expr, new_coe):
@@ -425,8 +426,30 @@ class SplineWithPiecewisePolynomial(object):
             return self.solution
         equations = self.get_equations()
         variables = self.get_variables()
-        solution = solve(equations, variables)
-        self.solution = solution
+        # Prefer linear solver to get ordered values aligned with variables
+        sol_set = linsolve(equations, variables)
+        if sol_set:
+            first = list(sol_set)[0]
+            try:
+                self.solution = dict(zip(variables, list(first)))
+            except Exception:
+                self.solution = {}
+        else:
+            # Fallbacks for non-linear systems
+            solution = solve(equations, variables, dict=True)
+            if isinstance(solution, list) and len(solution) > 0 and isinstance(solution[0], dict):
+                self.solution = solution[0]
+            else:
+                alt = solve(equations, variables)
+                if isinstance(alt, dict):
+                    self.solution = alt
+                elif isinstance(alt, (list, tuple)) and len(alt) == len(variables):
+                    try:
+                        self.solution = dict(zip(variables, alt))
+                    except Exception:
+                        self.solution = {}
+                else:
+                    self.solution = {}
         return self.solution
 
     def update_with_solution(self):
