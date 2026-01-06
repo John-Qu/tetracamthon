@@ -1,14 +1,13 @@
 import csv
 import math
 from collections import namedtuple
-from tetracamthon.helper import trans_degree_to_time
+from tetracamthon.helper import trans_degree_to_time, DATA_DIR
 
 
 class PackageDimension(object):
     def __init__(self,
                  path_to_package_dim_csv: str =
-                 "/Users/johnqu/PycharmProjects/Tetracamthon/"
-                 "data/package_dimensions.csv"
+                 str(DATA_DIR / "package_dimensions.csv")
                  ):
         self.spec_id = []
         self.volume = []
