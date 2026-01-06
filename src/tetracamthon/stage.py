@@ -8,15 +8,17 @@ from tetracamthon.package import Package, Productivity, Production
 from tetracamthon.mechanism import TracingOfPointA
 from sympy.abc import t
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 
 class JawOnYork(Spline):
     def __init__(self,
                  name="spline_of_jaw_on_york",
                  informed_knots=KnotsInSpline(
-                     knots_info_csv="/Users/johnqu/PycharmProjects/"
-                                    "tetracamthon/src/tetracamthon/knot_info/"
-                                    "jaw_on_york_with_eight_knots.csv"
+                    knots_info_csv=str(
+                        Path(__file__).resolve().parent / "knot_info" /
+                        "jaw_on_york_with_eight_knots.csv"
+                    )
                  ),
                  whether_reload=False,
                  ):
@@ -39,9 +41,10 @@ class ShakingHandWithClampingBottom(Spline):
     def __init__(self,
                  name="spline_of_shaking_hand_with_clamping_bottom",
                  a_set_of_informed_knots=KnotsInSpline(
-                     knots_info_csv="/Users/johnqu/PycharmProjects/"
-                                    "tetracamthon/src/tetracamthon/knot_info/"
-                                    "shaking_hand_with_clamping_bottom.csv"
+                    knots_info_csv=str(
+                        Path(__file__).resolve().parent / "knot_info" /
+                        "shaking_hand_with_clamping_bottom.csv"
+                    )
                  ),
                  a_production=Production(Package('1000SQ'), Productivity(
                      8000)),
@@ -92,9 +95,10 @@ class ShakingHandWithFoldingEar(Spline):
     def __init__(self,
                  name="spline_of_shaking_hand_with_folding_ear",
                  a_set_of_informed_knots=KnotsInSpline(
-                     knots_info_csv="/Users/johnqu/PycharmProjects/"
-                                    "tetracamthon/src/tetracamthon/knot_info/"
-                                    "shaking_hand_with_folding_ear.csv"
+                    knots_info_csv=str(
+                        Path(__file__).resolve().parent / "knot_info" /
+                        "shaking_hand_with_folding_ear.csv"
+                    )
                  ),
                  a_production=Production(Package('1000SQ'), Productivity(
                      8000)),
@@ -140,11 +144,10 @@ class PullingTube(Spline):
     def __init__(self,
                  name="spline_of_pulling_tube",
                  a_set_of_informed_knots=KnotsInSpline(
-                     knots_info_csv=(
-                             "/Users/johnqu/PycharmProjects/" +
-                             "tetracamthon/src/tetracamthon/knot_info/" +
-                             "pulling_tube.csv"
-                     ),
+                    knots_info_csv=str(
+                        Path(__file__).resolve().parent / "knot_info" /
+                        "pulling_tube.csv"
+                    ),
                  ),
                  a_production=Production(Package('1000SQ'),
                                          Productivity(8000)),
@@ -168,11 +171,10 @@ class WaitingLock(Spline):
     def __init__(self,
                  name="spline_of_waiting_lock",
                  a_set_of_informed_knots=KnotsInSpline(
-                     knots_info_csv=(
-                             "/Users/johnqu/PycharmProjects/" +
-                             "tetracamthon/src/tetracamthon/knot_info/" +
-                             "waiting_lock.csv"
-                     ),
+                    knots_info_csv=str(
+                        Path(__file__).resolve().parent / "knot_info" /
+                        "waiting_lock.csv"
+                    ),
                  ),
                  a_production=Production(Package('1000SQ'),
                                          Productivity(8000)),
@@ -196,11 +198,10 @@ class WaitingKnife(Spline):
     def __init__(self,
                  name="spline_of_waiting_knife",
                  a_set_of_informed_knots=KnotsInSpline(
-                     knots_info_csv=(
-                             "/Users/johnqu/PycharmProjects/" +
-                             "tetracamthon/src/tetracamthon/knot_info/" +
-                             "waiting_knife.csv"
-                     ),
+                    knots_info_csv=str(
+                        Path(__file__).resolve().parent / "knot_info" /
+                        "waiting_knife.csv"
+                    ),
                  ),
                  a_production=Production(Package('1000SQ'),
                                          Productivity(8000)),
@@ -224,24 +225,23 @@ class ClampingBottom(Spline):
     def __init__(self,
                  name="spline_of_clamping_bottom",
                  a_set_of_informed_knots=KnotsInSpline(
-                     knots_info_csv=(
-                             "/Users/johnqu/PycharmProjects/"
-                             "tetracamthon/src/tetracamthon/knot_info/"
-                             "clamping_bottom.csv"
-                     ),
+                    knots_info_csv=str(
+                        Path(__file__).resolve().parent / "knot_info" /
+                        "clamping_bottom.csv"
+                    ),
                  ),
                  a_production=Production(Package('1000SQ'),
                                          Productivity(8000)),
                  a_spline_of_shake_hand_with_clamping_bottom=(
                          ShakingHandWithClampingBottom(
-                             whether_reload=True,
+                             whether_reload=False,
                          )
                  ),
                  a_tracing_of_point_a=TracingOfPointA(
                      a_jaw_on_york_spline=JawOnYork(
-                         whether_reload=True,
+                         whether_reload=False,
                      ),
-                     whether_reload=True,
+                     whether_reload=False,
                  ),
                  whether_reload=False,
                  ):
@@ -265,11 +265,8 @@ class ClampingBottom(Spline):
                         whether_reload=False,
                         whether_solve=False
                         )
-        if whether_reload:
-            self.load_solved_pieces_of_polynomial()
-        else:
-            self.construct_pieces()
-            self.save_solved_pieces_of_polynomial()
+        self.construct_pieces()
+        self.save_solved_pieces_of_polynomial()
 
     def construct_pieces(self):
         """Construct pieces with mechanism dimension, shaking hand spline, and
@@ -358,11 +355,10 @@ class ClimbingBack(Spline):
     def __init__(self,
                  name="spline_of_climbing_back",
                  a_set_of_informed_knots=KnotsInSpline(
-                     knots_info_csv=(
-                             "/Users/johnqu/PycharmProjects/" +
-                             "tetracamthon/src/tetracamthon/knot_info/" +
-                             "climbing_back.csv"
-                     ),
+                    knots_info_csv=str(
+                        Path(__file__).resolve().parent / "knot_info" /
+                        "climbing_back.csv"
+                    ),
                  ),
                  a_production=Production(Package('1000SQ'),
                                          Productivity(8000)),
@@ -390,11 +386,10 @@ class ThrowingPack(Spline):
     def __init__(self,
                  name="spline_of_throwing_pack",
                  informed_knots=KnotsInSpline(
-                     knots_info_csv=(
-                             "/Users/johnqu/PycharmProjects/" +
-                             "tetracamthon/src/tetracamthon/knot_info/" +
-                             "throwing_pack.csv"
-                     ),
+                    knots_info_csv=str(
+                        Path(__file__).resolve().parent / "knot_info" /
+                        "throwing_pack.csv"
+                    ),
                  ),
                  a_production=Production(Package('1000SQ'),
                                          Productivity(8000)),

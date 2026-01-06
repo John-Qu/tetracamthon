@@ -11,6 +11,7 @@ from tetracamthon.helper import Variable, Memory, trans_degree_to_time, \
 from tetracamthon.package import Package
 
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 
 class Link(object):
@@ -338,9 +339,10 @@ class TracingOfPointA(object):
                  name="a_tracing_of_point_a",
                  a_spec_id="flex",
                  a_package_id='1000SQ',
-                 a_path_to_link_dim_csv='/Users/johnqu/PycharmProjects/'
-                                        'tetracamthon/src/tetracamthon/'
-                                        'tetracamthon_lind_dimensions.csv',
+                 a_path_to_link_dim_csv=str(
+                     Path(__file__).resolve().parent /
+                     'tetracamthon_lind_dimensions.csv'
+                 ),
                  whether_reload=False,
                  ):
         self.joy_spline = a_jaw_on_york_spline

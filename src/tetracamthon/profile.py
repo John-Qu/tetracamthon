@@ -17,7 +17,7 @@ class YorkProfile(Spline):
         self.production = machine_production
         self.each_stages = StagesConnector(
             machine_production=self.production,
-            whether_reload=True
+            whether_reload=False
         )
         self.tracing_of_point_a = self.each_stages.tracing_of_point_a
         self.connector = self.each_stages.collect_connectors()
