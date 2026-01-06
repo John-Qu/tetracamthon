@@ -10,6 +10,7 @@ from tetracamthon.helper import save_attribute_to_pkl, \
     trans_time_to_degree, find_file_name_from_a_path
 import matplotlib.pyplot as plt
 import numpy as np
+from pathlib import Path
 
 
 class Coefficient(object):
@@ -126,8 +127,9 @@ class KnotPVAJP(object):
 
 
 class KnotsInSpline(object):
-    def __init__(self, knots_info_csv="/Users/johnqu/PycharmProjects/"
-                                      "tetracamthon/data/sample_knots.csv"):
+    def __init__(self, knots_info_csv=str(
+        Path(__file__).resolve().parents[2] / "data" / "sample_knots.csv"
+    )):
         self.knots_with_info = []
         self.csv_file_name = find_file_name_from_a_path(knots_info_csv)
         self.read_in_csv_data(path_to_knots_csv=knots_info_csv)
@@ -218,10 +220,25 @@ class Spline(object):
                        for i in range(self.num_of_knots)]
         self.num_of_pieces = len(self.knots) - 1
         if whether_reload:
-            self.load_solved_pieces_of_polynomial()
-            self.load_conditional_equations()
-            self.load_variables()
-            self.load_solution()
+            try:
+                self.load_solved_pieces_of_polynomial()
+                self.load_conditional_equations()
+                self.load_variables()
+                self.load_solution()
+            except Exception:
+                self.pieces_of_polynomial = []
+                self.build_polynomials()
+                self.interpolating_equations = []
+                self.smoothness_equations = []
+                self.periodic_equations = []
+                self.variables = []
+                self.solution = {}
+                if whether_solve:
+                    self.solve_spline_pieces()
+                    self.save_solved_pieces_of_polynomial()
+                    self.save_solution()
+                    self.save_conditional_equations()
+                    self.save_variables()
         else:
             self.pieces_of_polynomial = []
             self.build_polynomials()
