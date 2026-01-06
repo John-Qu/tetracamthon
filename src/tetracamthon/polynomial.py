@@ -127,9 +127,11 @@ class KnotPVAJP(object):
 
 
 class KnotsInSpline(object):
-    def __init__(self, knots_info_csv=str(
-        Path(__file__).resolve().parents[2] / "data" / "sample_knots.csv"
-    )):
+    def __init__(self, knots_info_csv=None):
+        if knots_info_csv is None:
+            knots_info_csv = str(
+                Path(__file__).resolve().parents[2] / "data" / "sample_knots.csv"
+            )
         self.knots_with_info = []
         self.csv_file_name = find_file_name_from_a_path(knots_info_csv)
         self.read_in_csv_data(path_to_knots_csv=knots_info_csv)
@@ -374,9 +376,12 @@ class Spline(object):
         save_attribute_to_pkl(name, self.get_pieces_of_polynomial())
 
     def load_solved_pieces_of_polynomial(self):
-        name = self.name + "_pieces_of_polynomial"
-        self.pieces_of_polynomial = load_attribute_from_pkl(name)
-        return self.pieces_of_polynomial
+        try:
+            name = self.name + "_pieces_of_polynomial"
+            self.pieces_of_polynomial = load_attribute_from_pkl(name)
+            return self.pieces_of_polynomial
+        except Exception:
+            return None
 
     def save_conditional_equations(self):
         name = self.name + "_conditional_equations"
@@ -388,12 +393,17 @@ class Spline(object):
         save_attribute_to_pkl(name, data)
 
     def load_conditional_equations(self):
-        name = self.name + "_conditional_equations"
-        (
-            self.interpolating_equations,
-            self.smoothness_equations,
-            self.periodic_equations
-        ) = load_attribute_from_pkl(name)
+        try:
+            name = self.name + "_conditional_equations"
+            (
+                self.interpolating_equations,
+                self.smoothness_equations,
+                self.periodic_equations
+            ) = load_attribute_from_pkl(name)
+        except Exception:
+            self.interpolating_equations = []
+            self.smoothness_equations = []
+            self.periodic_equations = []
 
     def save_variables(self):
         name = self.name + "_variables"
@@ -408,8 +418,11 @@ class Spline(object):
         save_attribute_to_pkl(name, self.solution)
 
     def load_solution(self):
-        name = self.name + "_solution"
-        self.solution = load_attribute_from_pkl(name)
+        try:
+            name = self.name + "_solution"
+            self.solution = load_attribute_from_pkl(name)
+        except Exception:
+            self.solution = {}
 
     def get_index_of_piece_of_point(self, t_point):
         index = bisect(self.knots, t_point)

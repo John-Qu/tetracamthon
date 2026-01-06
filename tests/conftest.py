@@ -1,6 +1,13 @@
 import pytest
+import os
 from pathlib import Path
 from sympy import symbols
+
+# Configure MPLCONFIGDIR for all tests
+cache_dir = Path(__file__).resolve().parents[1] / ".mplcache"
+cache_dir.mkdir(parents=True, exist_ok=True)
+os.environ.setdefault("MPLCONFIGDIR", str(cache_dir))
+
 from tetracamthon.mechanism import Forward, Backward, SlideRocker
 from tetracamthon.polynomial import Polynomial, KnotsInSpline, \
     Spline

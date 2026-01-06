@@ -569,7 +569,7 @@ class TracingOfPointA(object):
         self.memo.update_memo(name, result)
         return result
 
-    def ploy_symbolically(self):
+    def ploy_symbolically(self, show=True):
         touch_time = self.get_t_touched()
         print('touch_time: ', touch_time)
         knot2 = (
@@ -613,7 +613,7 @@ class TracingOfPointA(object):
                           ylabel='mm',
                           show=False)
         y_AO2_plot.extend(
-            plot(self.get_y_AO2_of_t_while_clamping()[1], (t, knot2, closed))
+            plot(self.get_y_AO2_of_t_while_clamping()[1], (t, knot2, closed), show=False)
         )
         y_AO5_plot = plot(self.get_y_AO5_of_t_while_clamping()[0],
                           (t, touch_time, knot2),
@@ -621,7 +621,7 @@ class TracingOfPointA(object):
                           ylabel='mm',
                           show=False)
         y_AO5_plot.extend(
-            plot(self.get_y_AO5_of_t_while_clamping()[1], (t, knot2, closed))
+            plot(self.get_y_AO5_of_t_while_clamping()[1], (t, knot2, closed), show=False)
         )
         vx_AO5_plot = plot(self.get_vx_AO5_of_t_while_clamping()[0],
                            (t, touch_time, knot2),
@@ -629,7 +629,7 @@ class TracingOfPointA(object):
                            ylabel='mm/s',
                            show=False)
         vx_AO5_plot.extend(
-            plot(self.get_vy_AO5_of_t_while_clamping()[1], (t, knot2, closed))
+            plot(self.get_vy_AO5_of_t_while_clamping()[1], (t, knot2, closed), show=False)
         )
         vy_AO5_plot = plot(self.get_vy_AO5_of_t_while_clamping()[0],
                            (t, touch_time, knot2),
@@ -637,7 +637,7 @@ class TracingOfPointA(object):
                            ylabel='mm/s',
                            show=False)
         vy_AO5_plot.extend(
-            plot(self.get_vy_AO5_of_t_while_clamping()[1], (t, knot2, closed))
+            plot(self.get_vy_AO5_of_t_while_clamping()[1], (t, knot2, closed), show=False)
         )
         vx_AO2_plot = plot(self.get_vx_AO2_of_t_while_clamping()[0],
                            (t, touch_time, knot2),
@@ -645,7 +645,7 @@ class TracingOfPointA(object):
                            ylabel='mm/s',
                            show=False)
         vx_AO2_plot.extend(
-            plot(self.get_vx_AO2_of_t_while_clamping()[1], (t, knot2, closed))
+            plot(self.get_vx_AO2_of_t_while_clamping()[1], (t, knot2, closed), show=False)
         )
         vy_AO2_plot = plot(self.get_vy_AO2_of_t_while_clamping()[0],
                            (t, touch_time, knot2),
@@ -653,16 +653,17 @@ class TracingOfPointA(object):
                            ylabel='mm/s',
                            show=False)
         vy_AO2_plot.extend(
-            plot(self.get_vy_AO2_of_t_while_clamping()[1], (t, knot2, closed))
+            plot(self.get_vy_AO2_of_t_while_clamping()[1], (t, knot2, closed), show=False)
         )
-        fig, axs = plt.subplots(nrows=4)
-        move_sympy_plot_to_plt_axes(y_AO2_plot, axs[0])
-        move_sympy_plot_to_plt_axes(vy_AO2_plot, axs[1])
-        move_sympy_plot_to_plt_axes(y_AO5_plot, axs[2])
-        move_sympy_plot_to_plt_axes(vy_AO5_plot, axs[3])
-        for ax in axs:
-            ax.grid(True)
-            ax.set_xticks(x_ticks)
-            ax.set_xticklabels([str(trans_time_to_degree(x_ticks[i]))
-                                for i in range(len(x_ticks))])
-        plt.show()
+        if show:
+            fig, axs = plt.subplots(nrows=4)
+            move_sympy_plot_to_plt_axes(y_AO2_plot, axs[0])
+            move_sympy_plot_to_plt_axes(vy_AO2_plot, axs[1])
+            move_sympy_plot_to_plt_axes(y_AO5_plot, axs[2])
+            move_sympy_plot_to_plt_axes(vy_AO5_plot, axs[3])
+            for ax in axs:
+                ax.grid(True)
+                ax.set_xticks(x_ticks)
+                ax.set_xticklabels([str(trans_time_to_degree(x_ticks[i]))
+                                    for i in range(len(x_ticks))])
+            plt.show()
