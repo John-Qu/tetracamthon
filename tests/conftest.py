@@ -1,4 +1,5 @@
 import pytest
+from pathlib import Path
 from sympy import symbols
 from tetracamthon.mechanism import Forward, Backward, SlideRocker
 from tetracamthon.polynomial import Polynomial, KnotsInSpline, \
@@ -10,26 +11,28 @@ from tetracamthon.package import Package, Productivity, Production
 @pytest.fixture(scope='session')
 def path_to_tetra_pak_a3_flex_cam_acc_data_721_csv():
     """Return a path to a cvs file for testing."""
-    return "/Users/johnqu/PycharmProjects/tetracamthon/src" + \
-           "/a3flex/tetra_pak_a3_flex_cam_acc_data_721.csv"
+    base = Path(__file__).resolve().parents[1]
+    return str(base / "src" / "a3flex" / "tetra_pak_a3_flex_cam_acc_data_721.csv")
 
 
 @pytest.fixture(scope='session')
 def a_slide_rocker_of_compact_flex():
     sr = SlideRocker(name="SlideRocker",
                      a_spec_id="compact_flex",
-                     path_to_link_dim_csv="/Users/johnqu/PycharmProjects"
-                                          "/tetracamthon/src/tetracamthon/"
-                                          "tetracamthon_lind_dimensions.csv")
+                     path_to_link_dim_csv=str(
+                         Path(__file__).resolve().parents[1] /
+                         "src" / "tetracamthon" / "tetracamthon_lind_dimensions.csv"
+                     ))
     return sr
 
 
 @pytest.fixture(scope='session')
 def a_forward_slide_rocker_of_compact_flex():
     fw = Forward(name="Forward", a_spec_id="compact_flex",
-                 path_to_link_dim_csv="/Users/johnqu/PycharmProjects/"
-                                      "tetracamthon/src/tetracamthon/"
-                                      "tetracamthon_lind_dimensions.csv")
+                 path_to_link_dim_csv=str(
+                     Path(__file__).resolve().parents[1] /
+                     "src" / "tetracamthon" / "tetracamthon_lind_dimensions.csv"
+                 ))
     return fw
 
 
@@ -37,9 +40,10 @@ def a_forward_slide_rocker_of_compact_flex():
 def a_backward_slide_rocker_of_compact_flex():
     bw = Backward(name="Backward",
                   a_spec_id="compact_flex",
-                  path_to_link_dim_csv="/Users/johnqu/PycharmProjects/"
-                                       "tetracamthon/src/tetracamthon/"
-                                       "tetracamthon_lind_dimensions.csv")
+                  path_to_link_dim_csv=str(
+                      Path(__file__).resolve().parents[1] /
+                      "src" / "tetracamthon" / "tetracamthon_lind_dimensions.csv"
+                  ))
     return bw
 
 
@@ -63,9 +67,9 @@ def a_solution():
 
 @pytest.fixture(scope='session')
 def a_sample_knots_in_spline():
-    return KnotsInSpline(knots_info_csv="/Users/johnqu/PycharmProjects/"
-                                        "tetracamthon/data/"
-                                        "sample_knots.csv")
+    return KnotsInSpline(knots_info_csv=str(
+        Path(__file__).resolve().parents[1] / "data" / "sample_knots.csv"
+    ))
 
 
 @pytest.fixture(scope='session')
@@ -88,9 +92,11 @@ def an_jaw_on_york_spline_with_nine_knots():
     return JawOnYork(
         name="O4_to_O2_Spline",
         informed_knots=KnotsInSpline(
-            knots_info_csv="/Users/johnqu/PycharmProjects/"
-                           "tetracamthon/src/tetracamthon/knot_info/"
-                           "jaw_on_york_with_nine_knots.csv"
+            knots_info_csv=str(
+                Path(__file__).resolve().parents[1] /
+                "src" / "tetracamthon" / "knot_info" /
+                "jaw_on_york_with_nine_knots.csv"
+            )
         ),
         whether_reload=False,
     )
@@ -101,9 +107,11 @@ def an_jaw_on_york_spline_with_minimum_five_knots():
     return JawOnYork(
         name="jaw_on_york_Spline",
         informed_knots=KnotsInSpline(
-            knots_info_csv="/Users/johnqu/PycharmProjects/"
-                           "tetracamthon/src/tetracamthon/knot_info/"
-                           "jaw_on_york_with_minimum_five_knots.csv"
+            knots_info_csv=str(
+                Path(__file__).resolve().parents[1] /
+                "src" / "tetracamthon" / "knot_info" /
+                "jaw_on_york_with_five_knots.csv"
+            )
         ),
         whether_reload=False,
     )
@@ -114,9 +122,11 @@ def an_jaw_on_york_spline_with_trying_knots():
     return JawOnYork(
         name="jaw_on_york_Spline",
         informed_knots=KnotsInSpline(
-            knots_info_csv="/Users/johnqu/PycharmProjects/"
-                           "tetracamthon/src/tetracamthon/knot_info/"
-                           "jaw_on_york_with_trying_knots.csv"
+            knots_info_csv=str(
+                Path(__file__).resolve().parents[1] /
+                "src" / "tetracamthon" / "knot_info" /
+                "jaw_on_york_with_trying_knots.csv"
+            )
         ),
         whether_reload=False,
     )
@@ -129,9 +139,10 @@ def a_tracing_of_point_a_with_330sq_dim():
         name="a_tracing_of_point_a_with_five_knots_o4o2_spline",
         a_spec_id="compact_flex",
         a_package_id='330SQ',
-        a_path_to_link_dim_csv='/Users/johnqu/PycharmProjects/'
-                               'tetracamthon/src/tetracamthon/knot_info/'
-                               'tetracamthon_lind_dimensions.csv',
+        a_path_to_link_dim_csv=str(
+            Path(__file__).resolve().parents[1] /
+            'src' / 'tetracamthon' / 'tetracamthon_lind_dimensions.csv'
+        ),
         whether_reload=False,
         # whether_reload=True,
     )
@@ -145,9 +156,10 @@ def a_tracing_of_point_a_with_1000sq_dim():
         name="a_tracing_of_point_a_with_five_knots_o4o2_spline",
         a_spec_id="flex",
         a_package_id='1000SQ',
-        a_path_to_link_dim_csv='/Users/johnqu/PycharmProjects/'
-                               'tetracamthon/src/tetracamthon/'
-                               'tetracamthon_lind_dimensions.csv',
+        a_path_to_link_dim_csv=str(
+            Path(__file__).resolve().parents[1] /
+            'src' / 'tetracamthon' / 'tetracamthon_lind_dimensions.csv'
+        ),
         whether_reload=False,
         # whether_reload=True,
     )
