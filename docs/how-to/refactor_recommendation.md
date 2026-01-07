@@ -157,3 +157,94 @@
   - 引入 pre-commit、Ruff/Black/mypy 与 GitHub Actions
 
 如果你更倾向先定一个“练手剧本”的具体清单，我也可以直接输出一套 5 个练习的任务书与验收标准，并同时准备对应的示例脚本骨架。只要你点头，我就开始。
+
+# 双线路重构 Spec（练习套路 + 伺服优化）
+
+> 这个项目板上把它做两个分支，一个分支是上面你跟我提到的做几个小套路的练习，另外一个分支是把这种分段样条的凸轮曲线的做法，泛化做成伺服电机曲线优化的项目。把这个项目朝两个分支去发展、去重构，你有什么建议吗？
+
+## 概述
+- 目标：将项目沿两条路线并行发展——“工程师练习套路”与“伺服电机曲线优化”——同时抽象并沉淀共享的核心能力，减少重复与长期分支漂移。
+- 方法：保留主干（main），以目录拆分模块（core/recipes/servo_opt），以短期特性分支开发并回合主干；核心库统一曲线、时间标定、机构学与绘图解耦。
+
+## 架构与目录
+- 核心层（共享）：`src/tetracamthon/core`
+  - units 与常量：统一 mm、s、deg 与转换（参考 [helper.py](file:///Users/quzheng/Projects/tetracamthon/src/tetracamthon/helper.py) 中的度/时间转换）
+  - spline 与插值：统一样条接口与评估/导数（参考与改造 [polynomial.py](file:///Users/quzheng/Projects/tetracamthon/src/tetracamthon/polynomial.py)）
+  - kinematics 与几何模型：机制参数、坐标变换、解析/数值计算（参考 [mechanism.py](file:///Users/quzheng/Projects/tetracamthon/src/tetracamthon/mechanism.py) 的 SlideRocker 等）
+  - plotting utils：将绘图与计算彻底解耦，沿用 show 开关
+  - io/config：CSV/YAML/JSON 的统一入口，移除硬编码路径
+- 练习套路：`src/tetracamthon/recipes`
+  - 小题目/脚本集合，调用 core 能力；每个练习有对应测试与期望输出
+- 伺服优化：`src/tetracamthon/servo_opt`
+  - 问题建模（决策变量、约束、目标）
+  - 求解器适配（SciPy/CasADi/Pyomo）
+  - 仿真评估（轨迹、速度/加速度/jerk、能耗）
+  - 导出接口（伺服位置指令/路点）
+
+## 关键抽象
+- SplineCurve
+  - evaluate/vel/acc/jerk；基于 knot 的参数化与时间缩放；连续性等级与边界条件
+- MechanismModel
+  - 封装机构参数与解析表达式，统一输出位移/速度/加速度；支持符号/数值双通道
+- Trajectory
+  - 曲线与时间标定打通；采样、插值、重新标定（re-timing）
+- Objective/Constraint
+  - 目标与约束模块化、可插拔组合
+
+## 与现有代码的对齐重构
+- 解耦绘图
+  - 保持 `ploy_symbolically(show)` 的模式，迁移绘图到 core.plotting；计算函数仅返回表达式或数据（参考 [mechanism.py](file:///Users/quzheng/Projects/tetracamthon/src/tetracamthon/mechanism.py)）
+- 路径与配置
+  - 将 CSV/输出路径做成参数/配置，统一到 io/config（你已在 KnotsInSpline 的构造参数上迈出一步，参见 [polynomial.py](file:///Users/quzheng/Projects/tetracamthon/src/tetracamthon/polynomial.py)）
+- 命名与接口
+  - 统一时间/角度变量命名，集中转换函数，减少散落调用
+- 类型与数据结构
+  - 使用 dataclasses 与类型标注，明确参数与返回值
+- 日志与调试
+  - 使用结构化 logging 替代 print；在测试中捕获日志并断言
+- 测试组织
+  - 分层：`tests/core`、`tests/recipes`、`tests/servo_opt`；数值断言用容差；区分快测与慢测 pytest markers（现有 [tests/test_mechanism.py](file:///Users/quzheng/Projects/tetracamthon/tests/test_mechanism.py) 可拆分）
+
+## 伺服优化路线
+- 问题建模
+  - 决策变量：样条节点位置/时间或基函数系数；可选全局时间缩放
+  - 目标：jerk 最小、能耗/扭矩成本、跟踪误差，多目标加权
+  - 约束：位置边界、速度/加速度/jerk 上限，机械干涉/碰撞，周期/同步
+- 数值框架选择
+  - 起步：SciPy minimize + 非线性约束
+  - 进阶：CasADi（自动微分、配点/多相优化），或 Pyomo（复杂约束管理）
+- 时间再标定（re-timing）
+  - 先固定几何曲线，再做时间再标定以满足速度/加速度/jerk 与驱动约束
+- 求解策略
+  - 多起点随机化、分层优化（先可行、后优）
+- 可视化与导出
+  - 输出位置-时间表，生成伺服指令（含插补与采样率）；验证图不强制 show
+
+## “套路练习”路线
+- 坐标与向量：基础变换、角度/时间统一
+- 样条入门：三点/多点样条拟合，连续性对比（C1/C2）
+- 速度/加速度/jerk：数值与符号计算对照
+- 触点/极值：符号求解 vs 数值迭代
+- 约束满足：给定上限，调整 knot/时间以满足
+- 稳健性：噪声数据的平滑与鲁棒性
+- 小型优化：单段/双段曲线的能耗最小化
+- 单元测试驱动：每个练习有可运行测试与基准答案
+
+## 测试与工程实践
+- 统一断言容差与单位；快/慢测分层；性质测试（对称性、单调性等）
+- 持续集成：lint、类型检查、单元测试分组；禁止 GUI 依赖
+- 基准测试：优化器的收敛时间与结果质量追踪
+- 数据版本与可复现：固定随机种子、输入文件标识与快照
+
+## 里程碑
+- 第1–2周：抽象核心层（SplineCurve、转换、IO/plotting），迁移现有功能并保证测试通过
+- 第3–4周：完成 recipes 首批练习与测试；建立 CI 与 markers
+- 第5–6周：伺服优化 MVP（SciPy），含基础约束与目标；完成示例问题
+- 第7–8周：引入 CasADi 或 Pyomo，扩充约束与多目标；加入仿真与导出接口
+- 第9周以后：性能调优、鲁棒性提升、更多案例与数据
+
+## 具体下一步
+- 拆分目录并建立 core/recipes/servo_opt 三层结构骨架
+- 将 [mechanism.py](file:///Users/quzheng/Projects/tetracamthon/src/tetracamthon/mechanism.py) 的计算函数迁入 core，绘图迁入 plotting；保持现有测试可运行
+- 将 [polynomial.py](file:///Users/quzheng/Projects/tetracamthon/src/tetracamthon/polynomial.py) 收敛为 SplineCurve 抽象，补齐 vel/acc/jerk
+- 在 servo_opt 中实现最小示例：给定边界与速度上限，优化 knot 时间分配，输出轨迹并通过 tests 验证
