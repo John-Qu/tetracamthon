@@ -14,6 +14,18 @@ from tetracamthon.polynomial import Polynomial, KnotsInSpline, \
 from tetracamthon.stage import JawOnYork, TracingOfPointA
 from tetracamthon.package import Package, Productivity, Production
 
+@pytest.fixture(scope='session')
+def project_root():
+    return Path(__file__).resolve().parents[1]
+
+@pytest.fixture(scope='session')
+def src_path(project_root):
+    return project_root / "src"
+
+@pytest.fixture(scope='session')
+def data_path(project_root):
+    return project_root / "data"
+
 
 @pytest.fixture(scope='session')
 def path_to_tetra_pak_a3_flex_cam_acc_data_721_csv():
