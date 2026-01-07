@@ -248,3 +248,35 @@
 - 将 [mechanism.py](file:///Users/quzheng/Projects/tetracamthon/src/tetracamthon/mechanism.py) 的计算函数迁入 core，绘图迁入 plotting；保持现有测试可运行
 - 将 [polynomial.py](file:///Users/quzheng/Projects/tetracamthon/src/tetracamthon/polynomial.py) 收敛为 SplineCurve 抽象，补齐 vel/acc/jerk
 - 在 servo_opt 中实现最小示例：给定边界与速度上限，优化 knot 时间分配，输出轨迹并通过 tests 验证
+
+# 方法泛化为通用伺服优化工具，并以 A3-Flex 作为可验证客户案例
+
+## 目的与定位补充（方法泛化与客户案例）
+- 方法泛化目标：把“分段样条电子凸轮”方法抽象为通用伺服电机轨迹优化工具，适配不同设备与约束。
+- 客户案例定位：保留并强化 TetraPak A3-Flex 的曲线与机构数据作为可验证的标杆案例，用于对外展示和销售技术服务。
+- 展示内容：输入数据来源与处理、样条重建、机构融合、优化前后对比（jerk、能耗、峰值扭矩、跟踪误差）、导出位置指令/路点与采样策略。
+
+## 最佳实践建议（单仓多包，面向泛化）
+- 单仓多包结构：统一 core（曲线/时间/机构/plotting/io），recipes（夹爪练习），servo_opt（优化工具）。
+- 稳定接口：core 暴露少而稳的类与函数（SplineCurve、ElectronicCam、Trajectory、MechanismModel、ServoModel、Objective/Constraint），两条路线仅依赖 core。
+- 计算与绘图分离：计算函数只返回数据与表达式；绘图集中到 plotting，默认 show=False，CI 不依赖 GUI。
+- 路径与配置：统一 data/{inputs,outputs,plots}，以仓库根为基；CSV/YAML/JSON 配置承载约束/单位/电机参数/采样率。
+- 测试分层与容差：tests/core、tests/recipes、tests/servo_opt 分层；统一单位与容差；属性测试覆盖连续性、单调性、周期性。
+- 求解器适配：servo_opt 中以适配层隔离 SciPy/CasADi/Pyomo，避免求解器细节渗透 core；支持多目标加权与非线性约束。
+- 时间再标定：几何曲线先行，re-timing 满足速度/加速度/jerk 与扭矩约束；支持多起点与分层优化策略。
+- 可复现与审计：固定随机种子、记录配置与版本、生成结果快照；结构化日志替代 print，并可在测试中断言关键事件。
+- CI 工作流：主干可发布、特性分支短期合并；路径过滤仅跑受影响模块测试；引入 lint/类型检查/基准测试。
+
+## 客户案例与展示物料
+- 案例素材：A3-Flex 的原始/修正数据、样条参数（knot_info）、机构参数、优化配置文件。
+- 指标对比：jerk 积分、能耗估算（τ·ω）、峰值扭矩、最大速度/加速度/jerk、跟踪误差。
+- 导出物料：PNG 图、CSV 轨迹、伺服路点表；附采样率与插补说明。
+- 复现脚本：一键运行生成上述所有物料；日志中包含版本、配置、输入快照。
+
+## 行动项（基于上述目标）
+- 在 core 增补 ElectronicCam、Trajectory、ServoModel 与 Objective/Constraint 抽象，统一接口与类型。
+- 收敛 polynomial.py 为 SplineCurve，补齐 vel/acc/jerk 与连续性控制，移除硬编码路径。
+- 在 recipes/cam_jaw 编写“贯通线”脚本：数据→样条→机构触点→整机四联图与 CSV 导出；配套测试与验收标准。
+- 在 servo_opt 编写 MVP：SciPy 求解器 + 基础约束/目标；支持 re-timing 与多起点；输出轨迹与指令。
+- 建立 CI：按修改路径触发对应测试；默认 plotting 不展示；生成示例物料用于演示。
+- 文档更新：在 docs 中补“快速开始”“练习教程”“优化工具使用说明”，嵌入关键文件链接与示例结果。
