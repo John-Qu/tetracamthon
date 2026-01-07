@@ -81,16 +81,25 @@
     - 运行分层测试，确保迁移后功能无损。
     - 确认 `plotting` 模块在测试中默认不显示窗口 (`show=False`)。
 
-### 5.3 阶段 2: 练习套路落地 (Recipes Implementation)
-**目标**：贯通 cam_jaw 实例。
-1.  在 `recipes/cam_jaw` 编写最小贯通脚本：读数据→样条→机构触点→四联图与 CSV 输出。
-2.  完善断言：对图像生成做存在性检查，对 CSV 数据做数值容差检查。
+### 5.3 阶段 2: 并行执行策略 (Parallel Execution)
+**策略**：在核心层（Core）稳定并通过测试后，练习套路（Recipes）与伺服优化（Servo Opt）可并行推进。
+- **闸门条件**：
+  - `tests/core` 全绿，确保 SplineCurve/MechanismModel 接口稳定。
+  - `plotting` 模块默认 `show=False`，支持 CI 自动化。
 
-### 5.4 阶段 3: 伺服优化 MVP (Servo Opt MVP)
-**目标**：实现通用优化工具原型。
-1.  在 `servo_opt` 编写最小示例：给定速度/加速度/jerk 上限，优化 knot 时间。
-2.  输出轨迹并进行测试验收。
-3.  逐步引入 CasADi/Pyomo 适配层。
+#### 任务 A: 旧功能再现 (Recipes - Baseline)
+**目标**：用新架构跑通现有数据，建立可验证基线。
+1.  **最小闭环**：在 `recipes/cam_jaw` 编写脚本，实现“读数据 → 样条重建 → 机构触点 → 四联图/CSV 输出”。
+2.  **验收标准**：产物与 `data/plots` 下的历史黄金图表/数据一致（数值容差 1e-3）。
+
+#### 任务 B: 优化 MVP (Servo Opt - Prototype)
+**目标**：实现时间再标定（Re-timing）原型。
+1.  **可行性问题**：给定几何样条与 v/a/jerk 上限，优化段时间分配。
+2.  **验证**：使用 SciPy minimize 求解，输出优化后的轨迹并检查约束满足度。
+
+### 5.4 阶段 3: 双线迭代与扩展 (Iteration)
+- **Recipes**: 扩展更多测试用例，覆盖边界条件与异常处理。
+- **Servo Opt**: 引入 CasADi/Pyomo 适配层，支持复杂约束与多目标优化。
 
 ## 6. 数据与配置管理 (Data & Config)
 - **路径**：统一 `data/{inputs,outputs,plots}`，以仓库根为基准，禁止绝对路径。
